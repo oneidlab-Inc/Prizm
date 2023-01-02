@@ -151,7 +151,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/darkMode/android/app/.cxx/RelWithDebInfo/4v4d1zn6/armeabi-v7a"
+			"value" : "c:/Prizm/Prizm/android/app/.cxx/RelWithDebInfo/4v4d1zn6/armeabi-v7a"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -691,7 +691,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/darkMode/android"
+			"value" : "C:/Prizm/Prizm/android"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -727,7 +727,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "C:\\darkMode\\build\\app\\intermediates\\cxx\\RelWithDebInfo\\4v4d1zn6\\obj\\armeabi-v7a"
+			"value" : "C:\\Prizm\\Prizm\\build\\app\\intermediates\\cxx\\RelWithDebInfo\\4v4d1zn6\\obj\\armeabi-v7a"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -999,7 +999,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "C:\\darkMode\\build\\app\\intermediates\\cxx\\RelWithDebInfo\\4v4d1zn6\\obj\\armeabi-v7a"
+			"value" : "C:\\Prizm\\Prizm\\build\\app\\intermediates\\cxx\\RelWithDebInfo\\4v4d1zn6\\obj\\armeabi-v7a"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1271,7 +1271,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/darkMode/android/app/.cxx/RelWithDebInfo/4v4d1zn6/armeabi-v7a"
+			"value" : "C:/Prizm/Prizm/android/app/.cxx/RelWithDebInfo/4v4d1zn6/armeabi-v7a"
 		},
 		{
 			"name" : "Project_SOURCE_DIR",
@@ -1283,7 +1283,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/darkMode/android"
+			"value" : "C:/Prizm/Prizm/android"
 		}
 	],
 	"kind" : "cache",
