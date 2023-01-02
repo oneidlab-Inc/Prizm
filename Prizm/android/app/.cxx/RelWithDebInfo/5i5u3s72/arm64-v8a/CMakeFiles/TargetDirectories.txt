@@ -1,0 +1,2 @@
+C:/Users/Won/Downloads/darkMode/darkMode/android/app/.cxx/RelWithDebInfo/5i5u3s72/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Won/Downloads/darkMode/darkMode/android/app/.cxx/RelWithDebInfo/5i5u3s72/arm64-v8a/CMakeFiles/rebuild_cache.dir

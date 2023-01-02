@@ -1,0 +1,2 @@
+C:/darkMode/android/app/.cxx/Debug/4vs6zgo3/x86/CMakeFiles/edit_cache.dir
+C:/darkMode/android/app/.cxx/Debug/4vs6zgo3/x86/CMakeFiles/rebuild_cache.dir

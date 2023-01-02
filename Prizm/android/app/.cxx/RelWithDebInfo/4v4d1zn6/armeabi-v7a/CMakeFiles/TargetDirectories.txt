@@ -1,0 +1,2 @@
+C:/darkMode/android/app/.cxx/RelWithDebInfo/4v4d1zn6/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/darkMode/android/app/.cxx/RelWithDebInfo/4v4d1zn6/armeabi-v7a/CMakeFiles/rebuild_cache.dir
