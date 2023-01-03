@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:darkmode/Home.dart';
-import 'package:darkmode/vmidc.dart';
+import 'package:Prizm/Home.dart';
+import 'package:Prizm/vmidc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';

@@ -184,7 +184,6 @@
 //                   icon: ImageIcon(Image.asset('assets/settings.png').image),
 //                   color: isDarkMode ? Colors.white : Colors.black,
 //                   onPressed: () {
-//                     print("settings");
 //                     Navigator.push(
 //                         context,
 //                         MaterialPageRoute(

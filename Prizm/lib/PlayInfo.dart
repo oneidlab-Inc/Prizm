@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+
+import 'main.dart';
 
 enum _HighlightTextType { text }
 
@@ -42,10 +45,12 @@ class _PlayInfo extends State<PlayInfo> {
 
   fetchData() async {
     String id = widget.song_id;
-    String uid = widget.deviceId;
+    // String uid = widget.deviceId;
 
     http.Response response = await http.get(
-        Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=$id'));
+        // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=$id')
+            Uri.parse('${MyApp.Uri}get_song_search/json?id=$id')
+    );
 
     statuscode = response.statusCode;
     try {

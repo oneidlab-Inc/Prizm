@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:darkmode/Private_Policy.dart';
-import 'package:darkmode/Terms.dart';
+import 'package:Prizm/Private_Policy.dart';
+import 'package:Prizm/Terms.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
@@ -169,7 +169,7 @@ class _Settings extends State<Settings> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Terms()));
+                          MaterialPageRoute(builder: (context) => const Terms()));
                     },
                     child: Container(
                       color: MyApp.themeNotifier.value == ThemeMode.dark
@@ -200,7 +200,7 @@ class _Settings extends State<Settings> {
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Private()));
+                          MaterialPageRoute(builder: (context) => const Private()));
                     },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,

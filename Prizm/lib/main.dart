@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:darkmode/vmidc.dart';
+import 'package:Prizm/vmidc.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:material_color_generator/material_color_generator.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:yaml/yaml.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
@@ -24,7 +27,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   runApp(
-    MyApp(),
+    const MyApp(),
   );
 }
 
@@ -34,6 +37,12 @@ class MyApp extends StatelessWidget {
   ValueNotifier(ThemeMode.light);
 
   const MyApp({Key? key}) : super(key: key);
+  // static var history;
+  // static var rank;
+  // static var programs;
+  // static var search;
+  static var Uri;
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,17 +87,34 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
 
-  Future<void> initPlatformState() async {
-    if (Platform.isAndroid) {
-      deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
-    } else if (Platform.isIOS) {
-      IosDeviceInfo info = await deviceInfoPlugin.iosInfo;
+  String? _deviceId;
+  String? uid;
 
+  Future<void> initPlatformState() async {
+    String? deviceId;
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } on PlatformException {
+      deviceId = 'Failed to get Id';
     }
+    if (!mounted) return;
+
     setState(() {
-      _deviceData = deviceData;
+      _deviceId = deviceId;
+      uid = _deviceId;
     });
   }
+
+  // Future<void> initPlatformState() async {
+  //   if (Platform.isAndroid) {
+  //     deviceData = _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+  //   } else if (Platform.isIOS) {
+  //     IosDeviceInfo info = await deviceInfoPlugin.iosInfo;
+  //   }
+  //   setState(() {
+  //     _deviceData = deviceData;
+  //   });
+  // }
 
   double _readAndroidBuildData(AndroidDeviceInfo build) {
     return build.displayMetrics.widthPx;
@@ -229,9 +255,13 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
-    // print(doc['YAML']);
     _launchUpdate();
     initPlatformState();
+    // MyApp.history  = Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=');
+    // MyApp.rank = Uri.parse('http://dev.przm.kr/przm_api/get_song_ranks');
+    MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
+    print('type > ' + '${MyApp.Uri.runtimeType}');
+
     super.initState();
   }
 
@@ -267,6 +297,10 @@ class _TabPageState extends State<TabPage> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+
+    final deviceId = _deviceId;
+
     return WillPopScope(
         onWillPop: () {
           if (_selectedIndex == 1 &&

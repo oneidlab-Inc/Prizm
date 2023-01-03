@@ -50,15 +50,18 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    String id = widget.id;
 
     _uid = await PlatformDeviceId.getDeviceId;
     print('uid : $_uid');
 
 // json for title album artist
+
     try {
-      http.Response response = await http.get(Uri.parse(
-          'http://dev.przm.kr/przm_api/get_song_search/json?id=$id&uid=$_uid'));
+      http.Response response = await http.get(
+
+          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=$id&uid=$_uid')
+              Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid')
+      );
 
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
@@ -66,16 +69,21 @@ class _Result extends State<Result> {
       maps = map;
       song_cnts = maps['song_cnts'];
 
-      setState(() {});
+      setState(() {
+
+      });
     } catch (e) {
       print('json 가져오기 실패');
       print(e);
     }
 
 //json for program list
+
     try {
-      http.Response response = await http.get(Uri.parse(
-          'http://dev.przm.kr/przm_api/get_song_programs/json?id=$id'));
+      http.Response response = await http.get(
+
+          Uri.parse('${MyApp.Uri}get_song_programs/json?id=${widget.id}')
+      );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
@@ -185,8 +193,8 @@ class _Result extends State<Result> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Material(
-                color: isDarkMode ? Colors.black : Colors.white,
-                child: Column(
+               color: isDarkMode ? Colors.black : Colors.white,
+               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Stack(
@@ -409,10 +417,16 @@ class _Result extends State<Result> {
                                                             ? Colors.white
                                                             : Colors.black,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 20)))
+                                                    fontSize: 20)
+                                            )
+                                    )
                                         : Row(
-                                            children: [_listView(programs)],
-                                          ))),
+                                            children: [
+                                              _listView(programs)
+                                            ],
+                                          )
+                                )
+                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -423,7 +437,8 @@ class _Result extends State<Result> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),
-                                    )),
+                                    )
+                                ),
                                 isCNTS
                                     ? ChartContainer(
                                         color: isDarkMode
@@ -448,7 +463,8 @@ class _Result extends State<Result> {
                                   color: isDarkMode
                                       ? const Color.fromRGBO(42, 42, 42, 1)
                                       // : const Color.fromRGBO(239, 239, 239, 1)),
-                                      : const Color.fromRGBO(250, 250, 250, 1)),
+                                      : const Color.fromRGBO(250, 250, 250, 1)
+                              ),
                               height: 100,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -466,9 +482,11 @@ class _Result extends State<Result> {
                                                 : Colors.black)),
                                   ),
                                   Text('${maps['count']}',
-                                      style: const TextStyle(fontSize: 17)),
+                                      style: const TextStyle(fontSize: 17)
+                                  ),
                                   const Text('회',
-                                      style: TextStyle(fontSize: 17))
+                                      style: TextStyle(fontSize: 17)
+                                  )
                                 ],
                               ),
                             ),
@@ -487,7 +505,9 @@ class _Result extends State<Result> {
                                         width: 1,
                                         color: isDarkMode
                                             ? Colors.grey.withOpacity(0.3)
-                                            : Colors.black.withOpacity(0.1))),
+                                            : Colors.black.withOpacity(0.1)
+                                    )
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -498,25 +518,27 @@ class _Result extends State<Result> {
                                           '홈으로',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        )),
+                                              fontSize: 16
+                                          ),
+                                        )
+                                    ),
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,
                                       size: 17,
                                       color: isDarkMode
-                                          ? const Color.fromRGBO(
-                                              125, 125, 125, 1)
-                                          : const Color.fromRGBO(
-                                              208, 208, 208, 1),
+                                          ? const Color.fromRGBO(125, 125, 125, 1)
+                                          : const Color.fromRGBO(208, 208, 208, 1),
                                     )
                                   ],
                                 ),
                               ),
                             )
                           ],
-                        ))
+                        )
+                    )
                   ],
-                )),
+                )
+            ),
           ),
         ),
       ),
@@ -760,8 +782,6 @@ class _Result extends State<Result> {
     List<FlSpot> FlSpotData = [];
     FlSpotData.addAll(FlSpotDataAll);
     final minCnt = listY.last >= 50;
-    // print(listY);
-// for (int i = 0; i <= song_cnts.length - 2; i++) {
 
     var result = LineChart(LineChartData(
         extraLinesData: ExtraLinesData(
@@ -770,7 +790,8 @@ class _Result extends State<Result> {
                 y: 0,
                 color: isDarkMode
                     ? Colors.grey.withOpacity(0.4)
-                    : Colors.grey.withOpacity(0.3))
+                    : Colors.grey.withOpacity(0.3)
+            )
           ],
         ),
         baselineY: 0,
@@ -785,7 +806,8 @@ class _Result extends State<Result> {
             },
             drawVerticalLine: false,
             drawHorizontalLine: true,
-            horizontalInterval: minCnt ? avgY / 8 : 30),
+            horizontalInterval: minCnt ? avgY / 8 : 30
+        ),
         minX: 1,
         minY: 0,
         maxX: 12,
@@ -800,7 +822,8 @@ class _Result extends State<Result> {
                         color: const Color.fromRGBO(51, 211, 180, 1),
                         strokeColor:
                             isDarkMode ? Colors.white : Colors.grey.shade200,
-                        strokeWidth: 4),
+                        strokeWidth: 4
+                    ),
               ),
               color: const Color.fromRGBO(51, 211, 180, 1),
               isCurved: true,
@@ -815,9 +838,9 @@ class _Result extends State<Result> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Color.fromRGBO(51, 215, 180, 1),
-                      // Colors.white.withOpacity(0.8)
                       Colors.white
-                    ]),
+                    ]
+                ),
               ),
               spots: FlSpotData)
         ],
@@ -833,9 +856,14 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
-        lineTouchData: LineTouchData(enabled: true)));
+                    getTitlesWidget: bottomTitleWidgets)
+            ),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)
+            )
+        ),
+        lineTouchData: LineTouchData(enabled: true)
+        )
+    );
     return result;
   }
 }
