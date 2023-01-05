@@ -21,6 +21,7 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -53,11 +54,12 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-//            singingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
+
 //            minifyEnabled true
 //            useProguard true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug  // 출시 직전에 주석
         }
     }
     externalNativeBuild {
@@ -65,6 +67,11 @@ android {
             path "../CMakeLists.txt"
         }
     }
+}
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-config-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
 }
 
 flutter {

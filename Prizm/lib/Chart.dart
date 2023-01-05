@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'Home.dart';
 import 'Settings.dart';
 import 'PlayInfo.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'main.dart';
 
 class Chart extends StatefulWidget {
@@ -41,8 +39,11 @@ class _Chart extends State<Chart> {
 
   void fetchData() async {
     try {
-      http.Response response = await http.get(Uri.parse(
-          'http://dev.przm.kr/przm_api/get_song_ranks'));
+      http.Response response = await http.get(
+
+            Uri.parse('${MyApp.Uri}get_song_ranks')
+
+      );
       String jsonData = response.body;
       persons = jsonDecode(jsonData.toString());
       original = persons;
@@ -54,13 +55,8 @@ class _Chart extends State<Chart> {
     }
   }
 
-  // final duplicateItems =
-  // List<String>.generate(1000, (i) => "$Container(child:Text $i)");
-  // var items = <String>[];
-
   @override
   void initState() {
-    // items.addAll(duplicateItems);
     initPlatformState();
     fetchData();
     super.initState();
@@ -103,7 +99,6 @@ class _Chart extends State<Chart> {
                   ),
                   color: isDarkMode ? Colors.white : Colors.black,
                   onPressed: () {
-                    print("Settings");
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const Settings()),
@@ -138,7 +133,8 @@ class _Chart extends State<Chart> {
                                   ),
                                 ),
                               ],
-                            )),
+                            )
+                        ),
                       ],
                     ),
                   ),
@@ -172,8 +168,7 @@ class _Chart extends State<Chart> {
                         )
                       ],
                     ),
-                  )
-                      : _listView(persons)
+                  ) : _listView(persons)
                 ],
               ),
             )

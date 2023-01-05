@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:darkmode/vmidc.dart';
+import 'package:Prizm/vmidc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:darkmode/PermissionManage.dart';
+import 'package:Prizm/PermissionManage.dart';
 import 'Settings.dart';
 import 'main.dart';
 

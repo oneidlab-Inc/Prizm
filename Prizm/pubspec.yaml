@@ -1,9 +1,9 @@
-name: darkmode
+name: Prizm
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+#publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -66,6 +66,9 @@ dependencies:
   package_info: ^2.0.2
   dio: ^4.0.6
   flutter_native_splash: ^2.2.16
+  url_launcher: ^6.1.7
+  firebase_core: ^2.4.1
+  firebase_remote_config: ^3.0.9
 
 dev_dependencies:
   flutter_test:

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Prizm/Private_Policy.dart';
 import 'package:Prizm/Terms.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
@@ -57,7 +58,6 @@ class Settings extends StatefulWidget {
 // }
 
 class _Settings extends State<Settings> {
-
   final controller = TextEditingController();
   final colorsController = ScrollController();
 
@@ -74,11 +74,12 @@ class _Settings extends State<Settings> {
 
   var currentVersion;
 
+
   @override
   void initState() {
     var yaml;
     var version;
-
+    // versionChange();
     rootBundle.loadString('pubspec.yaml').then((yamlValue) async {
       setState(() {
         if (MyApp.themeNotifier.value == ThemeMode.light) {
@@ -87,7 +88,7 @@ class _Settings extends State<Settings> {
           _style = Style.dark;
         }
         yaml = loadYaml(yamlValue);
-        version = yaml['version'];
+        version = yaml['version'] ;
         currentVersion = version;
       });
     });
@@ -101,8 +102,11 @@ class _Settings extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    // versionChange();
 // final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+
+    print('currentVersion >>> $currentVersion');
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -168,8 +172,10 @@ class _Settings extends State<Settings> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Terms()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Terms()));
                     },
                     child: Container(
                       color: MyApp.themeNotifier.value == ThemeMode.dark
@@ -182,11 +188,11 @@ class _Settings extends State<Settings> {
                         children: [
                           Text('이용약관',
                               style:
-                              (MyApp.themeNotifier.value == ThemeMode.dark
-                                  ? const TextStyle(
-                                  fontSize: 17, color: Colors.white)
-                                  : const TextStyle(
-                                  fontSize: 17, color: Colors.black))),
+                                  (MyApp.themeNotifier.value == ThemeMode.dark
+                                      ? const TextStyle(
+                                          fontSize: 17, color: Colors.white)
+                                      : const TextStyle(
+                                          fontSize: 17, color: Colors.black))),
                           Align(
                             child: Image.asset(
                               'assets/move.png',
@@ -199,8 +205,10 @@ class _Settings extends State<Settings> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Private()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Private()));
                     },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,
@@ -258,8 +266,8 @@ class _Settings extends State<Settings> {
                     height: 70,
                     decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                        )),
+                      bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                    )),
                   ),
                   Container(
                     height: 70,
@@ -296,7 +304,7 @@ class _Settings extends State<Settings> {
                                 style: TextStyle(
                                   fontSize: 17,
                                   color:
-                                  isDarkMode ? Colors.white : Colors.black,
+                                      isDarkMode ? Colors.white : Colors.black,
                                 ),
                               )),
                           Expanded(
@@ -305,8 +313,8 @@ class _Settings extends State<Settings> {
                                 child: Theme(
                                     data: Theme.of(context).copyWith(
                                         unselectedWidgetColor:
-                                        const Color.fromRGBO(
-                                            221, 221, 221, 1),
+                                            const Color.fromRGBO(
+                                                221, 221, 221, 1),
                                         disabledColor: Colors.blue),
                                     child: RadioListTile<Style>(
                                       contentPadding: const EdgeInsets.fromLTRB(
@@ -334,7 +342,7 @@ class _Settings extends State<Settings> {
                                         });
                                       },
                                       activeColor:
-                                      const Color.fromRGBO(64, 220, 196, 1),
+                                          const Color.fromRGBO(64, 220, 196, 1),
                                     ))),
                           ),
                           Expanded(
@@ -343,8 +351,8 @@ class _Settings extends State<Settings> {
                                 child: Theme(
                                     data: Theme.of(context).copyWith(
                                         unselectedWidgetColor:
-                                        const Color.fromRGBO(
-                                            221, 221, 221, 1),
+                                            const Color.fromRGBO(
+                                                221, 221, 221, 1),
                                         disabledColor: Colors.blue),
                                     child: RadioListTile<Style>(
                                       contentPadding: const EdgeInsets.fromLTRB(
@@ -371,7 +379,7 @@ class _Settings extends State<Settings> {
                                         });
                                       },
                                       activeColor:
-                                      const Color.fromRGBO(64, 220, 196, 1),
+                                          const Color.fromRGBO(64, 220, 196, 1),
                                     ))),
                           )
                         ]),
@@ -391,7 +399,7 @@ class _Settings extends State<Settings> {
                                 ),
                                 child: Container(
                                     // width: 400,
-                                    height: c_height*0.18,
+                                    height: c_height * 0.18,
                                     width: c_width * 0.8,
                                     color: isDarkMode
                                         ? const Color.fromRGBO(66, 66, 66, 1)
@@ -400,54 +408,66 @@ class _Settings extends State<Settings> {
                                         top: 20, bottom: 20),
                                     child: Column(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           // width: 400,
                                           // height: 80,
                                           height: c_height * 0.115,
                                           child: const Center(
-                                              child: Text(
-                                                  '검색내역을 삭제하시겠습니까?',
+                                              child: Text('검색내역을 삭제하시겠습니까?',
                                                   style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18)
-                                              )
-                                          ),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18))),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
                                               border: Border(
                                                   top: BorderSide(
                                                       color: isDarkMode
-                                                          ? const Color.fromRGBO(94, 94, 94, 1)
-                                                          : Colors.black.withOpacity(0.1)))),
+                                                          ? const Color
+                                                                  .fromRGBO(
+                                                              94, 94, 94, 1)
+                                                          : Colors.black
+                                                              .withOpacity(
+                                                                  0.1)))),
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: <Widget>[
                                               SizedBox(
                                                   width: c_width * 0.4,
                                                   height: c_height * 0.08,
-                                                  child : Container(
-                                                    margin: const EdgeInsets.only(left: 20),
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 20),
                                                     decoration: BoxDecoration(
                                                         color: isDarkMode
-                                                            ? const Color.fromRGBO(66, 66, 66, 1)
+                                                            ? const Color
+                                                                    .fromRGBO(
+                                                                66, 66, 66, 1)
                                                             : Colors.white,
                                                         border: Border(
                                                             right: BorderSide(
                                                                 color: isDarkMode
-                                                                    ? const Color.fromRGBO(94, 94, 94, 1)
-                                                                    : Colors.black.withOpacity(0.1)
-                                                            )
-                                                        )
-                                                    ),
+                                                                    ? const Color
+                                                                            .fromRGBO(
+                                                                        94,
+                                                                        94,
+                                                                        94,
+                                                                        1)
+                                                                    : Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.1)))),
                                                     child: TextButton(
                                                         onPressed: () {
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         },
                                                         child: Text(
                                                           '취소',
@@ -455,16 +475,22 @@ class _Settings extends State<Settings> {
                                                               fontSize: 20,
                                                               color: isDarkMode
                                                                   ? Colors.white
-                                                                  .withOpacity(0.8)
+                                                                      .withOpacity(
+                                                                          0.8)
                                                                   : const Color
-                                                                  .fromRGBO(147,
-                                                                  147, 147, 1)),
+                                                                          .fromRGBO(
+                                                                      147,
+                                                                      147,
+                                                                      147,
+                                                                      1)),
                                                         )),
                                                   )),
                                               Container(
-                                                  margin: const EdgeInsets.only(right: 20),
+                                                  margin: const EdgeInsets.only(
+                                                      right: 20),
                                                   color: isDarkMode
-                                                      ? const Color.fromRGBO(66, 66, 66, 1)
+                                                      ? const Color.fromRGBO(
+                                                          66, 66, 66, 1)
                                                       : Colors.white,
                                                   // width: 180,
                                                   // height: 68,
@@ -473,25 +499,32 @@ class _Settings extends State<Settings> {
                                                   child: Center(
                                                     child: TextButton(
                                                       onPressed: () async {
-                                                        _deviceId = await PlatformDeviceId.getDeviceId;
+                                                        _deviceId =
+                                                            await PlatformDeviceId
+                                                                .getDeviceId;
                                                         uid = _deviceId!;
-                                                        try{
+                                                        try {
                                                           Response response =
-                                                        await http.get(Uri.parse(
-                                                            'http://dev.przm.kr/przm_api/get_song_history?uid=$uid&proc=del'));
-                                                        if (response.statusCode == 200) {
-                                                          showToast();
-                                                        } else {
-                                                          throw "히스토리 삭제 실패";
-                                                        }
-                                                        setState(() {
-                                                          Navigator.pop(context);
-                                                        });
+                                                              await http.get(
+                                                                  Uri.parse(
+                                                                      'http://dev.przm.kr/przm_api/get_song_history?uid=$uid&proc=del'));
+                                                          if (response
+                                                                  .statusCode ==
+                                                              200) {
+                                                            showToast();
+                                                          } else {
+                                                            throw "히스토리 삭제 실패";
+                                                          }
+                                                          setState(() {
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
                                                         } catch (e) {
                                                           NetworkToast();
                                                           print('실패');
                                                           setState(() {
-                                                            Navigator.pop(context);
+                                                            Navigator.pop(
+                                                                context);
                                                           });
                                                         }
                                                       },
@@ -499,7 +532,8 @@ class _Settings extends State<Settings> {
                                                         '삭제',
                                                         style: TextStyle(
                                                           fontSize: 20,
-                                                          color: Color.fromRGBO(64, 220, 196, 1),
+                                                          color: Color.fromRGBO(
+                                                              64, 220, 196, 1),
                                                         ),
                                                       ),
                                                     ),
@@ -524,7 +558,7 @@ class _Settings extends State<Settings> {
                             style: TextStyle(
                                 fontSize: 17,
                                 color:
-                                isDarkMode ? Colors.white : Colors.black),
+                                    isDarkMode ? Colors.white : Colors.black),
                           ),
                           Align(
                             child: Image.asset(
@@ -560,55 +594,54 @@ width: 10,
                     margin: const EdgeInsets.fromLTRB(30, 10, 0, 0),
                     child: Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '현재버전   v   $currentVersion',
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: isDarkMode ? Colors.white : Colors.black),
-                            ),
-                            Container(
-                              height: 40,
-                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              margin: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1.5, color: Colors.greenAccent),
-                                  borderRadius:
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '현재버전   v   $currentVersion',
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: isDarkMode ? Colors.white : Colors.black),
+                        ),
+                        Container(
+                          height: 40,
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          margin: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 1.5, color: Colors.greenAccent),
+                              borderRadius:
                                   const BorderRadius.all(Radius.circular(20))),
-                              child: TextButton(
-                                  onPressed: () => {
-                                    updateToast(),
-                                    _launchUpdate()
-                                  },
-                                  child: const Text('업데이트',style: TextStyle(color: Colors.greenAccent))
-                              ),
-                            )
-                          ],
-                        )),
+                          child: TextButton(
+                              onPressed: () => {updateToast(), _launchUpdate()},
+                              child: const Text('업데이트',
+                                  style: TextStyle(color: Colors.greenAccent))),
+                        )
+                      ],
+                    )),
                   )
                 ],
               ),
             )));
   }
+
   _launchUpdate() async {
     Uri _url = Uri.parse('');
     if (Platform.isAndroid) {
       //플레이 스토어 주소 입력
-
+      _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
     } else if (Platform.isIOS) {
       //앱스토어 주소 입력
       // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
     }
     await launchUrl(_url);
-    if(await launchUrl(_url)) {
+    if (await launchUrl(_url)) {
       print('launching $_url');
       await canLaunchUrl(_url);
     } else {
       throw '$_url 연결 실패';
     }
   }
+
   Future<bool> _onBackKey() async {
     return await showDialog(
         context: context,
@@ -616,4 +649,18 @@ width: 10,
           return TabPage();
         });
   }
+
+  /*versionChange() async {
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    remoteConfig.setDefaults({"version": "1.0.0+1"});
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 30),
+        minimumFetchInterval: const Duration(seconds: 30)));
+
+    await remoteConfig.fetchAndActivate();
+
+    version = remoteConfig.getString("version");
+    print('version >>> $version');
+    // version1 = version;
+  }*/
 }

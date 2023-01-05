@@ -44,12 +44,10 @@ class _PlayInfo extends State<PlayInfo> {
   // List<dynamic>original = [];
 
   fetchData() async {
-    String id = widget.song_id;
     // String uid = widget.deviceId;
 
     http.Response response = await http.get(
-        // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=$id')
-            Uri.parse('${MyApp.Uri}get_song_search/json?id=$id')
+            Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.song_id}')
     );
 
     statuscode = response.statusCode;

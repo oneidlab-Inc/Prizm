@@ -1,5 +1,11 @@
+// import 'dart:html';
+import 'dart:convert';
 import 'dart:io';
-import 'package:extended_image/extended_image.dart';
+import 'package:Prizm/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:Prizm/vmidc.dart';
@@ -7,7 +13,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:material_color_generator/material_color_generator.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:yaml/yaml.dart';
@@ -26,6 +31,27 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
+
+
+  /*--------------------------------------------------------------------
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  remoteConfig.setDefaults({"version" : "person['ARTIST']"});
+  await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+         fetchTimeout: const Duration(seconds: 30),
+         minimumFetchInterval: const Duration(seconds: 30)
+      )
+  );
+
+  await remoteConfig.fetchAndActivate();
+
+  String title = remoteConfig.getString("version");
+  print('version > $title');
+  --------------------------------------------------------------------*/
   runApp(
     const MyApp(),
   );
@@ -35,14 +61,13 @@ class MyApp extends StatelessWidget {
 
   static final ValueNotifier<ThemeMode> themeNotifier =
   ValueNotifier(ThemeMode.light);
-
   const MyApp({Key? key}) : super(key: key);
   // static var history;
   // static var rank;
   // static var programs;
   // static var search;
   static var Uri;
-
+  static var fixed;
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +112,8 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
 
-  String? _deviceId;
-  String? uid;
+  // String? _deviceId;
+  // String? uid;
 
   Future<void> initPlatformState() async {
     String? deviceId;
@@ -100,8 +125,8 @@ class _TabPageState extends State<TabPage> {
     if (!mounted) return;
 
     setState(() {
-      _deviceId = deviceId;
-      uid = _deviceId;
+      // _deviceId = deviceId;
+      // uid = _deviceId;
     });
   }
 
@@ -253,21 +278,42 @@ class _TabPageState extends State<TabPage> {
 
   final List _pages = [History(), Home(), Chart()];
 
+  List url = [];
+
+
+  fetchData() async {
+    try{
+      http.Response response = await http.get(
+        Uri.parse('http://dev.przm.kr/przm_api/')
+      );
+      String jsonData = response.body;
+      Map<String, dynamic> url = jsonDecode(jsonData.toString());
+      setState(() {});
+      MyApp.fixed = url[''];
+      MyApp.Uri = MyApp.fixed.toString();
+
+    } catch (e) {
+      print('error >> $e');
+    }
+  }
+
   @override
   void initState() {
+
+    // fetchData();   고정url 받으면 활성화
+
     _launchUpdate();
     initPlatformState();
     // MyApp.history  = Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=');
     // MyApp.rank = Uri.parse('http://dev.przm.kr/przm_api/get_song_ranks');
+
     MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
-    print('type > ' + '${MyApp.Uri.runtimeType}');
 
     super.initState();
   }
 
   PageController pageController = PageController(
     initialPage: 1,
-// keepPage: true,
   );
 
 /*--------------------------------------------------------------------*/
@@ -297,14 +343,15 @@ class _TabPageState extends State<TabPage> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-
-    final deviceId = _deviceId;
+    // final deviceId = _deviceId;
 
     return WillPopScope(
         onWillPop: () {
-          if (_selectedIndex == 1 &&
-              this.pageController.offset == _deviceData / 3) {
+          if (_selectedIndex == 1
+              && pageController.offset == _deviceData / 3
+          ) {
+            print(_selectedIndex);
+            print(pageController.offset);
             return _onBackKey();
           } else {
             return _backToHome();
@@ -318,7 +365,6 @@ class _TabPageState extends State<TabPage> {
                   : Style(),
               child: ConvexAppBar(
 // type: BottomNavigationBarType.fixed, // bottomNavigationBar item이 4개 이상일 경우
-// currentIndex: _selectedIndex, // 현재 선택된 index
                 items: [
                   TabItem(
                     icon: Image.asset(
