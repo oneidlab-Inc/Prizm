@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:Prizm/Private_Policy.dart';
 import 'package:Prizm/Terms.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -15,7 +14,6 @@ import 'History.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
-import 'package:yaml/yaml.dart';
 
 enum _HighlightTextType { text }
 
@@ -27,36 +25,6 @@ class Settings extends StatefulWidget {
   @override
   _Settings createState() => _Settings();
 }
-
-// class Setting extends StatelessWidget {
-//   static final ValueNotifier<ThemeMode> themeNotifier =
-//   ValueNotifier(ThemeMode.light);
-//
-//   Setting({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ValueListenableBuilder<ThemeMode>(
-//         valueListenable: themeNotifier,
-//         builder: (_, ThemeMode currentMode, __) {
-//           return WillPopScope(
-//             onWillPop: () {
-//               return _Settings()._onBackKey();
-//             },
-//             child: MaterialApp(
-// // Remove the debug banner
-//               debugShowCheckedModeBanner: false,
-//               theme: ThemeData(
-//                   primarySwatch: generateMaterialColor(color: Colors.white)),
-//               darkTheme: ThemeData.dark(),
-//               themeMode: currentMode,
-//               home: Setting(),
-//             ),
-//           );
-//         });
-//   }
-// }
-
 class _Settings extends State<Settings> {
   final controller = TextEditingController();
   final colorsController = ScrollController();
@@ -72,26 +40,8 @@ class _Settings extends State<Settings> {
   String? uid;
   String? _deviceId;
 
-  var currentVersion;
-
-
   @override
   void initState() {
-    var yaml;
-    var version;
-    // versionChange();
-    rootBundle.loadString('pubspec.yaml').then((yamlValue) async {
-      setState(() {
-        if (MyApp.themeNotifier.value == ThemeMode.light) {
-          _style = Style.light;
-        } else if (MyApp.themeNotifier.value == ThemeMode.dark) {
-          _style = Style.dark;
-        }
-        yaml = loadYaml(yamlValue);
-        version = yaml['version'] ;
-        currentVersion = version;
-      });
-    });
     super.initState();
   }
 
@@ -102,11 +52,7 @@ class _Settings extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    // versionChange();
-// final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
-
-    print('currentVersion >>> $currentVersion');
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -144,7 +90,6 @@ class _Settings extends State<Settings> {
               color: MyApp.themeNotifier.value == ThemeMode.dark
                   ? Colors.black
                   : Colors.white,
-// color: Colors.white,
               child: ListView(
                 padding: const EdgeInsets.all(8),
                 children: <Widget>[
@@ -355,9 +300,7 @@ class _Settings extends State<Settings> {
                                                 221, 221, 221, 1),
                                         disabledColor: Colors.blue),
                                     child: RadioListTile<Style>(
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          30, 0, 0, 0),
-// const EdgeInsets.fromLTRB(100, 0, 60, 0),
+                                      contentPadding: const EdgeInsets.only(left: 30),
                                       title: Align(
                                         alignment: Alignment(-1, 0),
                                         child: Text(
@@ -378,13 +321,15 @@ class _Settings extends State<Settings> {
                                               ThemeMode.dark;
                                         });
                                       },
-                                      activeColor:
-                                          const Color.fromRGBO(64, 220, 196, 1),
-                                    ))),
+                                      activeColor: const Color.fromRGBO(64, 220, 196, 1),
+                                    )
+                                )
+                            ),
                           )
-                        ]),
-                  ),
-//Radio Container End
+                        ]
+                    ),
+                  ), //RadioBox Container End
+
                   GestureDetector(
                     onTap: () {
                       showDialog(
@@ -398,7 +343,6 @@ class _Settings extends State<Settings> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Container(
-                                    // width: 400,
                                     height: c_height * 0.18,
                                     width: c_width * 0.8,
                                     color: isDarkMode
@@ -413,27 +357,22 @@ class _Settings extends State<Settings> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         SizedBox(
-                                          // width: 400,
-                                          // height: 80,
                                           height: c_height * 0.115,
                                           child: const Center(
                                               child: Text('검색내역을 삭제하시겠습니까?',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18))),
+                                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                                          ),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
                                               border: Border(
                                                   top: BorderSide(
                                                       color: isDarkMode
-                                                          ? const Color
-                                                                  .fromRGBO(
-                                                              94, 94, 94, 1)
-                                                          : Colors.black
-                                                              .withOpacity(
-                                                                  0.1)))),
+                                                          ? const Color.fromRGBO(94, 94, 94, 1)
+                                                          : Colors.black.withOpacity(0.1)
+                                                  )
+                                              )
+                                          ),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
@@ -442,89 +381,61 @@ class _Settings extends State<Settings> {
                                                   width: c_width * 0.4,
                                                   height: c_height * 0.08,
                                                   child: Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 20),
+                                                    margin: const EdgeInsets.only(left: 20),
                                                     decoration: BoxDecoration(
                                                         color: isDarkMode
-                                                            ? const Color
-                                                                    .fromRGBO(
-                                                                66, 66, 66, 1)
+                                                            ? const Color.fromRGBO(66, 66, 66, 1)
                                                             : Colors.white,
                                                         border: Border(
                                                             right: BorderSide(
                                                                 color: isDarkMode
-                                                                    ? const Color
-                                                                            .fromRGBO(
-                                                                        94,
-                                                                        94,
-                                                                        94,
-                                                                        1)
-                                                                    : Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.1)))),
+                                                                    ? const Color.fromRGBO(94, 94, 94, 1)
+                                                                    : Colors.black.withOpacity(0.1))
+                                                        )
+                                                    ),
                                                     child: TextButton(
                                                         onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
+                                                          Navigator.pop(context);
                                                         },
                                                         child: Text(
                                                           '취소',
                                                           style: TextStyle(
                                                               fontSize: 20,
                                                               color: isDarkMode
-                                                                  ? Colors.white
-                                                                      .withOpacity(
-                                                                          0.8)
-                                                                  : const Color
-                                                                          .fromRGBO(
-                                                                      147,
-                                                                      147,
-                                                                      147,
-                                                                      1)),
-                                                        )),
-                                                  )),
+                                                                  ? Colors.white.withOpacity(0.8)
+                                                                  : const Color.fromRGBO(147, 147, 147, 1)),
+                                                        )
+                                                    ),
+                                                  )
+                                              ),
                                               Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 20),
+                                                  margin: const EdgeInsets.only(right: 20),
                                                   color: isDarkMode
-                                                      ? const Color.fromRGBO(
-                                                          66, 66, 66, 1)
+                                                      ? const Color.fromRGBO(66, 66, 66, 1)
                                                       : Colors.white,
-                                                  // width: 180,
-                                                  // height: 68,
                                                   width: c_width * 0.345,
                                                   height: c_height * 0.08,
                                                   child: Center(
                                                     child: TextButton(
                                                       onPressed: () async {
-                                                        _deviceId =
-                                                            await PlatformDeviceId
-                                                                .getDeviceId;
+                                                        _deviceId = await PlatformDeviceId.getDeviceId;
                                                         uid = _deviceId!;
                                                         try {
                                                           Response response =
-                                                              await http.get(
-                                                                  Uri.parse(
-                                                                      'http://dev.przm.kr/przm_api/get_song_history?uid=$uid&proc=del'));
-                                                          if (response
-                                                                  .statusCode ==
-                                                              200) {
+                                                              await http.get(Uri.parse('http://dev.przm.kr/przm_api/get_song_history?uid=$uid&proc=del'));
+                                                          if (response.statusCode == 200) {
                                                             showToast();
                                                           } else {
                                                             throw "히스토리 삭제 실패";
                                                           }
                                                           setState(() {
-                                                            Navigator.pop(
-                                                                context);
+                                                            Navigator.pop(context);
                                                           });
                                                         } catch (e) {
                                                           NetworkToast();
                                                           print('실패');
                                                           setState(() {
-                                                            Navigator.pop(
-                                                                context);
+                                                            Navigator.pop(context);
                                                           });
                                                         }
                                                       },
@@ -532,18 +443,18 @@ class _Settings extends State<Settings> {
                                                         '삭제',
                                                         style: TextStyle(
                                                           fontSize: 20,
-                                                          color: Color.fromRGBO(
-                                                              64, 220, 196, 1),
-                                                        ),
+                                                          color: Color.fromRGBO(64, 220, 196, 1)),
                                                       ),
                                                     ),
-                                                  )),
+                                                  )
+                                              ),
                                             ],
                                           ),
                                         )
                                       ],
-// ),
-                                    )));
+                                    )
+                                )
+                            );
                           });
                     },
                     child: Container(
@@ -557,9 +468,7 @@ class _Settings extends State<Settings> {
                             '검색내역 삭제',
                             style: TextStyle(
                                 fontSize: 17,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black),
-                          ),
+                                color: isDarkMode ? Colors.white : Colors.black)),
                           Align(
                             child: Image.asset(
                               'assets/move.png',
@@ -597,7 +506,7 @@ width: 10,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '현재버전   v   $currentVersion',
+                          '현재버전   v   ${MyApp.appVersion}',
                           style: TextStyle(
                               fontSize: 17,
                               color: isDarkMode ? Colors.white : Colors.black),
@@ -607,28 +516,31 @@ width: 10,
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           margin: const EdgeInsets.only(right: 20),
                           decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1.5, color: Colors.greenAccent),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20))),
+                              border: Border.all(width: 1.5, color: Colors.greenAccent),
+                              borderRadius: const BorderRadius.all(Radius.circular(20))
+                          ),
                           child: TextButton(
-                              onPressed: () => {updateToast(), _launchUpdate()},
-                              child: const Text('업데이트',
-                                  style: TextStyle(color: Colors.greenAccent))),
+                              onPressed: () => {
+                                updateToast(), _launchUpdate()
+                              },
+                              child: const Text('업데이트', style: TextStyle(color: Colors.greenAccent))
+                          ),
                         )
                       ],
                     )),
                   )
                 ],
               ),
-            )));
+            )
+        )
+    );
   }
 
   _launchUpdate() async {
     Uri _url = Uri.parse('');
     if (Platform.isAndroid) {
       //플레이 스토어 주소 입력
-      _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
+      // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
     } else if (Platform.isIOS) {
       //앱스토어 주소 입력
       // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
@@ -650,7 +562,7 @@ width: 10,
         });
   }
 
-  /*versionChange() async {
+  /*versionChange() async {    //firebase 필요시 적용
     final RemoteConfig remoteConfig = await RemoteConfig.instance;
     remoteConfig.setDefaults({"version": "1.0.0+1"});
     await remoteConfig.setConfigSettings(RemoteConfigSettings(

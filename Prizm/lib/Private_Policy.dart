@@ -33,7 +33,6 @@ class _Private extends State<Private> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
         appBar: AppBar(
           title: const Text("개인정보 처리방침",
@@ -43,7 +42,8 @@ class _Private extends State<Private> {
           leading: IconButton(
             icon: ImageIcon(
               Image.asset('assets/x_icon.png').image, color: Colors.black,
-              size: 15,),
+              size: 15
+            ),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -51,9 +51,7 @@ class _Private extends State<Private> {
           centerTitle: true,
           elevation: 1.0,
           backgroundColor:
-          isDarkMode
-              ? Colors.white.withOpacity(0.7)
-              : Colors.white,
+          isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
           toolbarHeight: 60,
         ),
         body: Column(
@@ -90,9 +88,7 @@ class _Private extends State<Private> {
                 ),
                 alignment: Alignment.center,
                 height: 70,
-                child: const Text(
-                  '확인', style: TextStyle(color: Colors.white),
-                ),
+                child: const Text('확인', style: TextStyle(color: Colors.white)),
               ),
             )
           ],

@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'Settings.dart';
 
 class Guide  extends StatefulWidget{
   const Guide ({Key? key}) : super (key: key);

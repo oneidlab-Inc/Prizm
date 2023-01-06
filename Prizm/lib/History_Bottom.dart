@@ -50,19 +50,14 @@ class _BottomState extends State<Bottom> {
   Widget buildPageView() {
     return PageView(
       controller: pageController,
-      children: [
-        _pages[0],
-        _pages[1],
-        _pages[2],
-      ],
+      children: [_pages[0], _pages[1], _pages[2]],
     );
   }
 
   void pageChanged(int index) {
     setState(() {
       _selectedIndex = index;
-      pageController.animateToPage(index,
-          duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);
       pageController.jumpToPage(_selectedIndex);
     });
   }
@@ -70,11 +65,9 @@ class _BottomState extends State<Bottom> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return WillPopScope(
         onWillPop: () {
-          if (_selectedIndex == 1 &&
-              this.pageController.offset == _deviceData / 3) {
+          if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {
             return _onBackKey();
           } else {
             return _backToHome();
@@ -82,9 +75,6 @@ class _BottomState extends State<Bottom> {
         },
         child: Scaffold(
           body: buildPageView(),
-          // Center(
-          //   child: _pages[_selectedIndex],
-          // ),
           bottomNavigationBar: StyleProvider(
             style: isDarkMode ? Style_dark() : Style(),
             child: ConvexAppBar(
@@ -117,22 +107,17 @@ class _BottomState extends State<Bottom> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return await showDialog(
       context: context,
-      barrierDismissible: false,
-      //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
+      barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
       builder: (BuildContext context) {
         double c_height = MediaQuery.of(context).size.height;
         double c_width = MediaQuery.of(context).size.width;
         return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
               height: c_height * 0.18,
               width: c_width * 0.8,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
-              color: isDarkMode
-                  ? const Color.fromRGBO(66, 66, 66, 1)
-                  : Colors.white,
+              color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,10 +125,7 @@ class _BottomState extends State<Bottom> {
                   SizedBox(
                     height: c_height * 0.115,
                     child: const Center(
-                      child: Text(
-                        '종료 하시겠습니까?',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      child: Text('종료 하시겠습니까?', style: TextStyle(fontSize: 18)),
                     ),
                   ),
                   Container(
@@ -152,7 +134,9 @@ class _BottomState extends State<Bottom> {
                             top: BorderSide(
                                 color: isDarkMode
                                     ? const Color.fromRGBO(94, 94, 94, 1)
-                                    : Colors.black.withOpacity(0.1)))),
+                                    : Colors.black.withOpacity(0.1))
+                        )
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -161,40 +145,34 @@ class _BottomState extends State<Bottom> {
                           height: c_height * 0.08,
                           child: Container(
                               decoration: BoxDecoration(
-                                  color: isDarkMode
-                                      ? const Color.fromRGBO(66, 66, 66, 1)
-                                      : Colors.white,
+                                  color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                   border: Border(
                                       right: BorderSide(
                                           color: isDarkMode
-                                              ? const Color.fromRGBO(
-                                                  94, 94, 94, 1)
-                                              : Colors.black
-                                                  .withOpacity(0.1)))),
+                                              ? const Color.fromRGBO(94, 94, 94, 1)
+                                              : Colors.black.withOpacity(0.1))
+                                  )
+                              ),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
                                   onPressed: () {
                                     exit(0);
                                   },
-                                  child: const Text(
-                                    '종료',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.red),
-                                  ))),
+                                  child: const Text('종료',
+                                    style: TextStyle(fontSize: 20, color: Colors.red))
+                              )
+                          ),
                         ),
                         Container(
                             margin: const EdgeInsets.only(right: 20),
-                            color: isDarkMode
-                                ? const Color.fromRGBO(66, 66, 66, 1)
-                                : Colors.white,
+                            color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                             width: c_width * 0.345,
                             height: c_height * 0.08,
                             child: TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(
-                                '취소',
+                              child: Text('취소',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: isDarkMode
@@ -202,13 +180,15 @@ class _BottomState extends State<Bottom> {
                                       : Colors.black.withOpacity(0.3),
                                 ),
                               ),
-                            )),
+                            )
+                        ),
                       ],
                     ),
                   )
                 ],
               ),
-            ));
+            )
+        );
       },
     );
   }

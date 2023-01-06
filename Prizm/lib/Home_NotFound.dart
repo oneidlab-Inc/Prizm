@@ -5,7 +5,6 @@ import 'package:Prizm/Home.dart';
 import 'package:Prizm/vmidc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'main.dart';
 
 class NotFound extends StatefulWidget {
@@ -31,8 +30,8 @@ class _NotFound extends State<NotFound> {
           )),
           Text('노래를 인식할 수 없습니다.',
               style: TextStyle(
-                fontSize : 17, color: Colors.grey.withOpacity(0.6)
-              )),
+                fontSize : 17, color: Colors.grey.withOpacity(0.6))
+          ),
       ]
   )
       : Column(
