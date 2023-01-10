@@ -65,6 +65,7 @@ class _NotFound extends State<NotFound> {
 
   @override
   Widget build(BuildContext context) {
+
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;

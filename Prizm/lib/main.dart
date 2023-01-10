@@ -46,14 +46,12 @@ void main() async {
   print('version > $title');
   --------------------------------------------------------------------*/
   runApp(
-    const MyApp(),
+     MyApp(),
   );
 }
-
 class MyApp extends StatelessWidget {
   static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
-
-  const MyApp({Key? key}) : super(key: key);
+   MyApp({Key? key}) : super(key: key);
 
   // static var history;
   // static var rank;
@@ -153,6 +151,7 @@ class _TabPageState extends State<TabPage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
+
           final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           double c_height = MediaQuery.of(context).size.height;
           double c_width = MediaQuery.of(context).size.width;
@@ -289,11 +288,26 @@ class _TabPageState extends State<TabPage> {
 // flutter build apk —release —no-sound-null-safety
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
+    // SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+    //     SystemUiMode.manual,
+    //     overlays: [
+    //       SystemUiOverlay.top
+    //     ]
+    // );
     return WillPopScope(
         onWillPop: () {
           if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {
             return _onBackKey();
           } else {
+            print(pageController.offset);
+            print(_deviceData);
             return _backToHome();
           }
         },

@@ -80,6 +80,13 @@ class _PlayInfo extends State<PlayInfo> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
     final isExistTV = info.isEmpty;
     final isExistRadio = info_radio.isEmpty;
 
@@ -103,10 +110,10 @@ class _PlayInfo extends State<PlayInfo> {
         centerTitle: true,
         elevation: 1.0,
         backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        toolbarHeight: 60,
+        toolbarHeight: 90,
       ),
       body: Container(
-        height: 2500,
+        height: 2800,
         color: isDarkMode ? Colors.black : Colors.white,
         child: Scrollbar(
             child: SizedBox(

@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:wave/config.dart';
+import 'package:wave/wave.dart';
 import 'History_Bottom.dart';
 import 'Home.dart';
 import 'PlayInfo.dart';
@@ -158,6 +160,12 @@ class _History extends State<History> {
     int len = song_info.length;
     final isExist = len == 0;
 
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
     return WillPopScope(
         onWillPop: () async {
           return _onBackKey();
@@ -167,8 +175,7 @@ class _History extends State<History> {
               shape: Border(
                   bottom: BorderSide(color: Colors.grey.withOpacity(0.3))
               ),
-              title: Text(
-                '히스토리',
+              title: Text('히스토리',
                 style: (
                     isDarkMode
                     ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
@@ -374,18 +381,15 @@ class _History extends State<History> {
                                                 ),
                                                 Flexible(
                                                     child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                       SizedBox(
-                                                        width: c_width * 0.61,
+                                                        width: c_width * 0.55,
                                                         child: Column(
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Padding(
-                                                              padding:
-                                                                  const EdgeInsets.only(left: 15),
+                                                              padding: const EdgeInsets.only(left: 15),
                                                               child: Text(info['TITLE'],
                                                                 style: TextStyle(
                                                                     fontWeight: FontWeight.bold,
@@ -415,7 +419,7 @@ class _History extends State<History> {
                                                         width: c_width * 0.05,
                                                         child: IconButton(
                                                             padding: const EdgeInsets.only(bottom: 80, right: 10),
-                                                            icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
+                                                            icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 30),
                                                             color: isDarkMode ? Colors.white : Colors.grey,
                                                             onPressed: () {
                                                               Navigator.pop(context);
@@ -427,9 +431,7 @@ class _History extends State<History> {
                                             ),
                                           ),
                                           Container(
-                                            color: isDarkMode
-                                                ? Colors.black
-                                                : Colors.white,
+                                            color: isDarkMode ? Colors.black : Colors.white,
                                             height: 156,
                                             padding: const EdgeInsets.all(20),
                                             child: Column(
@@ -460,7 +462,8 @@ class _History extends State<History> {
                                                                 style: TextStyle(
                                                                     fontSize: 20,
                                                                     fontWeight: FontWeight.w300,
-                                                                    color: isDarkMode ? Colors.white : Colors.black))
+                                                                    color: isDarkMode ? Colors.white : Colors.black)
+                                                              )
                                                             ],
                                                           )
                                                       ),
@@ -479,7 +482,9 @@ class _History extends State<History> {
                                                             padding: const EdgeInsets.only(right: 30),
                                                             icon: ImageIcon(Image.asset('assets/trash.png').image, size: 40),
                                                             color: const Color.fromRGBO(64, 220, 196, 1),
-                                                            onPressed: () {}
+                                                            onPressed: () {
+                                                              showDialogPop();
+                                                            }
                                                           ),
                                                           Text('히스토리에서 삭제',
                                                             style: TextStyle(
@@ -510,7 +515,7 @@ class _History extends State<History> {
                     children: [
                       Container(
                         padding: EdgeInsets.all(1),
-                        margin: EdgeInsets.only(right: 30, left: 30),
+                        margin: EdgeInsets.only(right: 10, left: 20),
                         height: 100,
                         decoration: BoxDecoration(
                           color: isDarkMode
@@ -535,7 +540,7 @@ class _History extends State<History> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              width: c_width * 0.5,
+                              width: c_width * 0.54,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -587,7 +592,8 @@ class _History extends State<History> {
                                 ],
                               ),
                             ),
-                            SizedBox(
+                            Container(
+                              margin: EdgeInsets.only(right: 5),
                                 width: c_width * 0.09,
                                 child: const Icon(Icons.more_vert_sharp, color: Colors.grey, size: 30))
                           ],
@@ -681,13 +687,13 @@ class _History extends State<History> {
                               onPressed: () async {
                                 Response response = await http.get(
                                     Uri.parse(
-                                    // 'http://dev.przm.kr/przm_api/get_song_history?uid=$uid&id=$_songid&proc=del')
                                     '${MyApp.Uri}get_song_history/json?uid=$uid&id=$_songid&proc=del')
                                 );
                                 if (response.statusCode == 200) {
                                   print(response.statusCode);
                                   showToast();
                                 } else {
+                                  failToast();
                                   print(response.statusCode);
                                   throw "failed to delete history";
                                 }
@@ -716,5 +722,14 @@ void showToast() {
       msg: '검색내역 삭제 완료',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
+}
+void failToast() {
+  Fluttertoast.showToast(
+      msg: '검색내역 삭제 실패',
+    backgroundColor: Colors.grey,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.CENTER
+  );
 }

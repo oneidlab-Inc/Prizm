@@ -67,6 +67,19 @@ class _Chart extends State<Chart> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
+    // SystemChrome.setEnabledSystemUIMode(    // 하단 상태바 제거
+    //     SystemUiMode.manual,
+    //     overlays: [
+    //       SystemUiOverlay.top
+    //     ]
+    // );
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     int len = charts.length;
     final isExist = len == 0;
@@ -205,7 +218,7 @@ class _Chart extends State<Chart> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(1),
-                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          margin: const EdgeInsets.only(left: 15, right: 10),
                           decoration: BoxDecoration(
                             color: isDarkMode
                                 ? const Color.fromRGBO(189, 189, 189, 1)
@@ -235,7 +248,7 @@ class _Chart extends State<Chart> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: c_width * 0.6,
+                                width: c_width * 0.59,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -245,9 +258,7 @@ class _Chart extends State<Chart> {
                                       child: Text(
                                         chart['title'],
                                         style: TextStyle(
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
+                                          color: isDarkMode ? Colors.white : Colors.black,
                                           overflow: TextOverflow.ellipsis,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
@@ -261,24 +272,18 @@ class _Chart extends State<Chart> {
                                           maxLines: 1,
                                           text: TextSpan(children: [
                                             TextSpan(
-                                              text: isArtistNull
-                                                  ? 'Various Artists'
-                                                  : chart['artist'],
+                                              text: isArtistNull ? 'Various Artists' : chart['artist'],
                                               style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.grey
-                                                      .withOpacity(0.8)
-                                                      : Colors.black
-                                                      .withOpacity(0.3))
+                                                      ? Colors.grey.withOpacity(0.8)
+                                                      : Colors.black.withOpacity(0.3))
                                             ),
                                             TextSpan(
                                               text: ' · ',
                                               style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.grey
-                                                      .withOpacity(0.8)
-                                                      : Colors.black
-                                                      .withOpacity(0.3)),
+                                                      ? Colors.grey.withOpacity(0.8)
+                                                      : Colors.black.withOpacity(0.3)),
                                             ),
                                             TextSpan(
                                               text: isAlbumNull
@@ -286,17 +291,16 @@ class _Chart extends State<Chart> {
                                                   : chart['album'],
                                               style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.grey
-                                                      .withOpacity(0.8)
-                                                      : Colors.black
-                                                      .withOpacity(0.3)),
+                                                      ? Colors.grey.withOpacity(0.8)
+                                                      : Colors.black.withOpacity(0.3)),
                                             )
                                           ]),
                                         ))
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              Container(
+                                margin: const EdgeInsets.only(right: 5),
                                 width: c_width * 0.09,
                                 child: const Icon(Icons.more_vert_sharp,
                                     color: Colors.grey, size: 30),

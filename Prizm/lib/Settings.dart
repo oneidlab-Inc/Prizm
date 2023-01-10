@@ -26,6 +26,7 @@ class Settings extends StatefulWidget {
   _Settings createState() => _Settings();
 }
 class _Settings extends State<Settings> {
+
   final controller = TextEditingController();
   final colorsController = ScrollController();
 
@@ -40,8 +41,12 @@ class _Settings extends State<Settings> {
   String? uid;
   String? _deviceId;
 
+  late final bool selected;
   @override
   void initState() {
+    if(MyApp.themeNotifier.value == ThemeMode.dark) {
+      _style = Style.dark;
+    }
     super.initState();
   }
 
@@ -52,6 +57,12 @@ class _Settings extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
     final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
@@ -73,23 +84,17 @@ class _Settings extends State<Settings> {
                 icon: const Icon(Icons.arrow_back_ios),
                 color: Colors.grey,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TabPage()),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()),
                   );
                 },
               ),
-              backgroundColor: MyApp.themeNotifier.value == ThemeMode.dark
-                  ? Colors.black
-                  : Colors.white,
+              backgroundColor: isDarkMode ? Colors.black : Colors.white,
               centerTitle: true,
               elevation: 0.3,
-              toolbarHeight: 60,
+              toolbarHeight: 90,
             ),
             body: Container(
-              color: MyApp.themeNotifier.value == ThemeMode.dark
-                  ? Colors.black
-                  : Colors.white,
+              color: isDarkMode ? Colors.black : Colors.white,
               child: ListView(
                 padding: const EdgeInsets.all(8),
                 children: <Widget>[
@@ -108,7 +113,7 @@ class _Settings extends State<Settings> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: MyApp.themeNotifier.value == ThemeMode.dark
+                              color: isDarkMode
                                   ? Colors.grey.withOpacity(0.8)
                                   : Colors.black),
                         ),
@@ -117,15 +122,10 @@ class _Settings extends State<Settings> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Terms()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Terms()));
                     },
                     child: Container(
-                      color: MyApp.themeNotifier.value == ThemeMode.dark
-                          ? Colors.black
-                          : Colors.white,
+                      color: isDarkMode ? Colors.black : Colors.white,
                       height: 70,
                       margin: const EdgeInsets.fromLTRB(30, 10, 20, 0),
                       child: Row(
@@ -133,11 +133,9 @@ class _Settings extends State<Settings> {
                         children: [
                           Text('이용약관',
                               style:
-                                  (MyApp.themeNotifier.value == ThemeMode.dark
-                                      ? const TextStyle(
-                                          fontSize: 17, color: Colors.white)
-                                      : const TextStyle(
-                                          fontSize: 17, color: Colors.black))),
+                                  isDarkMode
+                                      ? const TextStyle(fontSize: 17, color: Colors.white)
+                                      : const TextStyle(fontSize: 17, color: Colors.black)),
                           Align(
                             child: Image.asset(
                               'assets/move.png',
@@ -162,8 +160,7 @@ class _Settings extends State<Settings> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '개인정보 처리방침',
+                          Text('개인정보 처리방침',
                             style: TextStyle(
                               fontSize: 17,
                               color: isDarkMode ? Colors.white : Colors.black,
@@ -229,9 +226,7 @@ class _Settings extends State<Settings> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode
-                                  ? Colors.grey.withOpacity(0.8)
-                                  : Colors.black),
+                              color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black),
                         ),
                       ],
                     ),
@@ -243,82 +238,66 @@ class _Settings extends State<Settings> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(
-                              width: c_width * 0.25,
-                              child: Text(
-                                '화면스타일',
+                              width: c_width * 0.22,
+                              child: Text('화면스타일',
                                 style: TextStyle(
                                   fontSize: 17,
-                                  color:
-                                      isDarkMode ? Colors.white : Colors.black,
+                                  color: isDarkMode ? Colors.white : Colors.black,
                                 ),
-                              )),
+                              )
+                          ),
                           Expanded(
                             child: SizedBox(
-                                width: c_width * 0.25,
+                                width: c_width * 0.30,
                                 child: Theme(
                                     data: Theme.of(context).copyWith(
-                                        unselectedWidgetColor:
-                                            const Color.fromRGBO(
-                                                221, 221, 221, 1),
+                                        unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
                                         disabledColor: Colors.blue),
                                     child: RadioListTile<Style>(
-                                      contentPadding: const EdgeInsets.fromLTRB(
-                                          30, 0, 0, 0),
-// const EdgeInsets.fromLTRB(100, 0, 60, 0),
+                                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
                                       title: Align(
-                                        alignment: const Alignment(-1, 0),
-                                        child: Text(
-                                          '라이트',
+                                        alignment: const Alignment(-1, -0.1),
+                                        child: Text('라이트',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                        ),
+                                              color: isDarkMode ? Colors.white : Colors.black)),
                                       ),
                                       groupValue: _style,
                                       value: Style.light,
                                       onChanged: (Style? value) {
                                         setState(() {
-                                          print('lightMode');
                                           _style = value!;
-                                          MyApp.themeNotifier.value =
-                                              ThemeMode.light;
+                                          MyApp.themeNotifier.value = ThemeMode.light;
                                         });
                                       },
-                                      activeColor:
-                                          const Color.fromRGBO(64, 220, 196, 1),
-                                    ))),
+                                      activeColor: const Color.fromRGBO(64, 220, 196, 1)
+                                    )
+                                )
+                            ),
                           ),
                           Expanded(
                             child: SizedBox(
-                                width: c_width * 0.25,
+                                width: c_width * 0.30,
                                 child: Theme(
                                     data: Theme.of(context).copyWith(
-                                        unselectedWidgetColor:
-                                            const Color.fromRGBO(
-                                                221, 221, 221, 1),
-                                        disabledColor: Colors.blue),
+                                        unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
+                                        disabledColor: Colors.blue
+                                    ),
                                     child: RadioListTile<Style>(
-                                      contentPadding: const EdgeInsets.only(left: 30),
+                                      contentPadding: const EdgeInsets.only(left: 20),
                                       title: Align(
-                                        alignment: Alignment(-1, 0),
-                                        child: Text(
-                                          '다크',
+                                        alignment: const Alignment(-1, -0.1),
+                                        child: Text('다크',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                        ),
+                                              color: isDarkMode ? Colors.white : Colors.black)),
                                       ),
                                       groupValue: _style,
                                       value: Style.dark,
                                       onChanged: (Style? value) {
                                         setState(() {
                                           _style = value!;
-                                          MyApp.themeNotifier.value =
-                                              ThemeMode.dark;
+                                          MyApp.themeNotifier.value = ThemeMode.dark;
                                         });
                                       },
                                       activeColor: const Color.fromRGBO(64, 220, 196, 1),
@@ -336,25 +315,18 @@ class _Settings extends State<Settings> {
                           context: context,
                           builder: (BuildContext context) {
                             return Dialog(
-                                backgroundColor: isDarkMode
-                                    ? const Color.fromRGBO(66, 66, 66, 1)
-                                    : Colors.white,
+                                backgroundColor: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Container(
                                     height: c_height * 0.18,
                                     width: c_width * 0.8,
-                                    color: isDarkMode
-                                        ? const Color.fromRGBO(66, 66, 66, 1)
-                                        : Colors.white,
-                                    margin: const EdgeInsets.only(
-                                        top: 20, bottom: 20),
+                                    color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+                                    margin: const EdgeInsets.only(top: 20, bottom: 20),
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           height: c_height * 0.115,
@@ -374,8 +346,7 @@ class _Settings extends State<Settings> {
                                               )
                                           ),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: <Widget>[
                                               SizedBox(
                                                   width: c_width * 0.4,
@@ -383,9 +354,7 @@ class _Settings extends State<Settings> {
                                                   child: Container(
                                                     margin: const EdgeInsets.only(left: 20),
                                                     decoration: BoxDecoration(
-                                                        color: isDarkMode
-                                                            ? const Color.fromRGBO(66, 66, 66, 1)
-                                                            : Colors.white,
+                                                        color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                                         border: Border(
                                                             right: BorderSide(
                                                                 color: isDarkMode
@@ -410,9 +379,7 @@ class _Settings extends State<Settings> {
                                               ),
                                               Container(
                                                   margin: const EdgeInsets.only(right: 20),
-                                                  color: isDarkMode
-                                                      ? const Color.fromRGBO(66, 66, 66, 1)
-                                                      : Colors.white,
+                                                  color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                                   width: c_width * 0.345,
                                                   height: c_height * 0.08,
                                                   child: Center(
@@ -422,11 +389,12 @@ class _Settings extends State<Settings> {
                                                         uid = _deviceId!;
                                                         try {
                                                           Response response =
-                                                              await http.get(Uri.parse('http://dev.przm.kr/przm_api/get_song_history?uid=$uid&proc=del'));
+                                                          await http.get(Uri.parse('${MyApp.Uri}get_song_history?uid=$uid&proc=del'));
                                                           if (response.statusCode == 200) {
                                                             showToast();
                                                           } else {
-                                                            throw "히스토리 삭제 실패";
+                                                            failToast();
+                                                            throw "검색내역 삭제 실패";
                                                           }
                                                           setState(() {
                                                             Navigator.pop(context);
@@ -439,8 +407,7 @@ class _Settings extends State<Settings> {
                                                           });
                                                         }
                                                       },
-                                                      child: const Text(
-                                                        '삭제',
+                                                      child: const Text('삭제',
                                                         style: TextStyle(
                                                           fontSize: 20,
                                                           color: Color.fromRGBO(64, 220, 196, 1)),
@@ -505,12 +472,8 @@ width: 10,
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          '현재버전   v   ${MyApp.appVersion}',
-                          style: TextStyle(
-                              fontSize: 17,
-                              color: isDarkMode ? Colors.white : Colors.black),
-                        ),
+                        Text('현재버전   v   ${MyApp.appVersion}',
+                          style: TextStyle(fontSize: 17, color: isDarkMode ? Colors.white : Colors.black)),
                         Container(
                           height: 40,
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -540,18 +503,19 @@ width: 10,
     Uri _url = Uri.parse('');
     if (Platform.isAndroid) {
       //플레이 스토어 주소 입력
+      _url = Uri.parse('http://www.naver.com');
       // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
     } else if (Platform.isIOS) {
       //앱스토어 주소 입력
       // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
     }
     await launchUrl(_url);
-    if (await launchUrl(_url)) {
-      print('launching $_url');
-      await canLaunchUrl(_url);
-    } else {
-      throw '$_url 연결 실패';
-    }
+    // if (await launchUrl(_url)) {
+    //   print('launching $_url');
+    //   await canLaunchUrl(_url);
+    // } else {
+    //   throw '$_url 연결 실패';
+    // }
   }
 
   Future<bool> _onBackKey() async {

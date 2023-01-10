@@ -1,5 +1,4 @@
 // --no-sound-null-safety
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -58,8 +57,6 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=$id&uid=$_uid')
               Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid')
       );
 
@@ -69,9 +66,7 @@ class _Result extends State<Result> {
       maps = map;
       song_cnts = maps['song_cnts'];
 
-      setState(() {
-
-      });
+      setState(() {});
     } catch (e) {
       print('json 가져오기 실패');
       print(e);
@@ -81,13 +76,11 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-
           Uri.parse('${MyApp.Uri}get_song_programs/json?id=${widget.id}')
       );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
-
       setState(() {});
     } catch (e) {
       print('fail to get json');
@@ -95,17 +88,13 @@ class _Result extends State<Result> {
     }
 
     try {
-      List _contain = [];
-// 실데이타 파싱
+      List _contain = [];  // 실데이타 파싱
       sum = 0;
       for (int i = 0; i <= song_cnts.length - 1; i++) {
-        // month = double.parse(song_cnts[i]['F_MONTH'].toString().substring(4));
-        // contain = song_cnts[i]['F_MONTH'].toString();
         intX = int.parse(song_cnts[i]['F_MONTH'].toString());
         intY = int.parse(song_cnts[i]['CTN']);
         listX.add(intX);
         listY.add(intY);
-
         listX.sort();
         listY.sort();
         _contain.add(song_cnts[i]['F_MONTH'].toString());
@@ -132,6 +121,7 @@ class _Result extends State<Result> {
 // 현재월
 // 차트 실데이터 파싱
       for (int j = 0; j < _reverse.length; j++) {
+
 //없는 월 제외
         double mon = double.parse(j.toString()) + 1;
 
@@ -171,7 +161,19 @@ class _Result extends State<Result> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.top
+        ]
+    );
     double c_height = MediaQuery.of(context).size.height * 1.0;
     double c_width = MediaQuery.of(context).size.width * 1.0;
     final isPad = c_width > 550;
@@ -180,10 +182,7 @@ class _Result extends State<Result> {
     final isArtistNull = maps['ARTIST'] == null;
     final isAlbumNull = maps['ALBUM'] == null;
     final isImage = maps['IMAGE'].toString().startsWith('assets') != true;
-    // print(widget.id);
-// SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-// statusBarColor: Colors.transparent, // 투명색
-// ));
+
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();
@@ -202,19 +201,20 @@ class _Result extends State<Result> {
                         Center(
                           child: SizedBox(
                               child: Image.network(
-                            '${maps['IMAGE']}',
-                            height: c_height * 0.5,
-                            fit: BoxFit.fill,
-                            errorBuilder: (context, error, stackTrace) {
-                              return SizedBox(
-                                child: Image.asset(
-                                  'assets/no_image.png',
-                                  height: c_height * 0.5,
-                                  fit: BoxFit.fill,
-                                ),
-                              );
-                            },
-                          )),
+                                '${maps['IMAGE']}',
+                                 height: c_height * 0.5,
+                                 fit: BoxFit.fill,
+                                 errorBuilder: (context, error, stackTrace) {
+                                   return SizedBox(
+                                     child: Image.asset(
+                                       'assets/no_image.png',
+                                       height: c_height * 0.5,
+                                       fit: BoxFit.fill,
+                                     ),
+                                   );
+                                 },
+                               )
+                          ),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -228,30 +228,23 @@ class _Result extends State<Result> {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [Colors.white10, Colors.white],
-                                      stops: [.40, .75])),
+                                      stops: [.40, .75])
+                          ),
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
                                     icon:
                                         const Icon(Icons.arrow_back_ios_sharp),
                                     color: isImage
-                                        ? isDarkMode
-                                            ? Colors.white
-                                            : Colors.black
+                                        ? isDarkMode ? Colors.white : Colors.black
                                         : isPad
-                                            ? isDarkMode
-                                                ? Colors.white
-                                                : Colors.black
-                                            : isDarkMode
-                                                ? Colors.black
-                                                : Colors.black,
-                                    // : Colors.white,
+                                          ? isDarkMode ? Colors.white : Colors.black
+                                            : isDarkMode ? Colors.black : Colors.black,
                                     onPressed: () {
                                       Navigator.push(
                                         context,
@@ -266,16 +259,10 @@ class _Result extends State<Result> {
                                       size: 30,
                                     ),
                                     color: isImage
-                                        ? isDarkMode
-                                            ? Colors.white
-                                            : Colors.black
+                                        ? isDarkMode ? Colors.white : Colors.black
                                         : isPad
-                                            ? isDarkMode
-                                                ? Colors.white
-                                                : Colors.black
-                                            : isDarkMode
-                                                ? Colors.black
-                                                : Colors.black,
+                                            ? isDarkMode ? Colors.white : Colors.black
+                                            : isDarkMode ? Colors.black : Colors.black,
                                     onPressed: () {
                                       _onShare(context);
                                     },
@@ -285,7 +272,6 @@ class _Result extends State<Result> {
                               Container(
                                   margin: const EdgeInsets.only(top: 400),
                                   width: c_width * 0.9,
-// padding: const EdgeInsets.only(top: 300),
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
@@ -297,12 +283,11 @@ class _Result extends State<Result> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30,
                                             overflow: TextOverflow.ellipsis,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : Colors.black),
+                                            color: isDarkMode ? Colors.white : Colors.black),
                                       )
                                     ]),
-                                  )),
+                                  )
+                              ),
                               Container(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
@@ -311,30 +296,20 @@ class _Result extends State<Result> {
                                           child: RichText(
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        strutStyle:
-                                            const StrutStyle(fontSize: 17),
+                                        strutStyle: const StrutStyle(fontSize: 17),
                                         text: TextSpan(children: [
                                           TextSpan(
-                                            // text: '${maps['ARTIST']}',
-                                            text: isArtistNull
-                                                ? 'Various Artist'
-                                                : maps['ARTIST'],
+                                            text: isArtistNull ? 'Various Artist' : maps['ARTIST'],
                                             style: TextStyle(
                                               fontSize: 17,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                              color: isDarkMode ? Colors.white : Colors.black,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           TextSpan(
                                               text: ' · ',
                                               style: TextStyle(
-                                                  color: isDarkMode
-                                                      ? Colors.grey
-                                                      : Colors.black
-                                                          .withOpacity(0.4),
-                                                  fontSize: 17)),
+                                                  color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4), fontSize: 17)),
                                           TextSpan(
                                             text: isAlbumNull
                                                 ? 'Various Album'
@@ -350,39 +325,28 @@ class _Result extends State<Result> {
                                         ]),
                                       ))
                                     ],
-                                  )),
+                                  )
+                              ),
                               Container(
                                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 50),
                                 child: Row(
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(right: 20),
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 5),
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: const Color.fromRGBO(
-                                              51, 211, 180, 1)),
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: const Color.fromRGBO(51, 211, 180, 1)),
                                       child: Text(
                                         '${maps['date']}',
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
                                     ),
-                                    Image.asset(
-                                      'assets/result_search.png',
-                                      width: 15,
-                                      color: Colors.grey,
-                                    ),
-                                    Text(
-                                      ' ${maps['count']}',
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          overflow: TextOverflow.ellipsis),
-                                    ),
-                                    const Text('회',
-                                        style: TextStyle(color: Colors.grey))
+                                    Image.asset('assets/result_search.png', width: 15, color: Colors.grey),
+                                    Text(' ${maps['count']}',
+                                      style: const TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis)),
+                                    const Text('회', style: TextStyle(color: Colors.grey))
                                   ],
                                 ),
                               ),
@@ -411,19 +375,12 @@ class _Result extends State<Result> {
                                         ? Center(
                                             child: Text('최신 방송 재생정보가 없습니다.',
                                                 style: TextStyle(
-                                                    color:
-// Colors.black,
-                                                        isDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
+                                                    color: isDarkMode ? Colors.white : Colors.black,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 20)
-                                            )
-                                    )
+                                                    fontSize: 20))
+                                        )
                                         : Row(
-                                            children: [
-                                              _listView(programs)
-                                            ],
+                                            children: [_listView(programs)],
                                           )
                                 )
                             ),

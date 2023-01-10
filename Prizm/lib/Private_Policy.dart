@@ -32,6 +32,13 @@ class _Private extends State<Private> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: AppBar(
@@ -74,7 +81,8 @@ class _Private extends State<Private> {
                       _webViewController?.loadUrl('http://www.prizm.kr/js/privacy.html');
                     }
                   },
-                )),
+                )
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);

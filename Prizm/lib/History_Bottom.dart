@@ -4,6 +4,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter/services.dart';
+
 import 'Chart.dart';
 import 'History.dart';
 import 'Home.dart';
@@ -64,6 +66,19 @@ class _BottomState extends State<Bottom> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
+    SystemChrome.setEnabledSystemUIMode(    // 하단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.top
+        ]
+    );
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
         onWillPop: () {
