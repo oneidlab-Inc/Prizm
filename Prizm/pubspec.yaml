@@ -71,6 +71,7 @@ dependencies:
   firebase_remote_config: ^3.0.9
   package_info_plus: ^3.0.2
   wave: ^0.2.2
+  firebase: ^9.0.3
 
 dev_dependencies:
   flutter_test:
