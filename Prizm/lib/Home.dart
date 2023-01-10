@@ -222,7 +222,8 @@ class _Home extends State<Home> {
                   ),
                 ],
               )),
-        ));
+        )
+    );
   }
   Future<bool> _onBackKey() async {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
