@@ -1,6 +1,6 @@
                     Executable : C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe
 arguments : 
--HC:\Users\Won\Downloads\darkMode\darkMode\android
+-HC:\Prizm\Prizm\android
 -DCMAKE_SYSTEM_NAME=Android
 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 -DCMAKE_SYSTEM_VERSION=26
@@ -11,10 +11,10 @@ arguments :
 -DCMAKE_ANDROID_NDK=C:\Users\Won\AppData\Local\Android\sdk\ndk\21.1.6352462
 -DCMAKE_TOOLCHAIN_FILE=C:\Users\Won\AppData\Local\Android\sdk\ndk\21.1.6352462\build\cmake\android.toolchain.cmake
 -DCMAKE_MAKE_PROGRAM=C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\ninja.exe
--DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\Users\Won\Downloads\darkMode\darkMode\build\app\intermediates\cxx\Debug\4f6l2845\obj\x86_64
--DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\Users\Won\Downloads\darkMode\darkMode\build\app\intermediates\cxx\Debug\4f6l2845\obj\x86_64
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\Prizm\Prizm\build\app\intermediates\cxx\Debug\4f6l2845\obj\x86_64
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\Prizm\Prizm\build\app\intermediates\cxx\Debug\4f6l2845\obj\x86_64
 -DCMAKE_BUILD_TYPE=Debug
--BC:\Users\Won\Downloads\darkMode\darkMode\android\app\.cxx\Debug\4f6l2845\x86_64
+-BC:\Prizm\Prizm\android\app\.cxx\Debug\4f6l2845\x86_64
 -GNinja
 jvmArgs : 
 

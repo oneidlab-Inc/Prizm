@@ -1,19 +1,19 @@
 {
   "buildFiles": [
-    "C:\\Users\\Won\\Downloads\\darkMode\\darkMode\\android\\CMakeLists.txt"
+    "C:\\Prizm\\Prizm\\android\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
       "C:\\Users\\Won\\AppData\\Local\\Android\\sdk\\cmake\\3.18.1\\bin\\ninja.exe",
       "-C",
-      "C:\\Users\\Won\\Downloads\\darkMode\\darkMode\\android\\app\\.cxx\\Debug\\4f6l2845\\x86",
+      "C:\\Prizm\\Prizm\\android\\app\\.cxx\\Debug\\4f6l2845\\x86",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
     "C:\\Users\\Won\\AppData\\Local\\Android\\sdk\\cmake\\3.18.1\\bin\\ninja.exe",
     "-C",
-    "C:\\Users\\Won\\Downloads\\darkMode\\darkMode\\android\\app\\.cxx\\Debug\\4f6l2845\\x86",
+    "C:\\Prizm\\Prizm\\android\\app\\.cxx\\Debug\\4f6l2845\\x86",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {},
