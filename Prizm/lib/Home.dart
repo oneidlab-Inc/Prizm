@@ -201,7 +201,7 @@ class _Home extends State<Home> {
                                            NetworkToast();
                                            return;
                                          } else if(await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false){
-                                           // _vmidc.start();
+                                           _vmidc.start();
                                            setState(() {
                                              _textSpan = const TextSpan(
                                                text: '노래 분석중',
