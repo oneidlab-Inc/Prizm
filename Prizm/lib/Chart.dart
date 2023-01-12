@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'Home.dart';
 import 'Settings.dart';
 import 'PlayInfo.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'main.dart';
 
 class Chart extends StatefulWidget {
@@ -36,16 +34,17 @@ class _Chart extends State<Chart> {
     });
   }
 
-  List persons = [];
+  List charts = [];
   List original = [];
 
   void fetchData() async {
     try {
-      http.Response response = await http.get(Uri.parse(
-          'http://dev.przm.kr/przm_api/get_song_ranks'));
+      http.Response response = await http.get(
+            Uri.parse('${MyApp.Uri}get_song_ranks')
+      );
       String jsonData = response.body;
-      persons = jsonDecode(jsonData.toString());
-      original = persons;
+      charts = jsonDecode(jsonData.toString());
+      original = charts;
       setState(() {});
     } catch (e) {
       NetworkToast();
@@ -54,13 +53,8 @@ class _Chart extends State<Chart> {
     }
   }
 
-  // final duplicateItems =
-  // List<String>.generate(1000, (i) => "$Container(child:Text $i)");
-  // var items = <String>[];
-
   @override
   void initState() {
-    // items.addAll(duplicateItems);
     initPlatformState();
     fetchData();
     super.initState();
@@ -73,8 +67,21 @@ class _Chart extends State<Chart> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
+    // SystemChrome.setEnabledSystemUIMode(    // 하단 상태바 제거
+    //     SystemUiMode.manual,
+    //     overlays: [
+    //       SystemUiOverlay.top
+    //     ]
+    // );
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    int len = persons.length;
+    int len = charts.length;
     final isExist = len == 0;
     return WillPopScope(
         onWillPop: () async {
@@ -83,17 +90,18 @@ class _Chart extends State<Chart> {
         child: Scaffold(
             appBar: AppBar(
               shape: Border(
-                  bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
+                  bottom: BorderSide(color: Colors.grey.withOpacity(0.3))
+              ),
               elevation: 0.0,
-              title: Text(
-                '차트',
-                style: (isDarkMode
+              title: Text('차트',
+                style: (
+                    isDarkMode
                     ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
-                    : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                    : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
+                ),
               ),
               centerTitle: true,
               toolbarHeight: 80,
-              // backgroundColor: Colors.white,
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
               automaticallyImplyLeading: false,
               actions: [
@@ -103,10 +111,7 @@ class _Chart extends State<Chart> {
                   ),
                   color: isDarkMode ? Colors.white : Colors.black,
                   onPressed: () {
-                    print("Settings");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Settings()),
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings()),
                     );
                   },
                 )
@@ -114,7 +119,7 @@ class _Chart extends State<Chart> {
             ),
             body: Container(
               color: isDarkMode ? Colors.black : Colors.white,
-              width: MediaQuery.of(context).size.width * 1,
+              width: MediaQuery.of(context).size.width,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +143,8 @@ class _Chart extends State<Chart> {
                                   ),
                                 ),
                               ],
-                            )),
+                            )
+                        ),
                       ],
                     ),
                   ),
@@ -151,8 +157,7 @@ class _Chart extends State<Chart> {
                         Container(
                           margin: const EdgeInsets.only(bottom: 30),
                           child: Center(
-                            child:
-                            Image.asset(
+                            child: Image.asset(
                                 'assets/loading.gif',
                                 width: 40,
                                 color: isDarkMode ? Colors.white : Colors.black
@@ -167,13 +172,13 @@ class _Chart extends State<Chart> {
                                     ? Colors.white
                                     : Colors.black,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 22),
+                                fontSize: 22
+                            ),
                           ),
                         )
                       ],
                     ),
-                  )
-                      : _listView(persons)
+                  ) : _listView(charts)
                 ],
               ),
             )
@@ -181,27 +186,26 @@ class _Chart extends State<Chart> {
      );
   }
 
-  Widget _listView(persons) {
+  Widget _listView(charts) {
     return Expanded(
         child: ListView.builder(
-            itemCount: persons == null ? 0 : persons.length,
+            itemCount: charts == null ? 0 : charts.length,
             itemBuilder: (context, index) {
               double c_width = MediaQuery.of(context).size.width;
 
               final deviceId = _deviceId;
-              final person = persons[index];
+              final chart = charts[index];
 
-              final isArtistNull = person['title'] == null;
-              final isAlbumNull = person['album'] == null;
+              final isArtistNull = chart['title'] == null;
+              final isAlbumNull = chart['album'] == null;
 
-              String title = person['title'];
-              String image = person['image'];
-              String artist = isArtistNull ? 'Various Artists' : person['artist'];
-              String song_id = person['song_id'];
+              String title = chart['title'];
+              String image = chart['image'];
+              String artist = isArtistNull ? 'Various Artists' : chart['artist'];
+              String song_id = chart['song_id'];
               String Id = deviceId!;
 
-              final isDarkMode =
-                  Theme.of(context).brightness == Brightness.dark;
+              final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
               return GestureDetector(
                   child: Container(
@@ -214,19 +218,18 @@ class _Chart extends State<Chart> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(1),
-                          margin: const EdgeInsets.only(left: 20, right: 20),
+                          margin: const EdgeInsets.only(left: 15, right: 10),
                           decoration: BoxDecoration(
                             color: isDarkMode
                                 ? const Color.fromRGBO(189, 189, 189, 1)
                                 : const Color.fromRGBO(228, 228, 228, 1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                            borderRadius: BorderRadius.circular(10)),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: SizedBox.fromSize(
                               size: const Size.fromRadius(40),
                               child: Image.network(
-                                person['image'],
+                                chart['image'],
                                 width: 80,
                                 height: 80,
                                 errorBuilder: (context, error, stackTrace) {
@@ -245,7 +248,7 @@ class _Chart extends State<Chart> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(
-                                width: c_width * 0.6,
+                                width: c_width * 0.59,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -253,11 +256,9 @@ class _Chart extends State<Chart> {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 10),
                                       child: Text(
-                                        person['title'],
+                                        chart['title'],
                                         style: TextStyle(
-                                          color: isDarkMode
-                                              ? Colors.white
-                                              : Colors.black,
+                                          color: isDarkMode ? Colors.white : Colors.black,
                                           overflow: TextOverflow.ellipsis,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15,
@@ -271,42 +272,35 @@ class _Chart extends State<Chart> {
                                           maxLines: 1,
                                           text: TextSpan(children: [
                                             TextSpan(
-                                              text: isArtistNull
-                                                  ? 'Various Artists'
-                                                  : person['artist'],
+                                              text: isArtistNull ? 'Various Artists' : chart['artist'],
                                               style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.grey
-                                                      .withOpacity(0.8)
-                                                      : Colors.black
-                                                      .withOpacity(0.3)),
+                                                      ? Colors.grey.withOpacity(0.8)
+                                                      : Colors.black.withOpacity(0.3))
                                             ),
                                             TextSpan(
                                               text: ' · ',
                                               style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.grey
-                                                      .withOpacity(0.8)
-                                                      : Colors.black
-                                                      .withOpacity(0.3)),
+                                                      ? Colors.grey.withOpacity(0.8)
+                                                      : Colors.black.withOpacity(0.3)),
                                             ),
                                             TextSpan(
                                               text: isAlbumNull
                                                   ? 'Various Album'
-                                                  : person['album'],
+                                                  : chart['album'],
                                               style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.grey
-                                                      .withOpacity(0.8)
-                                                      : Colors.black
-                                                      .withOpacity(0.3)),
+                                                      ? Colors.grey.withOpacity(0.8)
+                                                      : Colors.black.withOpacity(0.3)),
                                             )
                                           ]),
                                         ))
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              Container(
+                                margin: const EdgeInsets.only(right: 5),
                                 width: c_width * 0.09,
                                 child: const Icon(Icons.more_vert_sharp,
                                     color: Colors.grey, size: 30),
@@ -322,13 +316,12 @@ class _Chart extends State<Chart> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext context) {
-                          var person = persons[index];
+                          var chart = charts[index];
                           final deviceId = _deviceId;
                           return SizedBox(
                               height: 230,
                               child: ListView.builder(
                                   itemCount: 1,
-// itemCount: persons.length,
                                   itemBuilder: (context, index) {
                                     double c_width = MediaQuery.of(context).size.width;
                                     final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
@@ -350,24 +343,20 @@ class _Chart extends State<Chart> {
                                             child: Row(
                                               children: [
                                                 Container(
-                                                    margin : const EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                                                    // margin : const EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                                                    margin : const EdgeInsets.fromLTRB(10,10,0,10),
                                                     padding: const EdgeInsets.all(1),
                                                     decoration: BoxDecoration(
                                                       color: isDarkMode
                                                           ? const Color.fromRGBO(189, 189, 189, 1)
-                                                          // : const Color.fromRGBO(228, 228, 228, 1),
-                                                      : Colors.black.withOpacity(0.3),
-                                                      borderRadius:
-                                                      BorderRadius.circular(20),
+                                                          : Colors.black.withOpacity(0.3),
+                                                      borderRadius: BorderRadius.circular(20),
                                                     ),
                                                     child: ClipRRect(
-                                                        borderRadius:
-                                                        BorderRadius
-                                                            .circular(20),
-                                                        child:
-                                                        SizedBox.fromSize(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        child: SizedBox.fromSize(
                                                           child :Image.network(
-                                                            person['image'],
+                                                            chart['image'],
                                                             width: 90,
                                                             height: 90,
                                                             errorBuilder: (context, error, stackTrace) {
@@ -387,17 +376,13 @@ class _Chart extends State<Chart> {
                                                         children: [
                                                           Container(
                                                             width: c_width * 0.6,
-                                                            padding:
-                                                            const EdgeInsets.only(left: 40),
+                                                            padding: const EdgeInsets.only(left: 40),
                                                             child: Column(
-                                                              crossAxisAlignment:
-                                                              CrossAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
                                                                 Padding(
-                                                                  padding:
-                                                                  const EdgeInsets.only(bottom: 15),
-                                                                  child: Text(
-                                                                    person['title'],
+                                                                  padding: const EdgeInsets.only(bottom: 15),
+                                                                  child: Text(chart['title'],
                                                                     style: TextStyle(
                                                                         fontWeight:FontWeight.bold,
                                                                         fontSize:20,
@@ -410,12 +395,10 @@ class _Chart extends State<Chart> {
                                                                 Text(
                                                                   isArtistNull
                                                                       ? 'Various Artists'
-                                                                      : person[
-                                                                  'artist'],
+                                                                      : chart['artist'],
                                                                   style: TextStyle(
                                                                       color: isDarkMode
                                                                           ? Colors.grey.withOpacity(0.8)
-// : Colors.black.withOpacity(0.2),
                                                                           : const Color.fromRGBO(123, 123, 123, 1),
                                                                       overflow: TextOverflow.ellipsis),
                                                                 ),
@@ -426,31 +409,23 @@ class _Chart extends State<Chart> {
                                                             width: c_width * 0.05,
                                                             child: IconButton(
                                                                 padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    bottom:
-                                                                    50),
+                                                                const EdgeInsets.only(bottom: 50),
                                                                 icon: ImageIcon(
-                                                                    Image.asset(
-                                                                        'assets/x_icon.png')
-                                                                        .image,
-                                                                    size: 15),
-                                                                color:
-                                                                Colors.grey,
+                                                                    Image.asset('assets/x_icon.png').image, size: 15),
+                                                                color: Colors.grey,
                                                                 onPressed: () {
-                                                                  Navigator.pop(
-                                                                      context);
+                                                                  Navigator.pop(context);
                                                                 }),
                                                           )
-                                                        ])),
+                                                        ]
+                                                    )
+                                                ),
                                               ],
                                             ),
                                           ),
                                           Container(
                                             height: 90,
-                                            padding:
-                                            const EdgeInsets.fromLTRB(
-                                                20, 20, 20, 0),
+                                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                                             color: isDarkMode
                                                 ? Colors.black
                                                 : Colors.white,
@@ -459,13 +434,8 @@ class _Chart extends State<Chart> {
                                                 GestureDetector(
                                                     onTap: () {
                                                       Navigator.push(context, MaterialPageRoute(
-                                                          builder: (context) => PlayInfo(
-                                                            deviceId: Id,
-                                                            title: title,
-                                                            image: image,
-                                                            artist: artist,
-                                                            song_id: song_id,
-                                                          )));
+                                                          builder: (context) => PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id))
+                                                      );
                                                     },
                                                     child: Container(
                                                       color: isDarkMode
@@ -475,46 +445,25 @@ class _Chart extends State<Chart> {
                                                         children: [
                                                           IconButton(
                                                             padding: const EdgeInsets.only(right: 20),
-                                                            icon: ImageIcon(
-                                                                Image.asset('assets/list.png')
-                                                                    .image,
-                                                                size: 30),
-                                                            color: const Color
-                                                                .fromRGBO(
-                                                                64,
-                                                                220,
-                                                                196,
-                                                                1),
+                                                            icon: ImageIcon(Image.asset('assets/list.png').image, size: 30),
+                                                            color: const Color.fromRGBO(64, 220, 196, 1),
                                                             onPressed: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          PlayInfo(
-                                                                            deviceId: Id,
-                                                                            title: title,
-                                                                            image: image,
-                                                                            artist: artist,
-                                                                            song_id: song_id,
-                                                                          )));
+                                                              Navigator.push(context, MaterialPageRoute(
+                                                                      builder: (context) => PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id))
+                                                              );
                                                             },
                                                           ),
                                                           Text(
                                                             '프리즘 방송 재생정보',
                                                             style: TextStyle(
                                                                 fontSize: 20,
-                                                                fontWeight:
-                                                                FontWeight
-                                                                    .w300,
-                                                                color: isDarkMode
-                                                                    ? Colors
-                                                                    .white
-                                                                    : Colors
-                                                                    .black),
+                                                                fontWeight: FontWeight.w300,
+                                                                color: isDarkMode ? Colors.white : Colors.black),
                                                           )
                                                         ],
                                                       ),
-                                                    )),
+                                                    )
+                                                ),
                                               ],
                                             ),
                                           )
@@ -523,7 +472,8 @@ class _Chart extends State<Chart> {
                           );
                         });
                   });
-            }));
+            })
+    );
   }
 
   Future<bool> _onBackKey() async {

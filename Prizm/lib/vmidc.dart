@@ -15,8 +15,8 @@ import 'wavbuf.dart';
 final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android
 // final DynamicLibrary nativeLib = DynamicLibrary.process(); //IOS
 
-int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna = nativeLib
-    .lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
+int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna =
+      nativeLib.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
 
 const srate = 22050;
 const pcmLen = 74656; //3.39sec
@@ -39,8 +39,8 @@ class VMIDC {
   int? _score;
 
 
-  Future<bool> init(
-      {required String ip,
+  Future<bool> init({
+        required String ip,
         required int port,
         required StreamSink<List> sink}) async {
     print('vmid.init()');
@@ -49,9 +49,8 @@ class VMIDC {
     if (await _connect(ip, port) == false) return false;
 
     _sock.listen((Uint8List msg) async {
-      if (msg[0] == 1) {
-        //search
-        if (msg[1] != 1) //true
+      if (msg[0] == 1) {  //search
+        if (msg[1] != 1)  //true
           toStream.add(['error']);
         else {
           int n = msg[2];
@@ -59,7 +58,7 @@ class VMIDC {
             int score = msg[3];
             _score = score;
             _id = String.fromCharCodes(msg, 4, msg.length);
-            print('>>> id : $_id, $score');
+            print('>>>> id : $_id, score : $score');
             toStream.add([_id!, score]);
           }
         }
@@ -78,8 +77,7 @@ class VMIDC {
         if (_wbuf.length >= pcmLen * 2) {
           _wbuf.read(pcmLen * 2, _pcm);
           if (_id == null) {
-            int len =
-            pcm_to_dna(_pcm.cast<Int16>(), pcmLen, _dna.cast<Uint8>());
+            int len = pcm_to_dna(_pcm.cast<Int16>(), pcmLen, _dna.cast<Uint8>());
             _sendQuery(len);
             _wbuf.pop(pcmHop * 2);
           }
@@ -116,9 +114,8 @@ class VMIDC {
 
     if (!_recorder.isRecording) return false;
 
-    if (_id != null && _score! >= 40) { //35점 기준으로 하였으나 추후 변경 가능성 높음
+    if (_id != null && _score! >= 35) { //35점 기준으로 하였으나 추후 변경 가능성 높음
       String id = _id!;
-      print('------ id ------ : ${_id!}');
       HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
       navigatorState.currentState?.push(//얻어온 context로 id값 가지고 push
           MaterialPageRoute(builder: (context) => Result(id: id)));

@@ -83,7 +83,6 @@
 //                   ),
 //                   color: Colors.black,
 //                   onPressed: () {
-//                     print("Settings");
 //                     Navigator.push(
 //                       context,
 //                       MaterialPageRoute(builder: (context) => Settings()),

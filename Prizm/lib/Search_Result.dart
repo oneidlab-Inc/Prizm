@@ -1,5 +1,4 @@
 // --no-sound-null-safety
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -50,15 +49,16 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    String id = widget.id;
 
     _uid = await PlatformDeviceId.getDeviceId;
     print('uid : $_uid');
 
 // json for title album artist
+
     try {
-      http.Response response = await http.get(Uri.parse(
-          'http://dev.przm.kr/przm_api/get_song_search/json?id=$id&uid=$_uid'));
+      http.Response response = await http.get(
+              Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid')
+      );
 
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
@@ -73,13 +73,14 @@ class _Result extends State<Result> {
     }
 
 //json for program list
+
     try {
-      http.Response response = await http.get(Uri.parse(
-          'http://dev.przm.kr/przm_api/get_song_programs/json?id=$id'));
+      http.Response response = await http.get(
+          Uri.parse('${MyApp.Uri}get_song_programs/json?id=${widget.id}')
+      );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
-
       setState(() {});
     } catch (e) {
       print('fail to get json');
@@ -87,17 +88,13 @@ class _Result extends State<Result> {
     }
 
     try {
-      List _contain = [];
-// 실데이타 파싱
+      List _contain = [];  // 실데이타 파싱
       sum = 0;
       for (int i = 0; i <= song_cnts.length - 1; i++) {
-        // month = double.parse(song_cnts[i]['F_MONTH'].toString().substring(4));
-        // contain = song_cnts[i]['F_MONTH'].toString();
         intX = int.parse(song_cnts[i]['F_MONTH'].toString());
         intY = int.parse(song_cnts[i]['CTN']);
         listX.add(intX);
         listY.add(intY);
-
         listX.sort();
         listY.sort();
         _contain.add(song_cnts[i]['F_MONTH'].toString());
@@ -124,6 +121,7 @@ class _Result extends State<Result> {
 // 현재월
 // 차트 실데이터 파싱
       for (int j = 0; j < _reverse.length; j++) {
+
 //없는 월 제외
         double mon = double.parse(j.toString()) + 1;
 
@@ -163,7 +161,19 @@ class _Result extends State<Result> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom
+        ]
+    );
+    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.top
+        ]
+    );
     double c_height = MediaQuery.of(context).size.height * 1.0;
     double c_width = MediaQuery.of(context).size.width * 1.0;
     final isPad = c_width > 550;
@@ -172,10 +182,7 @@ class _Result extends State<Result> {
     final isArtistNull = maps['ARTIST'] == null;
     final isAlbumNull = maps['ALBUM'] == null;
     final isImage = maps['IMAGE'].toString().startsWith('assets') != true;
-    // print(widget.id);
-// SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-// statusBarColor: Colors.transparent, // 투명색
-// ));
+
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();
@@ -185,8 +192,8 @@ class _Result extends State<Result> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Material(
-                color: isDarkMode ? Colors.black : Colors.white,
-                child: Column(
+               color: isDarkMode ? Colors.black : Colors.white,
+               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Stack(
@@ -194,19 +201,20 @@ class _Result extends State<Result> {
                         Center(
                           child: SizedBox(
                               child: Image.network(
-                            '${maps['IMAGE']}',
-                            height: c_height * 0.5,
-                            fit: BoxFit.fill,
-                            errorBuilder: (context, error, stackTrace) {
-                              return SizedBox(
-                                child: Image.asset(
-                                  'assets/no_image.png',
-                                  height: c_height * 0.5,
-                                  fit: BoxFit.fill,
-                                ),
-                              );
-                            },
-                          )),
+                                '${maps['IMAGE']}',
+                                 height: c_height * 0.5,
+                                 fit: BoxFit.fill,
+                                 errorBuilder: (context, error, stackTrace) {
+                                   return SizedBox(
+                                     child: Image.asset(
+                                       'assets/no_image.png',
+                                       height: c_height * 0.5,
+                                       fit: BoxFit.fill,
+                                     ),
+                                   );
+                                 },
+                               )
+                          ),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -220,30 +228,23 @@ class _Result extends State<Result> {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [Colors.white10, Colors.white],
-                                      stops: [.40, .75])),
+                                      stops: [.40, .75])
+                          ),
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
                                     icon:
                                         const Icon(Icons.arrow_back_ios_sharp),
                                     color: isImage
-                                        ? isDarkMode
-                                            ? Colors.white
-                                            : Colors.black
+                                        ? isDarkMode ? Colors.white : Colors.black
                                         : isPad
-                                            ? isDarkMode
-                                                ? Colors.white
-                                                : Colors.black
-                                            : isDarkMode
-                                                ? Colors.black
-                                                : Colors.black,
-                                    // : Colors.white,
+                                          ? isDarkMode ? Colors.white : Colors.black
+                                            : isDarkMode ? Colors.black : Colors.black,
                                     onPressed: () {
                                       Navigator.push(
                                         context,
@@ -258,16 +259,10 @@ class _Result extends State<Result> {
                                       size: 30,
                                     ),
                                     color: isImage
-                                        ? isDarkMode
-                                            ? Colors.white
-                                            : Colors.black
+                                        ? isDarkMode ? Colors.white : Colors.black
                                         : isPad
-                                            ? isDarkMode
-                                                ? Colors.white
-                                                : Colors.black
-                                            : isDarkMode
-                                                ? Colors.black
-                                                : Colors.black,
+                                            ? isDarkMode ? Colors.white : Colors.black
+                                            : isDarkMode ? Colors.black : Colors.black,
                                     onPressed: () {
                                       _onShare(context);
                                     },
@@ -277,7 +272,6 @@ class _Result extends State<Result> {
                               Container(
                                   margin: const EdgeInsets.only(top: 400),
                                   width: c_width * 0.9,
-// padding: const EdgeInsets.only(top: 300),
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
@@ -289,12 +283,11 @@ class _Result extends State<Result> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30,
                                             overflow: TextOverflow.ellipsis,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : Colors.black),
+                                            color: isDarkMode ? Colors.white : Colors.black),
                                       )
                                     ]),
-                                  )),
+                                  )
+                              ),
                               Container(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
@@ -303,30 +296,20 @@ class _Result extends State<Result> {
                                           child: RichText(
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        strutStyle:
-                                            const StrutStyle(fontSize: 17),
+                                        strutStyle: const StrutStyle(fontSize: 17),
                                         text: TextSpan(children: [
                                           TextSpan(
-                                            // text: '${maps['ARTIST']}',
-                                            text: isArtistNull
-                                                ? 'Various Artist'
-                                                : maps['ARTIST'],
+                                            text: isArtistNull ? 'Various Artist' : maps['ARTIST'],
                                             style: TextStyle(
                                               fontSize: 17,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                              color: isDarkMode ? Colors.white : Colors.black,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           TextSpan(
                                               text: ' · ',
                                               style: TextStyle(
-                                                  color: isDarkMode
-                                                      ? Colors.grey
-                                                      : Colors.black
-                                                          .withOpacity(0.4),
-                                                  fontSize: 17)),
+                                                  color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4), fontSize: 17)),
                                           TextSpan(
                                             text: isAlbumNull
                                                 ? 'Various Album'
@@ -342,39 +325,28 @@ class _Result extends State<Result> {
                                         ]),
                                       ))
                                     ],
-                                  )),
+                                  )
+                              ),
                               Container(
                                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 50),
                                 child: Row(
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(right: 20),
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 5),
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: const Color.fromRGBO(
-                                              51, 211, 180, 1)),
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: const Color.fromRGBO(51, 211, 180, 1)),
                                       child: Text(
                                         '${maps['date']}',
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
                                     ),
-                                    Image.asset(
-                                      'assets/result_search.png',
-                                      width: 15,
-                                      color: Colors.grey,
-                                    ),
-                                    Text(
-                                      ' ${maps['count']}',
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          overflow: TextOverflow.ellipsis),
-                                    ),
-                                    const Text('회',
-                                        style: TextStyle(color: Colors.grey))
+                                    Image.asset('assets/result_search.png', width: 15, color: Colors.grey),
+                                    Text(' ${maps['count']}',
+                                      style: const TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis)),
+                                    const Text('회', style: TextStyle(color: Colors.grey))
                                   ],
                                 ),
                               ),
@@ -403,16 +375,15 @@ class _Result extends State<Result> {
                                         ? Center(
                                             child: Text('최신 방송 재생정보가 없습니다.',
                                                 style: TextStyle(
-                                                    color:
-// Colors.black,
-                                                        isDarkMode
-                                                            ? Colors.white
-                                                            : Colors.black,
+                                                    color: isDarkMode ? Colors.white : Colors.black,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 20)))
+                                                    fontSize: 20))
+                                        )
                                         : Row(
                                             children: [_listView(programs)],
-                                          ))),
+                                          )
+                                )
+                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -423,7 +394,8 @@ class _Result extends State<Result> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),
-                                    )),
+                                    )
+                                ),
                                 isCNTS
                                     ? ChartContainer(
                                         color: isDarkMode
@@ -448,7 +420,8 @@ class _Result extends State<Result> {
                                   color: isDarkMode
                                       ? const Color.fromRGBO(42, 42, 42, 1)
                                       // : const Color.fromRGBO(239, 239, 239, 1)),
-                                      : const Color.fromRGBO(250, 250, 250, 1)),
+                                      : const Color.fromRGBO(250, 250, 250, 1)
+                              ),
                               height: 100,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -466,9 +439,11 @@ class _Result extends State<Result> {
                                                 : Colors.black)),
                                   ),
                                   Text('${maps['count']}',
-                                      style: const TextStyle(fontSize: 17)),
+                                      style: const TextStyle(fontSize: 17)
+                                  ),
                                   const Text('회',
-                                      style: TextStyle(fontSize: 17))
+                                      style: TextStyle(fontSize: 17)
+                                  )
                                 ],
                               ),
                             ),
@@ -487,7 +462,9 @@ class _Result extends State<Result> {
                                         width: 1,
                                         color: isDarkMode
                                             ? Colors.grey.withOpacity(0.3)
-                                            : Colors.black.withOpacity(0.1))),
+                                            : Colors.black.withOpacity(0.1)
+                                    )
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -498,25 +475,27 @@ class _Result extends State<Result> {
                                           '홈으로',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        )),
+                                              fontSize: 16
+                                          ),
+                                        )
+                                    ),
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,
                                       size: 17,
                                       color: isDarkMode
-                                          ? const Color.fromRGBO(
-                                              125, 125, 125, 1)
-                                          : const Color.fromRGBO(
-                                              208, 208, 208, 1),
+                                          ? const Color.fromRGBO(125, 125, 125, 1)
+                                          : const Color.fromRGBO(208, 208, 208, 1),
                                     )
                                   ],
                                 ),
                               ),
                             )
                           ],
-                        ))
+                        )
+                    )
                   ],
-                )),
+                )
+            ),
           ),
         ),
       ),
@@ -667,14 +646,11 @@ class _Result extends State<Result> {
       await Share.share('www.oneidlab.kr/app_check.html',
           subject: 'Prizm',
           sharePositionOrigin: Rect.fromLTRB(
-              0,
-              0,
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height * 0.5));
+              0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
+      );
     } else if (Platform.isAndroid) {
       await Share.share('www.oneidlab.kr/app_check.html', subject: 'Prizm');
     }
-
     // box!.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -702,52 +678,38 @@ class _Result extends State<Result> {
 
     switch (value.toInt()) {
       case 1:
-// text = '${xList[0]}';
-// text = '2';
         text = reversedDate[0];
         break;
-
       case 2:
         text = reversedDate[1];
-// text = '3';
         break;
       case 3:
         text = reversedDate[2];
-// text = '4';
         break;
-
       case 4:
         text = reversedDate[3];
-// text = '5';
         break;
-
       case 5:
         text = reversedDate[4];
         break;
-
       case 6:
         text = reversedDate[5];
         break;
-
       case 7:
         text = reversedDate[6];
         break;
       case 8:
         text = reversedDate[7];
         break;
-
       case 9:
         text = reversedDate[8];
         break;
-
       case 10:
         text = reversedDate[9];
         break;
-
       case 11:
         text = reversedDate[10];
         break;
-
       default:
         text = reversedDate[11];
         break;
@@ -760,8 +722,6 @@ class _Result extends State<Result> {
     List<FlSpot> FlSpotData = [];
     FlSpotData.addAll(FlSpotDataAll);
     final minCnt = listY.last >= 50;
-    // print(listY);
-// for (int i = 0; i <= song_cnts.length - 2; i++) {
 
     var result = LineChart(LineChartData(
         extraLinesData: ExtraLinesData(
@@ -770,7 +730,8 @@ class _Result extends State<Result> {
                 y: 0,
                 color: isDarkMode
                     ? Colors.grey.withOpacity(0.4)
-                    : Colors.grey.withOpacity(0.3))
+                    : Colors.grey.withOpacity(0.3)
+            )
           ],
         ),
         baselineY: 0,
@@ -785,7 +746,8 @@ class _Result extends State<Result> {
             },
             drawVerticalLine: false,
             drawHorizontalLine: true,
-            horizontalInterval: minCnt ? avgY / 8 : 30),
+            horizontalInterval: minCnt ? avgY / 8 : 30
+        ),
         minX: 1,
         minY: 0,
         maxX: 12,
@@ -800,7 +762,8 @@ class _Result extends State<Result> {
                         color: const Color.fromRGBO(51, 211, 180, 1),
                         strokeColor:
                             isDarkMode ? Colors.white : Colors.grey.shade200,
-                        strokeWidth: 4),
+                        strokeWidth: 4
+                    ),
               ),
               color: const Color.fromRGBO(51, 211, 180, 1),
               isCurved: true,
@@ -815,11 +778,11 @@ class _Result extends State<Result> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Color.fromRGBO(51, 215, 180, 1),
-                      // Colors.white.withOpacity(0.8)
                       Colors.white
-                    ]),
-              ),
-              spots: FlSpotData)
+                    ]
+                ),
+              ), spots: FlSpotData
+          )
         ],
         titlesData: FlTitlesData(
             topTitles: AxisTitles(
@@ -833,9 +796,15 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
-        lineTouchData: LineTouchData(enabled: true)));
+                    getTitlesWidget: bottomTitleWidgets
+                )
+            ),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)
+            )
+        ),
+        lineTouchData: LineTouchData(enabled: true)
+        )
+    );
     return result;
   }
 }

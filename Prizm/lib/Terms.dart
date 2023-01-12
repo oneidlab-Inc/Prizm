@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
-import 'package:darkmode/Home.dart';
+import 'package:Prizm/Home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +14,7 @@ class Terms extends StatefulWidget {
 }
 
 class _Terms extends State<Terms> {
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
 
   WebViewController? _webViewController;
 
@@ -23,29 +22,36 @@ class _Terms extends State<Terms> {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitSubscription;
 
+
   @override
   void initState() {
     initConnectivity();
-    _connectivitSubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    super.initState();
+    _connectivitSubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    // ios 추후에 추가
+    // ios 추후에 추가 (다른 라이브러리 필요할듯?? IOSWebviedw가 없음;
+
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [
+        SystemUiOverlay.top
+      ]
+    );
+
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: AppBar(
           title: const Text("이용약관",
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
           leading: IconButton(
             icon: ImageIcon(
               Image.asset('assets/x_icon.png').image,
               color: Colors.black,
-              size: 15,
+              size: 20,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -53,9 +59,8 @@ class _Terms extends State<Terms> {
           ),
           centerTitle: true,
           elevation: 1.0,
-          backgroundColor:
-              isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-          toolbarHeight: 60,
+          backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
+          toolbarHeight: 90,
         ),
         body: Container(
             color: Colors.transparent,
@@ -63,8 +68,7 @@ class _Terms extends State<Terms> {
               children: [
                 Expanded(
                     child: WebView(
-                  backgroundColor:
-                      isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
+                  backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                   initialUrl: 'http://www.przm.kr/js/terms.html',
                   javascriptMode: JavascriptMode.unrestricted,
                   onWebViewCreated: (WebViewController webViewController) {},
@@ -75,35 +79,31 @@ class _Terms extends State<Terms> {
                     if (_connectionStatus.endsWith('none') == true) {
                       NetworkToast();
                     } else {
-                      _webViewController
-                          ?.loadUrl('http://www.przm.kr/js/terms.html');
+                      _webViewController?.loadUrl('http://www.przm.kr/js/terms.html');
                     }
                   },
-                  // WebWettings settings = mWeb.getSettings();
                 )),
                 GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      // margin: EdgeInsets.only(top: 10),
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
                             topLeft: Radius.circular(10),
                         ),
                         color: Color.fromRGBO(51, 211, 180, 1),
-                        // color: isDarkMode
-                        //     ? Colors.white.withOpacity(0.7)
-                        //     : Colors.white,
                       ),
                       alignment: Alignment.center,
                       height: 70,
-                      child: const Text('확인',
-                          style: TextStyle(color: Colors.white)),
-                    )),
+                      child: const Text('확인', style: TextStyle(color: Colors.white)),
+                    )
+                ),
               ],
-            )));
+            )
+        )
+    );
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
@@ -124,6 +124,7 @@ class _Terms extends State<Terms> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
+      NetworkToast();
       print(e.toString());
     }
     if (!mounted) {

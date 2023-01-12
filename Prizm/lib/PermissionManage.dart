@@ -3,7 +3,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 class PermissionManage {
   Future<bool> requestMicPermission(BuildContext context) async {
-    print('aaaa');
     PermissionStatus status = await Permission.microphone.request();
     print('permission manage >> $status');
 
