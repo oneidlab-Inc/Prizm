@@ -73,12 +73,6 @@ class _BottomState extends State<Bottom> {
           SystemUiOverlay.bottom
         ]
     );
-    SystemChrome.setEnabledSystemUIMode(    // 하단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.top
-        ]
-    );
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
         onWillPop: () {
@@ -110,12 +104,6 @@ class _BottomState extends State<Bottom> {
             ),
           ),
         ));
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index; // index는 item 순서로 0, 1, 2로 구성
-    });
   }
 
   Future<bool> _onBackKey() async {

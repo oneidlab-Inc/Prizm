@@ -646,14 +646,11 @@ class _Result extends State<Result> {
       await Share.share('www.oneidlab.kr/app_check.html',
           subject: 'Prizm',
           sharePositionOrigin: Rect.fromLTRB(
-              0,
-              0,
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height * 0.5));
+              0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
+      );
     } else if (Platform.isAndroid) {
       await Share.share('www.oneidlab.kr/app_check.html', subject: 'Prizm');
     }
-
     // box!.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -681,52 +678,38 @@ class _Result extends State<Result> {
 
     switch (value.toInt()) {
       case 1:
-// text = '${xList[0]}';
-// text = '2';
         text = reversedDate[0];
         break;
-
       case 2:
         text = reversedDate[1];
-// text = '3';
         break;
       case 3:
         text = reversedDate[2];
-// text = '4';
         break;
-
       case 4:
         text = reversedDate[3];
-// text = '5';
         break;
-
       case 5:
         text = reversedDate[4];
         break;
-
       case 6:
         text = reversedDate[5];
         break;
-
       case 7:
         text = reversedDate[6];
         break;
       case 8:
         text = reversedDate[7];
         break;
-
       case 9:
         text = reversedDate[8];
         break;
-
       case 10:
         text = reversedDate[9];
         break;
-
       case 11:
         text = reversedDate[10];
         break;
-
       default:
         text = reversedDate[11];
         break;
@@ -798,8 +781,8 @@ class _Result extends State<Result> {
                       Colors.white
                     ]
                 ),
-              ),
-              spots: FlSpotData)
+              ), spots: FlSpotData
+          )
         ],
         titlesData: FlTitlesData(
             topTitles: AxisTitles(
@@ -813,7 +796,8 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets)
+                    getTitlesWidget: bottomTitleWidgets
+                )
             ),
             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)
             )

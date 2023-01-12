@@ -35,7 +35,6 @@ class _Home extends State<Home> {
       : Image.asset('assets/_prizm_dark.png');
 
   late dynamic _background = const ColorFilter.mode(Colors.transparent, BlendMode.clear);
-
   late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
       ? const TextSpan(
           children: [
@@ -96,22 +95,24 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.bottom
-        ]
+    SystemChrome.setEnabledSystemUIMode( //상단 상태바 제거
+      SystemUiMode.manual,
+      overlays: [
+        SystemUiOverlay.bottom,
+      ]
     );
-    // SystemChrome.setEnabledSystemUIMode(    // 하단 상태바 제거
-    //     SystemUiMode.manual,
-    //     overlays: [
-    //       SystemUiOverlay.top
-    //     ]
-    // );
+    SystemChrome.setSystemUIOverlayStyle( // 상태바 색 설정
+        const SystemUiOverlayStyle(
+         statusBarColor: Colors.transparent
+      )
+    );
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
+    print('height >> $c_height');
+    print('width >> ${c_width}');
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final isPad = c_width > 550;
+    final isFlip = c_height > 800;
     return WillPopScope(
         onWillPop: () async {
           return _onBackKey();
@@ -152,21 +153,20 @@ class _Home extends State<Home> {
                   Container(
                       height: c_height * 0.55,
                       padding: const EdgeInsets.only(bottom: 50),
-
                       decoration: isPad
                         ? BoxDecoration(
                           image: DecorationImage(
-                              image: const AssetImage('assets/background.gif'),
-                              alignment: const Alignment(0, -1),
-                              fit: BoxFit.cover,
+                              image: const AssetImage('assets/background.png'),
+                              alignment: const Alignment(0, -1.8),
+                              fit: BoxFit.fitWidth,
                               colorFilter: _background
                           ),
                       )
                       : BoxDecoration(
                           image: DecorationImage(
-                              image: const AssetImage('assets/background.gif'),
-                              alignment: const Alignment(0,-1),
-                              fit: BoxFit.cover,
+                              image: const AssetImage('assets/background.png'),
+                              alignment: isFlip ? const Alignment(0, 1.5) : const Alignment(0,3),
+                              // fit: BoxFit.cover,
                               colorFilter: _background
                           )
                       ),
@@ -176,7 +176,8 @@ class _Home extends State<Home> {
                                  Center(
                                child : Container(
                                  margin : const EdgeInsets.only(bottom: 20),
-                                   child: RichText(text: _textSpan))
+                                   child: RichText(text: _textSpan)
+                                    )
                                  ),
                                  IconButton(
                                        icon: _icon,
@@ -201,7 +202,7 @@ class _Home extends State<Home> {
                                            NetworkToast();
                                            return;
                                          } else if(await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false){
-                                           // _vmidc.start();
+                                           _vmidc.start();
                                            setState(() {
                                              _textSpan = const TextSpan(
                                                text: '노래 분석중',
@@ -227,6 +228,7 @@ class _Home extends State<Home> {
   }
   Future<bool> _onBackKey() async {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // final isDarkMode = ThemeMode.system == Brightness.dark;
     return await showDialog(
       context: context,
       barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
