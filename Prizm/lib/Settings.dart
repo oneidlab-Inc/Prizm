@@ -41,11 +41,12 @@ class _Settings extends State<Settings> {
   String? uid;
   String? _deviceId;
 
-  late final bool selected;
   @override
   void initState() {
     if(MyApp.themeNotifier.value == ThemeMode.dark) {
       _style = Style.dark;
+    } else if(MyApp.themeNotifier.value == ThemeMode.dark) {
+      _style = Style.light;
     }
     super.initState();
   }

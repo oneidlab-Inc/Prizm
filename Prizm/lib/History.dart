@@ -166,6 +166,12 @@ class _History extends State<History> {
           SystemUiOverlay.bottom
         ]
     );
+    // SystemChrome.setEnabledSystemUIMode(
+    //   SystemUiMode.manual,
+    //   overlays: [
+    //     SystemUiOverlay.top
+    //   ]
+    // );
     return WillPopScope(
         onWillPop: () async {
           return _onBackKey();

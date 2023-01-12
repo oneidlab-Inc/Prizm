@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:Prizm/Home.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'Settings.dart';
 
 class Terms extends StatefulWidget {
   const Terms({Key? key}) : super(key: key);
@@ -24,13 +22,15 @@ class _Terms extends State<Terms> {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitSubscription;
 
+
   @override
   void initState() {
     initConnectivity();
     _connectivitSubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     // ios 추후에 추가 (다른 라이브러리 필요할듯?? IOSWebviedw가 없음;
+
+    super.initState();
   }
 
   @override
@@ -39,12 +39,6 @@ class _Terms extends State<Terms> {
       SystemUiMode.manual,
       overlays: [
         SystemUiOverlay.top
-      ]
-    );
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [
-        SystemUiOverlay.bottom
       ]
     );
 
@@ -79,7 +73,6 @@ class _Terms extends State<Terms> {
                   javascriptMode: JavascriptMode.unrestricted,
                   onWebViewCreated: (WebViewController webViewController) {},
                   onProgress: (int progress) {
-                    const Text('이용약관을 불러오고있습니다.', style: TextStyle(color: Colors.black));
                     print("WebView is loading (progress : $progress %)");
                   },
                   onPageStarted: (String url) {

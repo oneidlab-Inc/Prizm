@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -14,6 +16,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_color_generator/material_color_generator.dart';
 import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
 import 'History.dart';
@@ -27,8 +30,25 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  /*-----------------------ThemeMode-----------------------*/
+  final prefs = await SharedPreferences.getInstance();
+  ThemeMode themeMode = ThemeMode.light;
+
+  final String? savedThemeMode = prefs.getString('themeMode');
+
+  if(savedThemeMode == null) {
+    themeMode = ThemeMode.light;
+  } else if(savedThemeMode == "light") {
+    themeMode = ThemeMode.light;
+  } else if(savedThemeMode == "dark") {
+    themeMode = ThemeMode.dark;
+  } else if(savedThemeMode == "system") {
+    themeMode = ThemeMode.system;
+  }
+  /*-------------------------------------------------------*/
 
   /*--------------------------- firebase --------------------------------
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
@@ -50,7 +70,9 @@ void main() async {
   );
 }
 class MyApp extends StatelessWidget {
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+
+ static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+
    MyApp({Key? key}) : super(key: key);
 
   // static var history;
@@ -121,10 +143,7 @@ class _TabPageState extends State<TabPage> {
     setState(() {
       _deviceData = deviceData;
     });
-    // setState(() {
-      // _deviceId = deviceId;
-      // uid = _deviceId;
-    // });
+    print('mount >> ${mounted.toString()}');
   }
 /*----------------------------------------------------------------------------------------------------*/
 
@@ -237,6 +256,7 @@ class _TabPageState extends State<TabPage> {
   final List _pages = [History(), Home(), Chart()];
 
   List url = [];
+  var selectedTheme;
 
   fetchData() async {       // 고정 URL 나오면 변경
     try {
@@ -251,15 +271,37 @@ class _TabPageState extends State<TabPage> {
     }
   }
 
+  // void selectedColor() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   if(MyApp.themeNotifier.value == ThemeMode.dark) {
+  //     selectedTheme = ThemeMode.dark;
+  //     // String Theme = (prefs.getString('Theme')?? selectedTheme);
+  //     // await prefs.setString('Theme', selectedTheme);
+  //     print('aaa');
+  //   } else if(MyApp.themeNotifier.value == ThemeMode.light) {
+  //     selectedTheme = ThemeMode.light;
+  //
+  //     await prefs.setString('Theme', selectedTheme);
+  //     print('bbb');
+  //   }
+  //   setState(() {
+  //     print('setstate >> ${selectedTheme}');
+  //     MyApp.themeNotifier == selectedTheme;
+  //     print('setStatee >> ${MyApp.themeNotifier}');
+  //   });
+  // }
+
+
   @override
   void initState() {
     // fetchData();   고정url 받으면 활성화
     _launchUpdate();
+    // selectedColor();
+    print('selectedTheme >> ${selectedTheme}');
     initPlatformState();
     // MyApp.history  = Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=');
     // MyApp.rank = Uri.parse('http://dev.przm.kr/przm_api/get_song_ranks');
     MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
-
     super.initState();
   }
 
@@ -295,12 +337,6 @@ class _TabPageState extends State<TabPage> {
           SystemUiOverlay.bottom
         ]
     );
-    // SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
-    //     SystemUiMode.manual,
-    //     overlays: [
-    //       SystemUiOverlay.top
-    //     ]
-    // );
     return WillPopScope(
         onWillPop: () {
           if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {

@@ -13,46 +13,37 @@ class NotFound extends StatefulWidget {
 }
 
 class _NotFound extends State<NotFound> {
-
   final VMIDC _vmidc = VMIDC();
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   final Column _textSpan = MyApp.themeNotifier.value == ThemeMode.light
-  ? Column(
-    children: [
-      const Text('검색 결과 없음',
-          style: TextStyle(
-              fontSize: 17,
-            fontWeight: FontWeight.bold,
-            color: Colors.black
-          )),
-          Text('노래를 인식할 수 없습니다.',
+      ? Column(children: [
+          const Text('검색 결과 없음',
               style: TextStyle(
-                fontSize : 17, color: Colors.grey.withOpacity(0.6))
-          ),
-      ]
-  )
-      : Column(
-    children: const[
-       Text('검색 결과 없음',
-          style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Colors.white
-          )),
-      Text('노래를 인식할 수 없습니다.',
-          style: TextStyle(
-              fontSize : 17, color: Colors.grey
-          )),
-    ]
-  );
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black)),
+          Text('노래를 인식할 수 없습니다.',
+              style:
+                  TextStyle(fontSize: 17, color: Colors.grey.withOpacity(0.6))),
+        ])
+      : Column(children: const [
+          Text('검색 결과 없음',
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
+          Text('노래를 인식할 수 없습니다.',
+              style: TextStyle(fontSize: 17, color: Colors.grey)),
+        ]);
 
   @override
   void initState() {
     initConnectivity();
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _vmidc.recCtrl.sink.close();
     super.initState();
   }
@@ -65,11 +56,10 @@ class _NotFound extends State<NotFound> {
 
   @override
   Widget build(BuildContext context) {
-
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
-    if(_connectionStatus.endsWith('none') == true){
+    if (_connectionStatus.endsWith('none') == true) {
       print('network error');
       NetworkToast();
     }
@@ -100,47 +90,52 @@ class _NotFound extends State<NotFound> {
                         MaterialPageRoute(builder: (context) => TabPage()));
                   }),
             ),
-            backgroundColor:  isDarkMode
+            backgroundColor: isDarkMode
                 ? const Color.fromRGBO(47, 47, 47, 1)
                 : const Color.fromRGBO(244, 245, 247, 1),
             body: Container(
-              width: c_width,
-                height: c_height * 0.54,
+                width: c_width,
                 color: isDarkMode
-                ? const Color.fromRGBO(47, 47, 47, 1)
-                : const Color.fromRGBO(244, 245, 247, 1),
-                child :Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: _textSpan
-                    ),
-                Container(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: IconButton(
-                    icon: isDarkMode
-                      ? Image.asset('assets/_prizm_dark.png')
-                      : Image.asset('assets/_prizm.png'),
-                    iconSize: 220,
-                    onPressed: (){
-                      _vmidc.stop();
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> TabPage()));
-                    },
-                  ),
-                )
-              ])
-            )
-        )
-    );
+                    ? const Color.fromRGBO(47, 47, 47, 1)
+                    : const Color.fromRGBO(244, 245, 247, 1),
+                child:
+                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Container(
+                      height: c_height * 0.59,
+                      padding: const EdgeInsets.only(bottom: 50),
+                      child: Center(
+                          child: Column(
+                              children: <Widget>[
+                        Center(
+                            child: Container(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: _textSpan
+                            )
+                        ),
+                        IconButton(
+                          icon: isDarkMode
+                              ? Image.asset('assets/_prizm_dark.png')
+                              : Image.asset('assets/_prizm.png'),
+                          padding: const EdgeInsets.only(bottom: 30),
+                          iconSize: 220,
+                          onPressed: () {
+                            _vmidc.stop();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TabPage()));
+                          },
+                        )
+                      ])))
+                ]))));
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    switch(result) {
+    switch (result) {
       case ConnectivityResult.mobile:
       case ConnectivityResult.wifi:
       case ConnectivityResult.none:
-        setState(()=> _connectionStatus = result.toString());
+        setState(() => _connectionStatus = result.toString());
         break;
       default:
         setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.');
@@ -149,12 +144,12 @@ class _NotFound extends State<NotFound> {
 
   Future<void> initConnectivity() async {
     ConnectivityResult result = ConnectivityResult.none;
-    try{
+    try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch(e) {
+    } on PlatformException catch (e) {
       print(e.toString());
     }
-    if(!mounted) {
+    if (!mounted) {
       return Future.value(null);
     }
     return _updateConnectionStatus(result);
@@ -167,5 +162,4 @@ class _NotFound extends State<NotFound> {
           return TabPage();
         });
   }
-
 }
