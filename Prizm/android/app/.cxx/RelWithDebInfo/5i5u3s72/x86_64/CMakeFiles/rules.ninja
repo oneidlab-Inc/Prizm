@@ -23,7 +23,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe --regenerate-during-build -SC:\Users\Won\Downloads\darkMode\darkMode\android -BC:\Users\Won\Downloads\darkMode\darkMode\android\app\.cxx\RelWithDebInfo\5i5u3s72\x86_64
+  command = C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe --regenerate-during-build -SC:\Prizm\Prizm\android -BC:\Prizm\Prizm\android\app\.cxx\RelWithDebInfo\5i5u3s72\x86_64
   description = Re-running CMake...
   generator = 1
 

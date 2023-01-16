@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Won/Downloads/darkMode/darkMode/android
+# Install script for directory: C:/Prizm/Prizm/android
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Won/Downloads/darkMode/darkMode/android/app/.cxx/Debug/4f6l2845/arm64-v8a/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Prizm/Prizm/android/app/.cxx/Debug/4f6l2845/arm64-v8a/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

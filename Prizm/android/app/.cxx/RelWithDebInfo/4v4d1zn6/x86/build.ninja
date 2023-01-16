@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\darkMode\android\app\.cxx\RelWithDebInfo\4v4d1zn6\x86 && C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D C:\Prizm\Prizm\android\app\.cxx\RelWithDebInfo\4v4d1zn6\x86 && C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -50,7 +50,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D C:\darkMode\android\app\.cxx\RelWithDebInfo\4v4d1zn6\x86 && C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe --regenerate-during-build -SC:\darkMode\android -BC:\darkMode\android\app\.cxx\RelWithDebInfo\4v4d1zn6\x86"
+  COMMAND = cmd.exe /C "cd /D C:\Prizm\Prizm\android\app\.cxx\RelWithDebInfo\4v4d1zn6\x86 && C:\Users\Won\AppData\Local\Android\sdk\cmake\3.18.1\bin\cmake.exe --regenerate-during-build -SC:\Prizm\Prizm\android -BC:\Prizm\Prizm\android\app\.cxx\RelWithDebInfo\4v4d1zn6\x86"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -66,7 +66,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: C:/darkMode/android/app/.cxx/RelWithDebInfo/4v4d1zn6/x86
+# Folder: C:/Prizm/Prizm/android/app/.cxx/RelWithDebInfo/4v4d1zn6/x86
 
 build all: phony
 

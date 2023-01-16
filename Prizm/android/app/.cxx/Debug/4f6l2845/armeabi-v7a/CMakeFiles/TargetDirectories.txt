@@ -1,2 +1,2 @@
-C:/Users/Won/Downloads/darkMode/darkMode/android/app/.cxx/Debug/4f6l2845/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/Won/Downloads/darkMode/darkMode/android/app/.cxx/Debug/4f6l2845/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+C:/Users/Won/Downloads/Prizm/Prizm/android/app/.cxx/Debug/4f6l2845/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Won/Downloads/Prizm/Prizm/android/app/.cxx/Debug/4f6l2845/armeabi-v7a/CMakeFiles/rebuild_cache.dir
