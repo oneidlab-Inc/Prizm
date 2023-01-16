@@ -423,7 +423,7 @@ class _History extends State<History> {
                                                             width: c_width * 0.05,
                                                             child: IconButton(
                                                                 padding: const EdgeInsets.only(bottom: 80, right: 10),
-                                                                icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 30),
+                                                                icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
                                                                 color: isDarkMode ? Colors.white : Colors.grey,
                                                                 onPressed: () {
                                                                   Navigator.pop(context);

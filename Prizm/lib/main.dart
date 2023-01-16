@@ -74,8 +74,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   // final themeMode;
 
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(
-      ThemeMode.light);
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.light);
 
   MyApp({Key? key}) : super(key: key);
 
@@ -124,7 +124,6 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> {
-
   int _selectedIndex = 1; // 처음에 나올 화면 지정
 
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -134,7 +133,8 @@ class _TabPageState extends State<TabPage> {
 
   Future<void> initPlatformState() async {
     String? deviceId;
-    try { //기기 uid
+    try {
+      //기기 uid
       deviceId = await PlatformDeviceId.getDeviceId;
     } on PlatformException {
       deviceId = 'Failed to get Id';
@@ -153,7 +153,6 @@ class _TabPageState extends State<TabPage> {
   }
 
 /*----------------------------------------------------------------------------------------------------*/
-
 
   Future _launchUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -177,17 +176,9 @@ class _TabPageState extends State<TabPage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          final isDarkMode = Theme
-              .of(context)
-              .brightness == Brightness.dark;
-          double c_height = MediaQuery
-              .of(context)
-              .size
-              .height;
-          double c_width = MediaQuery
-              .of(context)
-              .size
-              .width;
+          final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+          double c_height = MediaQuery.of(context).size.height;
+          double c_width = MediaQuery.of(context).size.width;
           return Dialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -196,8 +187,9 @@ class _TabPageState extends State<TabPage> {
                 height: c_height * 0.18,
                 width: c_width * 0.8,
                 margin: const EdgeInsets.only(top: 20, bottom: 20),
-                color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors
-                    .white,
+                color: isDarkMode
+                    ? const Color.fromRGBO(66, 66, 66, 1)
+                    : Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,16 +207,15 @@ class _TabPageState extends State<TabPage> {
                               top: BorderSide(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(94, 94, 94, 1)
-                                      : Colors.black.withOpacity(0.1))
-                          )
-                      ),
+                                      : Colors.black.withOpacity(0.1)))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                               margin: const EdgeInsets.only(right: 20),
-                              color: isDarkMode ? const Color.fromRGBO(
-                                  66, 66, 66, 1) : Colors.white,
+                              color: isDarkMode
+                                  ? const Color.fromRGBO(66, 66, 66, 1)
+                                  : Colors.white,
                               width: c_width * 0.345,
                               height: c_height * 0.08,
                               child: TextButton(
@@ -257,8 +248,7 @@ class _TabPageState extends State<TabPage> {
                                         : Colors.black.withOpacity(0.3),
                                   ),
                                 ),
-                              )
-                          ),
+                              )),
                         ],
                       ),
                     )
@@ -271,6 +261,7 @@ class _TabPageState extends State<TabPage> {
 /*-----------------------------------------------------------------------------------------*/
 
   final List _pages = [History(), Home(), Chart()];
+
   // final List _pages = [Result(id: '',), Home(), Chart()];
   List url = [];
   var selectedTheme;
@@ -278,8 +269,8 @@ class _TabPageState extends State<TabPage> {
   fetchData() async {
     // 고정 URL 나오면 변경
     try {
-      http.Response response = await http.get(
-          Uri.parse('http://dev.przm.kr/przm_api/'));
+      http.Response response =
+          await http.get(Uri.parse('http://dev.przm.kr/przm_api/'));
       String jsonData = response.body;
       Map<String, dynamic> url = jsonDecode(jsonData.toString());
       setState(() {});
@@ -310,7 +301,6 @@ class _TabPageState extends State<TabPage> {
   //   });
   // }
 
-
   @override
   void initState() {
     // fetchData();   고정url 받으면 활성화
@@ -339,9 +329,8 @@ class _TabPageState extends State<TabPage> {
   void pageChanged(int index) {
     setState(() {
       _selectedIndex = index;
-      pageController.animateToPage(
-          index, duration: const Duration(milliseconds: 500),
-          curve: Curves.ease);
+      pageController.animateToPage(index,
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
       pageController.jumpToPage(_selectedIndex);
     });
   }
@@ -351,12 +340,10 @@ class _TabPageState extends State<TabPage> {
 // flutter build apk —release —no-sound-null-safety
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode( // 상단 상태바 제거
+    SystemChrome.setEnabledSystemUIMode(
+        // 상단 상태바 제거
         SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.bottom
-        ]
-    );
+        overlays: [SystemUiOverlay.bottom]);
     return WillPopScope(
         onWillPop: () {
           if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {
@@ -398,39 +385,30 @@ class _TabPageState extends State<TabPage> {
                 backgroundColor: MyApp.themeNotifier.value == ThemeMode.dark
                     ? Colors.black
                     : Colors.white,
-              )
-          ),
-        )
-    );
+              )),
+        ));
   }
 
 /* =======================================================*/
 
   Future<bool> _onBackKey() async {
-    final isDarkMode = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return await showDialog(
       context: context,
       barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘)
       builder: (BuildContext context) {
-        double c_height = MediaQuery
-            .of(context)
-            .size
-            .height;
-        double c_width = MediaQuery
-            .of(context)
-            .size
-            .width;
+        double c_height = MediaQuery.of(context).size.height;
+        double c_width = MediaQuery.of(context).size.width;
         return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
               height: c_height * 0.18,
               width: c_width * 0.8,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
-              color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors
-                  .white,
+              color: isDarkMode
+                  ? const Color.fromRGBO(66, 66, 66, 1)
+                  : Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,10 +425,7 @@ class _TabPageState extends State<TabPage> {
                             top: BorderSide(
                                 color: isDarkMode
                                     ? const Color.fromRGBO(94, 94, 94, 1)
-                                    : Colors.black.withOpacity(0.1)
-                            )
-                        )
-                    ),
+                                    : Colors.black.withOpacity(0.1)))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -459,52 +434,52 @@ class _TabPageState extends State<TabPage> {
                           height: c_height * 0.08,
                           child: Container(
                               decoration: BoxDecoration(
-                                  color: isDarkMode ? const Color.fromRGBO(
-                                      66, 66, 66, 1) : Colors.white,
+                                  color: isDarkMode
+                                      ? const Color.fromRGBO(66, 66, 66, 1)
+                                      : Colors.white,
                                   border: Border(
                                       right: BorderSide(
                                           color: isDarkMode
                                               ? const Color.fromRGBO(
-                                              94, 94, 94, 1)
-                                              : Colors.black.withOpacity(0.1))
-                                  )
-                              ),
+                                                  94, 94, 94, 1)
+                                              : Colors.black
+                                                  .withOpacity(0.1)))),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
                                   onPressed: () {
                                     exit(0);
                                   },
-                                  child: const Text('종료', style: TextStyle(
-                                      fontSize: 20, color: Colors.red))
-                              )
-                          ),
+                                  child: const Text('종료',
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.red)))),
                         ),
                         Container(
                             margin: const EdgeInsets.only(right: 20),
-                            color: isDarkMode ? const Color.fromRGBO(
-                                66, 66, 66, 1) : Colors.white,
+                            color: isDarkMode
+                                ? const Color.fromRGBO(66, 66, 66, 1)
+                                : Colors.white,
                             width: c_width * 0.345,
                             height: c_height * 0.08,
                             child: TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('취소',
+                              child: Text(
+                                '취소',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: isDarkMode ? Colors.white.withOpacity(
-                                      0.8) : Colors.black.withOpacity(0.3),
+                                  color: isDarkMode
+                                      ? Colors.white.withOpacity(0.8)
+                                      : Colors.black.withOpacity(0.3),
                                 ),
                               ),
-                            )
-                        ),
+                            )),
                       ],
                     ),
                   )
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }

@@ -408,8 +408,7 @@ class _Chart extends State<Chart> {
                                                           SizedBox(
                                                             width: c_width * 0.05,
                                                             child: IconButton(
-                                                                padding:
-                                                                const EdgeInsets.only(bottom: 50),
+                                                                padding: const EdgeInsets.only(bottom: 50, right: 10),
                                                                 icon: ImageIcon(
                                                                     Image.asset('assets/x_icon.png').image, size: 15),
                                                                 color: Colors.grey,
@@ -458,7 +457,8 @@ class _Chart extends State<Chart> {
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight: FontWeight.w300,
-                                                                color: isDarkMode ? Colors.white : Colors.black),
+                                                                color: isDarkMode ? Colors.white : Colors.black
+                                                            ),
                                                           )
                                                         ],
                                                       ),
