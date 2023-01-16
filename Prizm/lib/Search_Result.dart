@@ -49,7 +49,6 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-
     _uid = await PlatformDeviceId.getDeviceId;
     print('uid : $_uid');
 
@@ -57,9 +56,8 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-              Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid')
-      );
-
+        // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
+          Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -77,6 +75,7 @@ class _Result extends State<Result> {
     try {
       http.Response response = await http.get(
           Uri.parse('${MyApp.Uri}get_song_programs/json?id=${widget.id}')
+        // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
       );
       String jsonData = response.body;
 
@@ -88,7 +87,7 @@ class _Result extends State<Result> {
     }
 
     try {
-      List _contain = [];  // 실데이타 파싱
+      List _contain = []; // 실데이타 파싱
       sum = 0;
       for (int i = 0; i <= song_cnts.length - 1; i++) {
         intX = int.parse(song_cnts[i]['F_MONTH'].toString());
@@ -121,7 +120,6 @@ class _Result extends State<Result> {
 // 현재월
 // 차트 실데이터 파싱
       for (int j = 0; j < _reverse.length; j++) {
-
 //없는 월 제외
         double mon = double.parse(j.toString()) + 1;
 
@@ -142,7 +140,7 @@ class _Result extends State<Result> {
   }
 
   final duplicateItems =
-      List<String>.generate(1000, (i) => "$Container(child:Text $i)");
+  List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
 
   @override
@@ -162,27 +160,29 @@ class _Result extends State<Result> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+    SystemChrome.setEnabledSystemUIMode(
+      // 상단 상태바 제거
         SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.bottom
-        ]
-    );
-    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
+        overlays: [SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(
+      // 상단 상태바 제거
         SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.top
-        ]
-    );
+        overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height * 1.0;
     double c_width = MediaQuery.of(context).size.width * 1.0;
-    final isPad = c_width > 550;
     final isCNTS = song_cnts.length > 3;
     final isExist = programs.length == 0;
     final isArtistNull = maps['ARTIST'] == null;
     final isAlbumNull = maps['ALBUM'] == null;
     final isImage = maps['IMAGE'].toString().startsWith('assets') != true;
-
+    final isPad = c_width > 800;
+    final isFlip = c_height / c_width > 2.3;
+    final isUltra =c_height > 1000;
+    final isPlus = 1000 < c_height && 1300 >= c_height && c_width > 500;
+    final isNormal = c_height < 850;
+    print('height = ${c_height.toInt()}');
+    print('width = ${c_width.toInt()}');
+    print('height / width = ${c_height / c_width} ');
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();
@@ -192,59 +192,149 @@ class _Result extends State<Result> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Material(
-               color: isDarkMode ? Colors.black : Colors.white,
-               child: Column(
+                color: isDarkMode ? Colors.black : Colors.white,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Stack(
                       children: [
                         Center(
-                          child: SizedBox(
+                          child: isFlip
+                              ? SizedBox(
                               child: Image.network(
                                 '${maps['IMAGE']}',
-                                 height: c_height * 0.5,
-                                 fit: BoxFit.fill,
-                                 errorBuilder: (context, error, stackTrace) {
-                                   return SizedBox(
-                                     child: Image.asset(
-                                       'assets/no_image.png',
-                                       height: c_height * 0.5,
-                                       fit: BoxFit.fill,
-                                     ),
-                                   );
-                                 },
-                               )
-                          ),
+                                height: c_height * 0.57,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SizedBox(
+                                    child: Image.asset(
+                                      'assets/no_image.png',
+                                      height: c_height * 0.57,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  );
+                                },
+                              ))  // << flip
+                              : isPad
+                              ? SizedBox(
+                              child: Image.network(
+                                '${maps['IMAGE']}',
+                                height: c_height * 0.5,
+                                width: c_height * 0.5,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return SizedBox(
+                                    child: Image.asset(
+                                      'assets/no_image.png',
+                                      height: c_height * 0.5,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  );
+                                },
+                              )) //  << fold
+                              : isPlus ? SizedBox(
+                              child: Image.network(
+                                '${maps['IMAGE']}',
+                                width: c_width,
+                                height: c_height * 0.4,
+                                fit: BoxFit.fill,
+                                errorBuilder:
+                                    (context, error, stackTrace) {
+                                  return SizedBox(
+                                    child: Image.asset(
+                                      'assets/no_image.png',
+                                      height: c_height * 0.4,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  );
+                                },
+                              ))
+                              : isUltra
+                              ? SizedBox(
+                              child: Image.network(
+                                '${maps['IMAGE']}',
+                                height: c_height * 0.5,
+                                fit: BoxFit.fill,
+                                errorBuilder:
+                                    (context, error, stackTrace) {
+                                  return SizedBox(
+                                    child: Image.asset(
+                                      'assets/no_image.png',
+                                      height: c_height * 0.5,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  );
+                                },
+                              ))
+                              : isNormal
+                              ? SizedBox(
+                              child: Image.network(
+                                '${maps['IMAGE']}',
+                                height: c_height * 0.6,
+                                fit: BoxFit.fill,
+                                errorBuilder:
+                                    (context, error, stackTrace) {
+                                  return SizedBox(
+                                    child: Image.asset(
+                                      'assets/no_image.png',
+                                      height: c_height * 0.6,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  );
+                                },
+                              ))
+                              : SizedBox(
+                              child: Image.network(
+                                '${maps['IMAGE']}',
+                                height: c_height * 0.5,
+                                fit: BoxFit.fill,
+                                errorBuilder:
+                                    (context, error, stackTrace) {
+                                  return SizedBox(
+                                    child: Image.asset(
+                                      'assets/no_image.png',
+                                      height: c_height * 0.5,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  );
+                                },
+                              )),
                         ),
                         Container(
                           decoration: BoxDecoration(
                               gradient: isDarkMode
                                   ? const LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [Colors.white10, Colors.black],
-                                      stops: [.40, .75])
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [Colors.black12, Colors.black],
+                                  stops: [.35, .75])
                                   : const LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [Colors.white10, Colors.white],
-                                      stops: [.40, .75])
-                          ),
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [Colors.white10, Colors.white],
+                                  stops: [.35, .75])),
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
                                     icon:
-                                        const Icon(Icons.arrow_back_ios_sharp),
+                                    const Icon(Icons.arrow_back_ios_sharp),
                                     color: isImage
-                                        ? isDarkMode ? Colors.white : Colors.black
+                                        ? isDarkMode
+                                        ? Colors.white
+                                        : Colors.black
                                         : isPad
-                                          ? isDarkMode ? Colors.white : Colors.black
-                                            : isDarkMode ? Colors.black : Colors.black,
+                                        ? isDarkMode
+                                        ? Colors.white
+                                        : Colors.black
+                                        : isDarkMode
+                                        ? Colors.black
+                                        : Colors.black,
                                     onPressed: () {
                                       Navigator.push(
                                         context,
@@ -259,10 +349,16 @@ class _Result extends State<Result> {
                                       size: 30,
                                     ),
                                     color: isImage
-                                        ? isDarkMode ? Colors.white : Colors.black
+                                        ? isDarkMode
+                                        ? Colors.white
+                                        : Colors.black
                                         : isPad
-                                            ? isDarkMode ? Colors.white : Colors.black
-                                            : isDarkMode ? Colors.black : Colors.black,
+                                        ? isDarkMode
+                                        ? Colors.white
+                                        : Colors.black
+                                        : isDarkMode
+                                        ? Colors.black
+                                        : Colors.black,
                                     onPressed: () {
                                       _onShare(context);
                                     },
@@ -270,7 +366,8 @@ class _Result extends State<Result> {
                                 ],
                               ),
                               Container(
-                                  margin: const EdgeInsets.only(top: 400),
+                                  margin: const EdgeInsets.only(top: 350),
+                                  // original : 400
                                   width: c_width * 0.9,
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
@@ -283,70 +380,86 @@ class _Result extends State<Result> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30,
                                             overflow: TextOverflow.ellipsis,
-                                            color: isDarkMode ? Colors.white : Colors.black),
+                                            color: isDarkMode
+                                                ? Colors.white
+                                                : Colors.black),
                                       )
                                     ]),
-                                  )
-                              ),
+                                  )),
                               Container(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
                                     children: [
                                       Flexible(
                                           child: RichText(
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        strutStyle: const StrutStyle(fontSize: 17),
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                            text: isArtistNull ? 'Various Artist' : maps['ARTIST'],
-                                            style: TextStyle(
-                                              fontSize: 17,
-                                              color: isDarkMode ? Colors.white : Colors.black,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                              text: ' · ',
-                                              style: TextStyle(
-                                                  color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4), fontSize: 17)),
-                                          TextSpan(
-                                            text: isAlbumNull
-                                                ? 'Various Album'
-                                                : maps['ALBUM'],
-                                            style: TextStyle(
-                                                color: isDarkMode
-                                                    ? Colors.grey
-                                                    : Colors.black
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                            strutStyle:
+                                            const StrutStyle(fontSize: 17),
+                                            text: TextSpan(children: [
+                                              TextSpan(
+                                                text: isArtistNull
+                                                    ? 'Various Artist'
+                                                    : maps['ARTIST'],
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  color: isDarkMode
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                  text: ' · ',
+                                                  style: TextStyle(
+                                                      color: isDarkMode
+                                                          ? Colors.grey
+                                                          : Colors.black
+                                                          .withOpacity(0.4),
+                                                      fontSize: 17)),
+                                              TextSpan(
+                                                text: isAlbumNull
+                                                    ? 'Various Album'
+                                                    : maps['ALBUM'],
+                                                style: TextStyle(
+                                                    color: isDarkMode
+                                                        ? Colors.grey
+                                                        : Colors.black
                                                         .withOpacity(0.4),
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 17),
-                                          )
-                                        ]),
-                                      ))
+                                                    overflow: TextOverflow.ellipsis,
+                                                    fontSize: 17),
+                                              )
+                                            ]),
+                                          ))
                                     ],
-                                  )
-                              ),
+                                  )),
                               Container(
                                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 50),
                                 child: Row(
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(right: 20),
-                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 5, 10, 5),
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: const Color.fromRGBO(51, 211, 180, 1)),
+                                          borderRadius:
+                                          BorderRadius.circular(20),
+                                          color: const Color.fromRGBO(
+                                              51, 211, 180, 1)),
                                       child: Text(
                                         '${maps['date']}',
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
                                     ),
-                                    Image.asset('assets/result_search.png', width: 15, color: Colors.grey),
+                                    Image.asset('assets/result_search.png',
+                                        width: 15, color: Colors.grey),
                                     Text(' ${maps['count']}',
-                                      style: const TextStyle(color: Colors.grey, overflow: TextOverflow.ellipsis)),
-                                    const Text('회', style: TextStyle(color: Colors.grey))
+                                        style: const TextStyle(
+                                            color: Colors.grey,
+                                            overflow: TextOverflow.ellipsis)),
+                                    const Text('회',
+                                        style: TextStyle(color: Colors.grey))
                                   ],
                                 ),
                               ),
@@ -373,17 +486,16 @@ class _Result extends State<Result> {
                                 child: Container(
                                     child: isExist
                                         ? Center(
-                                            child: Text('최신 방송 재생정보가 없습니다.',
-                                                style: TextStyle(
-                                                    color: isDarkMode ? Colors.white : Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20))
-                                        )
+                                        child: Text('최신 방송 재생정보가 없습니다.',
+                                            style: TextStyle(
+                                                color: isDarkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20)))
                                         : Row(
-                                            children: [_listView(programs)],
-                                          )
-                                )
-                            ),
+                                      children: [_listView(programs)],
+                                    ))),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -394,34 +506,31 @@ class _Result extends State<Result> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),
-                                    )
-                                ),
+                                    )),
                                 isCNTS
                                     ? ChartContainer(
-                                        color: isDarkMode
-                                            ? Colors.black
-                                            : Colors.white,
-                                        chart: line_chart(song_cnts),
-                                        title: '',
-                                      )
+                                  color: isDarkMode
+                                      ? Colors.black
+                                      : Colors.white,
+                                  chart: line_chart(song_cnts),
+                                  title: '',
+                                )
                                     : const SizedBox(
-                                        height: 200,
-                                        child: Center(
-                                            child: Text('차트 정보가 없습니다.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20))))
+                                    height: 200,
+                                    child: Center(
+                                        child: Text('차트 정보가 없습니다.',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20))))
                               ],
                             ),
                             Container(
                               margin:
-                                  const EdgeInsets.only(left: 00, right: 10),
+                              const EdgeInsets.only(left: 00, right: 10),
                               decoration: BoxDecoration(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(42, 42, 42, 1)
-                                      // : const Color.fromRGBO(239, 239, 239, 1)),
-                                      : const Color.fromRGBO(250, 250, 250, 1)
-                              ),
+                                      : const Color.fromRGBO(250, 250, 250, 1)),
                               height: 100,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -429,21 +538,20 @@ class _Result extends State<Result> {
                                   Image.asset('assets/result_search.png',
                                       width: 20),
                                   Container(
-                                    padding: const EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(left: 10, right:10),
+                                    // padding: const EdgeInsets.only(right: 10),
                                     child: Text('총 검색 : ',
                                         style: TextStyle(
                                             fontSize: 17,
                                             color: isDarkMode
                                                 ? const Color.fromRGBO(
-                                                    151, 151, 151, 1)
+                                                151, 151, 151, 1)
                                                 : Colors.black)),
                                   ),
                                   Text('${maps['count']}',
-                                      style: const TextStyle(fontSize: 17)
-                                  ),
+                                      style: const TextStyle(fontSize: 17)),
                                   const Text('회',
-                                      style: TextStyle(fontSize: 17)
-                                  )
+                                      style: TextStyle(fontSize: 17))
                                 ],
                               ),
                             ),
@@ -453,49 +561,45 @@ class _Result extends State<Result> {
                               },
                               child: Container(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 100),
+                                const EdgeInsets.symmetric(horizontal: 100),
                                 height: 70,
                                 margin:
-                                    const EdgeInsets.fromLTRB(0, 30, 10, 40),
+                                const EdgeInsets.fromLTRB(0, 30, 10, 40),
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
                                         color: isDarkMode
                                             ? Colors.grey.withOpacity(0.3)
-                                            : Colors.black.withOpacity(0.1)
-                                    )
-                                ),
+                                            : Colors.black.withOpacity(0.1))),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
                                         padding:
-                                            const EdgeInsets.only(right: 10),
+                                        const EdgeInsets.only(right: 10),
                                         child: const Text(
                                           '홈으로',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 16
-                                          ),
-                                        )
-                                    ),
+                                              fontSize: 16),
+                                        )),
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,
                                       size: 17,
                                       color: isDarkMode
-                                          ? const Color.fromRGBO(125, 125, 125, 1)
-                                          : const Color.fromRGBO(208, 208, 208, 1),
+                                          ? const Color.fromRGBO(
+                                          125, 125, 125, 1)
+                                          : const Color.fromRGBO(
+                                          208, 208, 208, 1),
                                     )
                                   ],
                                 ),
                               ),
                             )
                           ],
-                        )
-                    )
+                        ))
                   ],
-                )
-            ),
+                )),
           ),
         ),
       ),
@@ -522,10 +626,10 @@ class _Result extends State<Result> {
                         color: Colors.white,
                         border: Border.all(
                           width: 3,
-                           color: isDarkMode
+                          color: isDarkMode
                               ? const Color.fromRGBO(189, 189, 189, 1)
-                              // : const Color.fromRGBO(228, 228, 228, 1),
-                          :Colors.black.withOpacity(0.3),
+                          // : const Color.fromRGBO(228, 228, 228, 1),
+                              : Colors.black.withOpacity(0.3),
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -545,8 +649,7 @@ class _Result extends State<Result> {
                             },
                           ),
                         ),
-                      )
-                  ),
+                      )),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -557,8 +660,7 @@ class _Result extends State<Result> {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromRGBO(51, 211, 180, 1)
-                            ),
+                                color: const Color.fromRGBO(51, 211, 180, 1)),
                             child: Text(
                               program['F_TYPE'],
                               style: const TextStyle(
@@ -567,9 +669,9 @@ class _Result extends State<Result> {
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width: 65,
-                            height: 22,
+                              margin: const EdgeInsets.only(left: 10),
+                              width: 65,
+                              height: 22,
                               child: Text(program['CL_NM'],
                                   style: TextStyle(
                                       fontSize: 16,
@@ -577,8 +679,7 @@ class _Result extends State<Result> {
                                       fontWeight: FontWeight.bold,
                                       color: isDarkMode
                                           ? Colors.white
-                                          : Colors.black)
-                              )
+                                          : Colors.black))
                             // child: Image.network(
                             //   program['F_LOGO'],
                             //   width: 50,
@@ -646,8 +747,10 @@ class _Result extends State<Result> {
       await Share.share('www.oneidlab.kr/app_check.html',
           subject: 'Prizm',
           sharePositionOrigin: Rect.fromLTRB(
-              0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5)
-      );
+              0,
+              0,
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height * 0.5));
     } else if (Platform.isAndroid) {
       await Share.share('www.oneidlab.kr/app_check.html', subject: 'Prizm');
     }
@@ -729,9 +832,8 @@ class _Result extends State<Result> {
             HorizontalLine(
                 y: 0,
                 color: isDarkMode
-                    ? Colors.grey.withOpacity(0.4)
-                    : Colors.grey.withOpacity(0.3)
-            )
+                    ? Colors.grey.withOpacity(0.6)
+                    : Colors.grey.withOpacity(0.3))
           ],
         ),
         baselineY: 0,
@@ -741,8 +843,9 @@ class _Result extends State<Result> {
               return FlLine(
                   strokeWidth: 1,
                   color: isDarkMode
-                      ? Colors.grey.withOpacity(0.4)
-                      : Colors.grey.withOpacity(0.3));
+                      ? Colors.grey.withOpacity(0.6)
+                      : Colors.grey.withOpacity(0.3)
+              );
             },
             drawVerticalLine: false,
             drawHorizontalLine: true,
@@ -758,12 +861,11 @@ class _Result extends State<Result> {
                 show: true,
                 getDotPainter: (spot, percent, barData, index) =>
                     FlDotCirclePainter(
-                        radius: 3,
+                        radius: 2.5,
                         color: const Color.fromRGBO(51, 211, 180, 1),
                         strokeColor:
-                            isDarkMode ? Colors.white : Colors.grey.shade200,
-                        strokeWidth: 4
-                    ),
+                        isDarkMode ? Colors.white : Colors.grey.shade200,
+                        strokeWidth: 2.5),
               ),
               color: const Color.fromRGBO(51, 211, 180, 1),
               isCurved: true,
@@ -773,15 +875,18 @@ class _Result extends State<Result> {
               isStrokeJoinRound: true,
               belowBarData: BarAreaData(
                 show: true,
-                gradient: const LinearGradient(
+                gradient: isDarkMode ? const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Color.fromRGBO(51, 215, 180, 1),
-                      Colors.white
-                    ]
+                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.grey]
+                )
+                    : const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.white]
                 ),
-              ), spots: FlSpotData
+              ),
+              spots: FlSpotData
           )
         ],
         titlesData: FlTitlesData(
@@ -796,15 +901,9 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets
-                )
-            ),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)
-            )
-        ),
-        lineTouchData: LineTouchData(enabled: true)
-        )
-    );
+                    getTitlesWidget: bottomTitleWidgets)),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
+        lineTouchData: LineTouchData(enabled: true)));
     return result;
   }
 }

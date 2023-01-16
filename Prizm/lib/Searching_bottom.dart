@@ -72,35 +72,35 @@ class _BottomState extends State<Notfound_Bottom> {
         ]
     );
     return WillPopScope(
-      onWillPop: (){
-        if(_selectedIndex == 1 && pageController.offset == _deviceData /3) {
-          return _onBackKey();
-        } else {
-          return _backToHome();
-        }
-      },
-      child: Scaffold(
-        body: buildPageView(),
-        bottomNavigationBar: StyleProvider(
-          style: isDarkMode ? Style_dark() : Style(),
-          child: ConvexAppBar(
-            items: [
-              TabItem(icon: Image.asset('assets/history.png'), title: '히스토리'),
-              TabItem(icon: isDarkMode
-                  ?Image.asset('assets/search_dark.png')
-                  :Image.asset('assets/search.png')
-              ),
-              TabItem(icon: Image.asset('assets/chart.png'), title: '차트')
-            ],
-            onTap: pageChanged,
-            height: 70,
-            initialActiveIndex: null,
-            style: TabStyle.fixedCircle,
-            elevation: 1,
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        onWillPop: (){
+          if(_selectedIndex == 1 && pageController.offset == _deviceData /3) {
+            return _onBackKey();
+          } else {
+            return _backToHome();
+          }
+        },
+        child: Scaffold(
+          body: buildPageView(),
+          bottomNavigationBar: StyleProvider(
+            style: isDarkMode ? Style_dark() : Style(),
+            child: ConvexAppBar(
+              items: [
+                TabItem(icon: Image.asset('assets/history.png'), title: '히스토리'),
+                TabItem(icon: isDarkMode
+                    ?Image.asset('assets/search_dark.png')
+                    :Image.asset('assets/search.png')
+                ),
+                TabItem(icon: Image.asset('assets/chart.png'), title: '차트')
+              ],
+              onTap: pageChanged,
+              height: 70,
+              initialActiveIndex: null,
+              style: TabStyle.fixedCircle,
+              elevation: 1,
+              backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            ),
           ),
-        ),
-      )
+        )
     );
   }
 

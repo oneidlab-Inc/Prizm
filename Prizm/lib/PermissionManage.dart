@@ -23,14 +23,14 @@ class PermissionManage {
       content: const Text('마이크 권한을 확인해주세요'),
       actions: [
         TextButton(
-            onPressed: () {
-              openAppSettings();
-        },
-            child: const Text('설정하기',
-              style: TextStyle(
+          onPressed: () {
+            openAppSettings();
+          },
+          child: const Text('설정하기',
+            style: TextStyle(
                 color: Colors.blue
-              ),
             ),
+          ),
         )
       ],
     );

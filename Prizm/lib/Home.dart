@@ -16,7 +16,6 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -31,31 +30,37 @@ class _Home extends State<Home> {
       ? Image.asset('assets/_prizm.png')
       : Image.asset('assets/_prizm_dark.png');
 
-  late dynamic _background = const ColorFilter.mode(Colors.transparent, BlendMode.clear);
+  late dynamic _background =
+  const ColorFilter.mode(Colors.transparent, BlendMode.clear);
   late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
-      ? const TextSpan(
-          children: [
-              TextSpan(text: '지금 이 곡을 찾으려면 ',
-                style: TextStyle(fontSize: 17, color: Colors.black)),
-              TextSpan(text: '프리즘 ',
-                style: TextStyle(
-                    color: Color.fromRGBO(43, 226, 193, 1),
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold)),
-              TextSpan(text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)),
-             ])
-      : const TextSpan(
-          children: [
-              TextSpan(text: '지금 이 곡을 찾으려면 ',
-                style: TextStyle(fontSize: 17, color: Colors.white)),
-              TextSpan(text: '프리즘 ',
-                style: TextStyle(
-                    color: Color.fromRGBO(43, 226, 193, 1),
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold)),
-              TextSpan(text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.white)),
-          ]
-  );
+      ? const TextSpan(children: [
+    TextSpan(
+        text: '지금 이 곡을 찾으려면 ',
+        style: TextStyle(fontSize: 17, color: Colors.black)),
+    TextSpan(
+        text: '프리즘 ',
+        style: TextStyle(
+            color: Color.fromRGBO(43, 226, 193, 1),
+            fontSize: 17,
+            fontWeight: FontWeight.bold)),
+    TextSpan(
+        text: '을 눌러주세요!',
+        style: TextStyle(fontSize: 17, color: Colors.black)),
+  ])
+      : const TextSpan(children: [
+    TextSpan(
+        text: '지금 이 곡을 찾으려면 ',
+        style: TextStyle(fontSize: 17, color: Colors.white)),
+    TextSpan(
+        text: '프리즘 ',
+        style: TextStyle(
+            color: Color.fromRGBO(43, 226, 193, 1),
+            fontSize: 17,
+            fontWeight: FontWeight.bold)),
+    TextSpan(
+        text: '을 눌러주세요!',
+        style: TextStyle(fontSize: 17, color: Colors.white)),
+  ]);
 
 /*--------------------------------------------------------------*/
 
@@ -63,8 +68,11 @@ class _Home extends State<Home> {
   void initState() {
     Permission.microphone.request();
     initConnectivity();
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    _vmidc.init(ip: '222.122.131.220', port: 8551, sink: _ctrl.sink).then((ret) {
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _vmidc
+        .init(ip: '222.122.131.220', port: 8551, sink: _ctrl.sink)
+        .then((ret) {
       if (!ret) {
         print('server error');
       } else {
@@ -87,22 +95,20 @@ class _Home extends State<Home> {
   @override
   void dispose() {
     _vmidc.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode( //상단 상태바 제거
-      SystemUiMode.manual,
-      overlays: [
-        SystemUiOverlay.bottom,
-      ]
-    );
-    SystemChrome.setSystemUIOverlayStyle( // 상태바 색 설정
-        const SystemUiOverlayStyle(
-         statusBarColor: Colors.transparent
-      )
-    );
+    SystemChrome.setEnabledSystemUIMode(
+      //상단 상태바 제거
+        SystemUiMode.manual,
+        overlays: [
+          SystemUiOverlay.bottom,
+        ]);
+    SystemChrome.setSystemUIOverlayStyle(// 상태바 색 설정
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     print('height >> $c_height');
@@ -130,8 +136,10 @@ class _Home extends State<Home> {
                 visualDensity: const VisualDensity(horizontal: 4.0),
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings())
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Settings()));
                 },
               )
             ],
@@ -140,7 +148,7 @@ class _Home extends State<Home> {
             elevation: 0.0,
           ),
           body: Container(
-            width: double.infinity,
+              width: double.infinity,
               color: isDarkMode
                   ? const Color.fromRGBO(47, 47, 47, 1)
                   : const Color.fromRGBO(244, 245, 247, 1),
@@ -151,93 +159,101 @@ class _Home extends State<Home> {
                       height: c_height * 0.55,
                       padding: const EdgeInsets.only(bottom: 50),
                       decoration: isPad
-                        ? BoxDecoration(
-                          image: DecorationImage(
-                              image: const AssetImage('assets/background.png'),
-                              alignment: const Alignment(0, -1.8),
-                              fit: BoxFit.fitWidth,
-                              colorFilter: _background
-                          ),
+                          ? BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage(isDarkMode
+                                ? ('assets/BG_dark.gif')
+                                : ('assets/BG_light.gif')),
+                            alignment: const Alignment(0, -2),
+                            fit: BoxFit.cover,
+                            colorFilter: _background),
                       )
-                      : BoxDecoration(
+                          : BoxDecoration(
                           image: DecorationImage(
-                              image: const AssetImage('assets/background.png'),
-                              alignment: isFlip ? const Alignment(0, 1.5) : const Alignment(0,3),
-                              // fit: BoxFit.cover,
-                              colorFilter: _background
-                          )
-                      ),
+                              image: AssetImage(isDarkMode
+                                  ? ('assets/BG_dark.gif')
+                                  : ('assets/BG_light.gif')),
+                              alignment: isFlip
+                                  ? const Alignment(0, 1)
+                                  : const Alignment(0, 1),
+                              // fit: BoxFit.contain,
+                              colorFilter: _background)),
                       child: Center(
-                          child: Column(
-                              children: <Widget>[
-                                 Center(
-                               child : Container(
-                                 margin : const EdgeInsets.only(bottom: 20),
-                                   child: RichText(text: _textSpan)
-                                    )
-                                 ),
-                                 IconButton(
-                                       icon: _icon,
-                                       padding: const EdgeInsets.only(bottom: 30),
-                                       iconSize: _size,
-                                       onPressed: () async {
-                                         var status = await Permission.microphone.status;
-                                         if(status == PermissionStatus.permanentlyDenied) {
-                                           PermissionToast();
-                                           requestMicPermission(context);
-                                           print('status >> $status');
-                                           return;
-                                         } else if(status == PermissionStatus.denied) {
-                                           PermissionToast();
-                                           requestMicPermission(context);
-                                           print('status >> $status');
-                                           Permission.microphone.request();
-                                           return;
-                                         }
-                                         print(_connectionStatus);
-                                         if(_connectionStatus.endsWith('none') == true){
-                                           NetworkToast();
-                                           return;
-                                         } else if(await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false){
-                                           _vmidc.start();
-                                           setState(() {
-                                             _textSpan = const TextSpan(
-                                               text: '노래 분석중',
-                                               style: TextStyle(
-                                                   color: Color.fromRGBO(43, 226, 193, 1),
-                                                   fontSize: 17,
-                                                   fontWeight: FontWeight.bold),
-                                             );
-                                             _background = const ColorFilter.mode(Colors.transparent, BlendMode.color);
-                                           });
-                                           if (_vmidc.isRunning() == true) {
-                                             _vmidc.stop();
-                                           }
-                                         }
-                                       }),
-                          ])
-                      )
-                  ),
+                          child: Column(children: <Widget>[
+                            Center(
+                                child: Container(
+                                    margin: const EdgeInsets.only(bottom: 20),
+                                    child: RichText(text: _textSpan))),
+                            IconButton(
+                                icon: _icon,
+                                padding: const EdgeInsets.only(bottom: 30),
+                                iconSize: _size,
+                                onPressed: () async {
+                                  var status = await Permission.microphone.status;
+                                  if (status ==
+                                      PermissionStatus.permanentlyDenied) {
+                                    PermissionToast();
+                                    requestMicPermission(context);
+                                    print('status >> $status');
+                                    return;
+                                  } else if (status == PermissionStatus.denied) {
+                                    PermissionToast();
+                                    requestMicPermission(context);
+                                    print('status >> $status');
+                                    Permission.microphone.request();
+                                    return;
+                                  }
+                                  print(_connectionStatus);
+                                  if (_connectionStatus.endsWith('none') == true) {
+                                    NetworkToast();
+                                    return;
+                                  } else if (await Permission
+                                      .microphone.status.isGranted &&
+                                      _connectionStatus.endsWith('none') == false) {
+                                    _vmidc.start();
+                                    setState(() {
+                                      _textSpan = const TextSpan(
+                                        text: '노래 분석중',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(43, 226, 193, 1),
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      );
+                                      _background = const ColorFilter.mode(
+                                          Colors.transparent, BlendMode.color);
+                                    });
+                                    if (_vmidc.isRunning() == true) {
+                                      _vmidc.stop();
+                                      setState(() {
+                                        _background = const ColorFilter.mode(
+                                            Colors.transparent, BlendMode.clear);
+                                      });
+                                    }
+                                  }
+                                }),
+                          ]))),
                 ],
               )),
-        )
-    );
+        ));
   }
+
   Future<bool> _onBackKey() async {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    // final isDarkMode = ThemeMode.system == Brightness.dark;
     return await showDialog(
       context: context,
-      barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
+      barrierDismissible: false,
+      //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
       builder: (BuildContext context) {
         return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)),
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
               width: 400,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
               height: 150,
-              color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+              color: isDarkMode
+                  ? const Color.fromRGBO(66, 66, 66, 1)
+                  : Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,10 +270,7 @@ class _Home extends State<Home> {
                             top: BorderSide(
                                 color: isDarkMode
                                     ? const Color.fromRGBO(94, 94, 94, 1)
-                                    : Colors.black.withOpacity(0.1)
-                            )
-                        )
-                    ),
+                                    : Colors.black.withOpacity(0.1)))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -266,24 +279,26 @@ class _Home extends State<Home> {
                           height: 78,
                           child: Container(
                               decoration: BoxDecoration(
-                                  color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+                                  color: isDarkMode
+                                      ? const Color.fromRGBO(66, 66, 66, 1)
+                                      : Colors.white,
                                   border: Border(
                                       right: BorderSide(
-                                          color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1)
-                                      )
-                                  )
-                              ),
+                                          color: isDarkMode
+                                              ? const Color.fromRGBO(
+                                              94, 94, 94, 1)
+                                              : Colors.black
+                                              .withOpacity(0.1)))),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
                                   onPressed: () {
                                     exit(0);
                                   },
-                                  child: const Text('종료',
+                                  child: const Text(
+                                    '종료',
                                     style: TextStyle(
                                         fontSize: 20, color: Colors.red),
-                                  )
-                              )
-                          ),
+                                  ))),
                         ),
                         Container(
                             margin: const EdgeInsets.only(right: 20),
@@ -300,11 +315,12 @@ class _Home extends State<Home> {
                                 '취소',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: isDarkMode ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.3),
+                                  color: isDarkMode
+                                      ? Colors.white.withOpacity(0.8)
+                                      : Colors.black.withOpacity(0.3),
                                 ),
                               ),
-                            )
-                        ),
+                            )),
                       ],
                     ),
                   )
@@ -318,7 +334,7 @@ class _Home extends State<Home> {
   Future<bool> requestMicPermission(BuildContext context) async {
     PermissionStatus status = await Permission.microphone.request();
     print('permission manage >> $status');
-    if(!status.isGranted) {
+    if (!status.isGranted) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -338,57 +354,53 @@ class _Home extends State<Home> {
           onPressed: () {
             openAppSettings();
           },
-          child: const Text('설정하기',
-            style: TextStyle(
-                color: Colors.blue
-            ),
+          child: const Text(
+            '설정하기',
+            style: TextStyle(color: Colors.blue),
           ),
         )
       ],
     );
   }
 
-  Future <void> _updateConnectionStatus(ConnectivityResult result) async {
-    switch(result) {
-      case ConnectivityResult.wifi :
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
-      case ConnectivityResult.none :
+      case ConnectivityResult.none:
         setState(() => _connectionStatus = result.toString());
         break;
       default:
-        setState(()=> _connectionStatus = '네트워크 연결을 확인 해주세요.');
+        setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.');
     }
   }
 
   Future<void> initConnectivity() async {
     ConnectivityResult result = ConnectivityResult.none;
-    try{
+    try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
       print(e.toString());
     }
-    if(!mounted) {
+    if (!mounted) {
       return Future.value(null);
     }
     return _updateConnectionStatus(result);
   }
 }
 
-void NetworkToast(){
+void NetworkToast() {
   Fluttertoast.showToast(
-    msg: '네트워크 연결을 확인 해주세요.',
-    backgroundColor: Colors.grey,
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.CENTER
-  );
+      msg: '네트워크 연결을 확인 해주세요.',
+      backgroundColor: Colors.grey,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER);
 }
 
 void PermissionToast() {
   Fluttertoast.showToast(
-    msg: '마이크 권한을 허용해주세요.',
-    backgroundColor: Colors.grey,
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.CENTER
-  );
+      msg: '마이크 권한을 허용해주세요.',
+      backgroundColor: Colors.grey,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER);
 }
-

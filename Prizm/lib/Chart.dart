@@ -40,7 +40,7 @@ class _Chart extends State<Chart> {
   void fetchData() async {
     try {
       http.Response response = await http.get(
-            Uri.parse('${MyApp.Uri}get_song_ranks')
+          Uri.parse('${MyApp.Uri}get_song_ranks')
       );
       String jsonData = response.body;
       charts = jsonDecode(jsonData.toString());
@@ -96,8 +96,8 @@ class _Chart extends State<Chart> {
               title: Text('차트',
                 style: (
                     isDarkMode
-                    ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
-                    : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
+                        ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                        : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
                 ),
               ),
               centerTitle: true,
@@ -183,7 +183,7 @@ class _Chart extends State<Chart> {
               ),
             )
         )
-     );
+    );
   }
 
   Widget _listView(charts) {
@@ -220,10 +220,10 @@ class _Chart extends State<Chart> {
                           padding: const EdgeInsets.all(1),
                           margin: const EdgeInsets.only(left: 15, right: 10),
                           decoration: BoxDecoration(
-                            color: isDarkMode
-                                ? const Color.fromRGBO(189, 189, 189, 1)
-                                : const Color.fromRGBO(228, 228, 228, 1),
-                            borderRadius: BorderRadius.circular(10)),
+                              color: isDarkMode
+                                  ? const Color.fromRGBO(189, 189, 189, 1)
+                                  : const Color.fromRGBO(228, 228, 228, 1),
+                              borderRadius: BorderRadius.circular(10)),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: SizedBox.fromSize(
@@ -272,11 +272,11 @@ class _Chart extends State<Chart> {
                                           maxLines: 1,
                                           text: TextSpan(children: [
                                             TextSpan(
-                                              text: isArtistNull ? 'Various Artists' : chart['artist'],
-                                              style: TextStyle(
-                                                  color: isDarkMode
-                                                      ? Colors.grey.withOpacity(0.8)
-                                                      : Colors.black.withOpacity(0.3))
+                                                text: isArtistNull ? 'Various Artists' : chart['artist'],
+                                                style: TextStyle(
+                                                    color: isDarkMode
+                                                        ? Colors.grey.withOpacity(0.8)
+                                                        : Colors.black.withOpacity(0.3))
                                             ),
                                             TextSpan(
                                               text: ' · ',
@@ -343,7 +343,7 @@ class _Chart extends State<Chart> {
                                             child: Row(
                                               children: [
                                                 Container(
-                                                    // margin : const EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                                                  // margin : const EdgeInsets.only(left: 10, top: 10, bottom: 10),
                                                     margin : const EdgeInsets.fromLTRB(10,10,0,10),
                                                     padding: const EdgeInsets.all(1),
                                                     decoration: BoxDecoration(
@@ -449,7 +449,7 @@ class _Chart extends State<Chart> {
                                                             color: const Color.fromRGBO(64, 220, 196, 1),
                                                             onPressed: () {
                                                               Navigator.push(context, MaterialPageRoute(
-                                                                      builder: (context) => PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id))
+                                                                  builder: (context) => PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id))
                                                               );
                                                             },
                                                           ),

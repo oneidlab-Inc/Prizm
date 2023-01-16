@@ -48,8 +48,8 @@ class _Private extends State<Private> {
                   fontWeight: FontWeight.bold)),
           leading: IconButton(
             icon: ImageIcon(
-              Image.asset('assets/x_icon.png').image, color: Colors.black,
-              size: 15
+                Image.asset('assets/x_icon.png').image, color: Colors.black,
+                size: 15
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -89,10 +89,10 @@ class _Private extends State<Private> {
               },
               child: Container(
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
-                  color: Color.fromRGBO(51, 211, 180, 1)
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    color: Color.fromRGBO(51, 211, 180, 1)
                 ),
                 alignment: Alignment.center,
                 height: 70,

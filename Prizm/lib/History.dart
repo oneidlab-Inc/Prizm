@@ -55,9 +55,9 @@ class _History extends State<History> {
 
     try {
       http.Response response = await http.get(
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=$uid')
-              Uri.parse('${MyApp.Uri}get_song_history/json?uid=$uid')
-          );
+        // Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=$uid')
+          Uri.parse('${MyApp.Uri}get_song_history/json?uid=$uid')
+      );
       String jsonData = response.body;
       song_info = jsonDecode(jsonData.toString());
       original = song_info;
@@ -182,8 +182,8 @@ class _History extends State<History> {
               title: Text('히스토리',
                 style: (
                     isDarkMode
-                    ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
-                    : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
+                        ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                        : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
                 ),
               ),
               centerTitle: true,
@@ -220,13 +220,13 @@ class _History extends State<History> {
                             child: Row(
                               children: [
                                 const Text('발견한 노래 ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 20)),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold, fontSize: 20)),
                                 Text('$len',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                                 const Text(
-                                  ' 곡',
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    ' 곡',
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                               ],
                             )),
                         TextFormField(
@@ -251,39 +251,39 @@ class _History extends State<History> {
                                 prefixIcon: const Icon(Icons.search, color: Colors.greenAccent),
                                 suffixIcon: txtQuery.text.isNotEmpty
                                     ? IconButton(
-                                        icon: Icon(
-                                          Icons.clear,
-                                          color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2),
-                                        ),
-                                        onPressed: () {
-                                          txtQuery.text = '';
-                                          search(txtQuery.text);
-                                        },
-                                      )
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2),
+                                  ),
+                                  onPressed: () {
+                                    txtQuery.text = '';
+                                    search(txtQuery.text);
+                                  },
+                                )
                                     : null)),
                       ],
                     ),
                   ),
                   isExist
                       ? Container(
-                          margin: EdgeInsets.only(top: 100),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text('최근 검색 기록이 없습니다.',
-                                  style: TextStyle(
-                                      color: isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22
-                                  ),
-                                ),
-                              )
-                            ],
+                    margin: EdgeInsets.only(top: 100),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text('최근 검색 기록이 없습니다.',
+                            style: TextStyle(
+                                color: isDarkMode
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22
+                            ),
                           ),
-                        ) : _listView(song_info, info)
+                        )
+                      ],
+                    ),
+                  ) : _listView(song_info, info)
                 ],
               ),
             )
@@ -320,7 +320,7 @@ class _History extends State<History> {
                         var info = song_info[index];
                         final deviceId = _deviceId;
                         return SizedBox(
-                          width: c_width,
+                            width: c_width,
                             height: 300,
                             child: ListView.builder(
                                 itemCount: 1,
@@ -387,49 +387,49 @@ class _History extends State<History> {
                                                     child: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                      SizedBox(
-                                                        width: c_width * 0.55,
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(left: 15),
-                                                              child: Text(info['TITLE'],
-                                                                style: TextStyle(
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 20,
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                    color: isDarkMode ? Colors.white : Colors.black)),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(left: 20, top: 10),
-                                                              child: isArtistNull
-                                                                  ? Text('Various Artists',
+                                                          SizedBox(
+                                                            width: c_width * 0.55,
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 15),
+                                                                  child: Text(info['TITLE'],
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontSize: 20,
+                                                                          overflow: TextOverflow.ellipsis,
+                                                                          color: isDarkMode ? Colors.white : Colors.black)),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(left: 20, top: 10),
+                                                                  child: isArtistNull
+                                                                      ? Text('Various Artists',
                                                                       style: TextStyle(
                                                                           color: isDarkMode
                                                                               ? Colors.grey.withOpacity(0.8)
                                                                               : Colors.black.withOpacity(0.4)))
-                                                                  : Text(info['ARTIST'],
+                                                                      : Text(info['ARTIST'],
                                                                       style: TextStyle(
                                                                           color: isDarkMode
                                                                               ? Colors.grey.withOpacity(0.8)
                                                                               : Colors.black.withOpacity(0.4)),
                                                                       overflow: TextOverflow.ellipsis),
+                                                                ),
+                                                              ],
                                                             ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: c_width * 0.05,
-                                                        child: IconButton(
-                                                            padding: const EdgeInsets.only(bottom: 80, right: 10),
-                                                            icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 30),
-                                                            color: isDarkMode ? Colors.white : Colors.grey,
-                                                            onPressed: () {
-                                                              Navigator.pop(context);
-                                                            }),
-                                                      )
-                                                    ])
+                                                          ),
+                                                          SizedBox(
+                                                            width: c_width * 0.05,
+                                                            child: IconButton(
+                                                                padding: const EdgeInsets.only(bottom: 80, right: 10),
+                                                                icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 30),
+                                                                color: isDarkMode ? Colors.white : Colors.grey,
+                                                                onPressed: () {
+                                                                  Navigator.pop(context);
+                                                                }),
+                                                          )
+                                                        ])
                                                 ),
                                               ],
                                             ),
@@ -443,8 +443,8 @@ class _History extends State<History> {
                                                 GestureDetector(
                                                     onTap: () {
                                                       Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                                              PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id)
-                                                          )
+                                                          PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id)
+                                                      )
                                                       );
                                                     },
                                                     child: Column(children: [
@@ -463,10 +463,10 @@ class _History extends State<History> {
                                                                 },
                                                               ),
                                                               Text('프리즘 방송 재생정보',
-                                                                style: TextStyle(
-                                                                    fontSize: 20,
-                                                                    fontWeight: FontWeight.w300,
-                                                                    color: isDarkMode ? Colors.white : Colors.black)
+                                                                  style: TextStyle(
+                                                                      fontSize: 20,
+                                                                      fontWeight: FontWeight.w300,
+                                                                      color: isDarkMode ? Colors.white : Colors.black)
                                                               )
                                                             ],
                                                           )
@@ -483,12 +483,12 @@ class _History extends State<History> {
                                                       child: Row(
                                                         children: [
                                                           IconButton(
-                                                            padding: const EdgeInsets.only(right: 30),
-                                                            icon: ImageIcon(Image.asset('assets/trash.png').image, size: 40),
-                                                            color: const Color.fromRGBO(64, 220, 196, 1),
-                                                            onPressed: () {
-                                                              showDialogPop();
-                                                            }
+                                                              padding: const EdgeInsets.only(right: 30),
+                                                              icon: ImageIcon(Image.asset('assets/trash.png').image, size: 40),
+                                                              color: const Color.fromRGBO(64, 220, 196, 1),
+                                                              onPressed: () {
+                                                                showDialogPop();
+                                                              }
                                                           ),
                                                           Text('히스토리에서 삭제',
                                                             style: TextStyle(
@@ -522,10 +522,10 @@ class _History extends State<History> {
                         margin: EdgeInsets.only(right: 10, left: 20),
                         height: 100,
                         decoration: BoxDecoration(
-                          color: isDarkMode
-                              ? const Color.fromRGBO(189, 189, 189, 1)
-                              : Colors.black.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(8)),
+                            color: isDarkMode
+                                ? const Color.fromRGBO(189, 189, 189, 1)
+                                : Colors.black.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(8)),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: SizedBox.fromSize(
@@ -559,35 +559,35 @@ class _History extends State<History> {
                                   SizedBox(
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                          child: isArtistNull
-                                              ? Text('Various Artists',
-                                                  style: TextStyle(
-                                                      color: isDarkMode
-                                                          ? Colors.grey.withOpacity(0.8)
-                                                          : Colors.black.withOpacity(0.4)))
-                                              : Text(info['ARTIST'],
-                                                  style: TextStyle(
-                                                      color: isDarkMode
-                                                          ? Colors.grey.withOpacity(0.8)
-                                                          : Colors.black.withOpacity(0.4)),
-                                                  overflow: TextOverflow.ellipsis),
-                                        )
+                                        child: isArtistNull
+                                            ? Text('Various Artists',
+                                            style: TextStyle(
+                                                color: isDarkMode
+                                                    ? Colors.grey.withOpacity(0.8)
+                                                    : Colors.black.withOpacity(0.4)))
+                                            : Text(info['ARTIST'],
+                                            style: TextStyle(
+                                                color: isDarkMode
+                                                    ? Colors.grey.withOpacity(0.8)
+                                                    : Colors.black.withOpacity(0.4)),
+                                            overflow: TextOverflow.ellipsis),
+                                      )
                                   ),
                                   isAlbumNull
                                       ? Text('Various Album',
-                                          style: TextStyle(
-                                              color: isDarkMode
-                                                  ? Colors.grey.withOpacity(0.8)
-                                                  : Colors.black.withOpacity(0.4),
-                                              overflow: TextOverflow.ellipsis),
-                                        )
+                                    style: TextStyle(
+                                        color: isDarkMode
+                                            ? Colors.grey.withOpacity(0.8)
+                                            : Colors.black.withOpacity(0.4),
+                                        overflow: TextOverflow.ellipsis),
+                                  )
                                       : Text(info['ALBUM'],
-                                          style: TextStyle(
-                                              color: isDarkMode
-                                                  ? Colors.grey.withOpacity(0.8)
-                                                  : Colors.black.withOpacity(0.4),
-                                              overflow: TextOverflow.ellipsis),
-                                        ),
+                                    style: TextStyle(
+                                        color: isDarkMode
+                                            ? Colors.grey.withOpacity(0.8)
+                                            : Colors.black.withOpacity(0.4),
+                                        overflow: TextOverflow.ellipsis),
+                                  ),
                                   Text(info['SCH_DATE'],
                                     style: TextStyle(
                                       color: isDarkMode ? Colors.greenAccent.withOpacity(0.8) : Colors.greenAccent,
@@ -597,7 +597,7 @@ class _History extends State<History> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(right: 5),
+                                margin: EdgeInsets.only(right: 5),
                                 width: c_width * 0.09,
                                 child: const Icon(Icons.more_vert_sharp, color: Colors.grey, size: 30))
                           ],
@@ -636,7 +636,7 @@ class _History extends State<History> {
                     height: c_height * 0.115,
                     child: Center(
                       child: Text('이 항목을 삭제하시겠습니까?',
-                        style: TextStyle(fontSize: 18)),
+                          style: TextStyle(fontSize: 18)),
                     ),
                   ),
                   Container(
@@ -691,7 +691,7 @@ class _History extends State<History> {
                               onPressed: () async {
                                 Response response = await http.get(
                                     Uri.parse(
-                                    '${MyApp.Uri}get_song_history/json?uid=$uid&id=$_songid&proc=del')
+                                        '${MyApp.Uri}get_song_history/json?uid=$uid&id=$_songid&proc=del')
                                 );
                                 if (response.statusCode == 200) {
                                   print(response.statusCode);
@@ -732,8 +732,8 @@ void showToast() {
 void failToast() {
   Fluttertoast.showToast(
       msg: '검색내역 삭제 실패',
-    backgroundColor: Colors.grey,
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.CENTER
+      backgroundColor: Colors.grey,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER
   );
 }

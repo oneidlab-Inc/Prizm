@@ -162,7 +162,7 @@ class _BottomState extends State<Bottom> {
                                     exit(0);
                                   },
                                   child: const Text('종료',
-                                    style: TextStyle(fontSize: 20, color: Colors.red))
+                                      style: TextStyle(fontSize: 20, color: Colors.red))
                               )
                           ),
                         ),

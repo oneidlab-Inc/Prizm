@@ -43,7 +43,7 @@ class _PlayInfo extends State<PlayInfo> {
   fetchData() async {
 
     http.Response response = await http.get(
-            Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.song_id}')
+        Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.song_id}')
     );
 
     statuscode = response.statusCode;
@@ -63,7 +63,7 @@ class _PlayInfo extends State<PlayInfo> {
   }
 
   final duplicateItems =
-      List<String>.generate(1000, (i) => "$Container(child:Text $i)");
+  List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
 
   @override
@@ -117,150 +117,150 @@ class _PlayInfo extends State<PlayInfo> {
         color: isDarkMode ? Colors.black : Colors.white,
         child: Scrollbar(
             child: SizedBox(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: c_width,
-                    color: isDarkMode
-                        ? const Color.fromRGBO(36, 36, 36, 1)
-                        : const Color.fromRGBO(250, 250, 250, 1),
-                    height: 100,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                            padding: const EdgeInsets.all(1),
-                            margin: const EdgeInsets.only(
-                                right: 30, top: 20, left: 20, bottom: 20),
-                            decoration: BoxDecoration(
-                              color: isDarkMode
-                                  ? const Color.fromRGBO(189, 189, 189, 1)
-                                  : const Color.fromRGBO(228, 228, 228, 1),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: SizedBox.fromSize(
-                                  size: const Size.fromRadius(28),
-                                  child: Image.network(
-                                    widget.image,
-                                    width: 70,
-                                    height: 70,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return SizedBox(
-                                          width: 70,
-                                          height: 70,
-                                          child: Image.asset(
-                                              'assets/no_image.png'));
-                                    },
-                                  )),
-                            )),
-                        Container(
-                            width: c_width * 0.6,
-                            padding: const EdgeInsets.only(top: 25),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(widget.title,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        overflow: TextOverflow.ellipsis,
-                                        color: isDarkMode ? Colors.white : Colors.black)),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 5),
-                                  child: Text(widget.artist,
-                                      style: TextStyle(
-                                          color: isDarkMode
-                                              ? const Color.fromRGBO(123, 123, 123, 1)
-                                              : const Color.fromRGBO(151, 151, 151, 1),
-                                          overflow: TextOverflow.ellipsis)),
-                                )
-                              ],
-                            )
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20, right: 20),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                            height: c_height * 0.4,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 30, bottom: 10),
-                                    child: Text(
-                                      '최신 TV 방송내역',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22,
-                                          color: isDarkMode ? Colors.white : Colors.black),
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          child: isExistTV
-                                              ? Center(
-                                                  child: Text(
-                                                      '최신 TV 방송내역이 없습니다.',
-                                                      style: TextStyle(
-                                                          color: isDarkMode ? Colors.white : Colors.black,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          fontSize: 20)),
-                                                ) : _tv_list(info, widget)
-                                      )
-                                    ],
-                                  ))
-                                ]
-                            )
-                        ),
-                        SizedBox(
-                            height: c_height * 0.40,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                                  child: const Text('최신 RADIO 방송내역',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22)),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: c_width,
+                        color: isDarkMode
+                            ? const Color.fromRGBO(36, 36, 36, 1)
+                            : const Color.fromRGBO(250, 250, 250, 1),
+                        height: 100,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                padding: const EdgeInsets.all(1),
+                                margin: const EdgeInsets.only(
+                                    right: 30, top: 20, left: 20, bottom: 20),
+                                decoration: BoxDecoration(
+                                  color: isDarkMode
+                                      ? const Color.fromRGBO(189, 189, 189, 1)
+                                      : const Color.fromRGBO(228, 228, 228, 1),
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                                Expanded(
-                                    child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: SizedBox.fromSize(
+                                      size: const Size.fromRadius(28),
+                                      child: Image.network(
+                                        widget.image,
+                                        width: 70,
+                                        height: 70,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return SizedBox(
+                                              width: 70,
+                                              height: 70,
+                                              child: Image.asset(
+                                                  'assets/no_image.png'));
+                                        },
+                                      )),
+                                )),
+                            Container(
+                                width: c_width * 0.6,
+                                padding: const EdgeInsets.only(top: 25),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Text(widget.title,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis,
+                                            color: isDarkMode ? Colors.white : Colors.black)),
                                     Container(
-                                      child: isExistRadio
-                                          ? Center(
-                                              child: Text('최신 RADIO 방송내역이 없습니다.',
-                                                  style: TextStyle(
-                                                      color: isDarkMode ? Colors.white : Colors.black,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 20)),
-                                            ) : _radio_list(info_radio, widget),
+                                      margin: const EdgeInsets.only(top: 5),
+                                      child: Text(widget.artist,
+                                          style: TextStyle(
+                                              color: isDarkMode
+                                                  ? const Color.fromRGBO(123, 123, 123, 1)
+                                                  : const Color.fromRGBO(151, 151, 151, 1),
+                                              overflow: TextOverflow.ellipsis)),
                                     )
                                   ],
-                                ))
-                              ],
-                            )),
-                      ],
-                    ),
-                  )
-                ]),
-          ),
-        )),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                height: c_height * 0.4,
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 30, bottom: 10),
+                                        child: Text(
+                                          '최신 TV 방송내역',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22,
+                                              color: isDarkMode ? Colors.white : Colors.black),
+                                        ),
+                                      ),
+                                      Expanded(
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                  child: isExistTV
+                                                      ? Center(
+                                                    child: Text(
+                                                        '최신 TV 방송내역이 없습니다.',
+                                                        style: TextStyle(
+                                                            color: isDarkMode ? Colors.white : Colors.black,
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                            fontSize: 20)),
+                                                  ) : _tv_list(info, widget)
+                                              )
+                                            ],
+                                          ))
+                                    ]
+                                )
+                            ),
+                            SizedBox(
+                                height: c_height * 0.40,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                      child: const Text('최신 RADIO 방송내역',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22)),
+                                    ),
+                                    Expanded(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              child: isExistRadio
+                                                  ? Center(
+                                                child: Text('최신 RADIO 방송내역이 없습니다.',
+                                                    style: TextStyle(
+                                                        color: isDarkMode ? Colors.white : Colors.black,
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 20)),
+                                              ) : _radio_list(info_radio, widget),
+                                            )
+                                          ],
+                                        ))
+                                  ],
+                                )),
+                          ],
+                        ),
+                      )
+                    ]),
+              ),
+            )),
       ),
     );
   }
@@ -415,26 +415,26 @@ Widget _tv_list(info, widget) {
                     Row(
                         children: [
                           Container(
-                             margin: const EdgeInsets.only(right: 10),
-                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                             decoration: BoxDecoration(
-                                 borderRadius: BorderRadius.circular(10),
-                                 color: const Color.fromRGBO(51, 211, 180, 1)),
-                             child: Text(
-                               info[index]['TV_TYPE'],
-                               style: const TextStyle(color: Colors.white)),
-                      ),
-                      SizedBox(
-                        width: 65,
-                        height: 22,
-                        child: Text(info[index]['CL_NM'],
-                            style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                                fontWeight: FontWeight.bold,
-                                color: isDarkMode ? Colors.white : Colors.black,
-                                fontSize: 16)),
-                      ),
-                    ]),
+                            margin: const EdgeInsets.only(right: 10),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color.fromRGBO(51, 211, 180, 1)),
+                            child: Text(
+                                info[index]['TV_TYPE'],
+                                style: const TextStyle(color: Colors.white)),
+                          ),
+                          SizedBox(
+                            width: 65,
+                            height: 22,
+                            child: Text(info[index]['CL_NM'],
+                                style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    fontSize: 16)),
+                          ),
+                        ]),
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 3, 0, 10),
                       width: 140,
