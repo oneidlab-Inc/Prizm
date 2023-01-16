@@ -9,8 +9,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-import 'package:wave/config.dart';
-import 'package:wave/wave.dart';
 import 'History_Bottom.dart';
 import 'Home.dart';
 import 'PlayInfo.dart';

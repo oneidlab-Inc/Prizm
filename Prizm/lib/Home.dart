@@ -10,9 +10,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'Settings.dart';
 import 'main.dart';
 
-import 'package:wave/wave.dart';
-import 'package:wave/config.dart';
-
 class Home extends StatefulWidget {
   @override
   _Home createState() => _Home();
