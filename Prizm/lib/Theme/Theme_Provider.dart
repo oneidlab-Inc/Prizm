@@ -21,12 +21,12 @@
 //   }
 // }
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-class MyThemeModel extends ChangeNotifier {
-  late ThemeData _themedata;
-
-  MyThemeModel(bool isActivate) {
-  }
-}
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+//
+// class MyThemeModel extends ChangeNotifier {
+//   late ThemeData _themedata;
+//
+//   MyThemeModel(bool isActivate) {
+//   }
+// }

@@ -59,7 +59,7 @@ class _Private extends State<Private> {
           elevation: 1.0,
           backgroundColor:
           isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-          toolbarHeight: 60,
+          toolbarHeight: 90,
         ),
         body: Column(
           children: [
