@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MyThemes{
+class MyThemes {
   static final lightTheme = ThemeData().copyWith(
-    primaryColor: Colors.white
+    primaryColor: Colors.purple
   );
 
-  static final darkTheme = ThemeData().copyWith(
-    primaryColor: Colors.black
-  );
 }

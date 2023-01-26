@@ -67,12 +67,10 @@ class _Settings extends State<Settings> {
     final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
-    return
-      // WillPopScope(
-      //   onWillPop: () async {
-      //     return _onBackKey();
-      //   },
-      //   child:
+    return WillPopScope(
+        onWillPop:
+          _onBackKey,
+        child:
       Scaffold(
           appBar: AppBar(
             shape: Border(
@@ -498,7 +496,7 @@ width: 10,
               ],
             ),
           )
-        // )
+        )
       );
   }
 
