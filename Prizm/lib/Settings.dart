@@ -17,7 +17,7 @@ import 'dart:async';
 
 enum _HighlightTextType { text }
 
-enum Style { light, dark }
+enum Style { light, dark, system }
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -41,14 +41,15 @@ class _Settings extends State<Settings> {
   String? uid;
   String? _deviceId;
 
+  var theme;
+
   @override
   void initState() {
     if(MyApp.themeNotifier.value == ThemeMode.dark) {
       _style = Style.dark;
+    } else if(MyApp.themeNotifier.value == ThemeMode.system) {
+      _style = Style.system;
     }
-    // if(Theme.of(context).brightness == Brightness.dark) {
-    //   _style = Style.dark;
-    // }      이거 활성화하면 에러
     super.initState();
   }
 
@@ -67,8 +68,12 @@ class _Settings extends State<Settings> {
     );
     // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    var themeContext = Theme.of(context).brightness;
+    theme = themeContext;
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
+
+
     return WillPopScope(
         onWillPop:
           _onBackKey,
@@ -271,8 +276,8 @@ class _Settings extends State<Settings> {
                                       onChanged: (Style? value) {
                                         setState(() {
                                           _style = value!;
-                                          Theme.of(context).brightness == Brightness.light;
-                                          // MyApp.themeNotifier.value = ThemeMode.light;
+                                          // Theme.of(context).brightness == Brightness.light;
+                                          MyApp.themeNotifier.value = ThemeMode.light;
                                         });
                                       },
                                       activeColor: const Color.fromRGBO(64, 220, 196, 1)
@@ -302,15 +307,44 @@ class _Settings extends State<Settings> {
                                     onChanged: (Style? value) {
                                       setState(() {
                                         _style = value!;
-                                        // MyApp.themeNotifier.value = ThemeMode.dark;
-                                        Theme.of(context).brightness == Brightness.dark;
+                                        MyApp.themeNotifier.value = ThemeMode.dark;
+                                        // Theme.of(context).brightness == Brightness.dark;
                                       });
                                     },
                                     activeColor: const Color.fromRGBO(64, 220, 196, 1),
                                   )
                               )
                           ),
-                        )
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                              width: c_width * 0.30,
+                              child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                      unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
+                                      disabledColor: Colors.blue),
+                                  child: RadioListTile<Style>(
+                                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                      title: Align(
+                                        alignment: const Alignment(-1, -0.1),
+                                        child: Text('시스템',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: isDarkMode ? Colors.white : Colors.black)),
+                                      ),
+                                      groupValue: _style,
+                                      value: Style.system,
+                                      onChanged: (Style? value) {
+                                        setState(() {
+                                          _style = value!;
+                                          MyApp.themeNotifier.value == ThemeMode.system;
+                                        });
+                                      },
+                                      activeColor: const Color.fromRGBO(64, 220, 196, 1)
+                                  )
+                              )
+                          ),
+                        ),
                       ]
                   ),
                 ), //RadioBox Container End

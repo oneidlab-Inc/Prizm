@@ -111,8 +111,6 @@ class _Home extends State<Home> {
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
-    print('height >> $c_height');
-    print('width >> ${c_width}');
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
     final isPad = c_width > 550;

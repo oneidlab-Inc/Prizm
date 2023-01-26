@@ -5,6 +5,7 @@ import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_theme_provider/flutter_theme_provider.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -267,7 +268,6 @@ class _TabPageState extends State<TabPage> {
 
   // final List _pages = [Result(id: '',), Home(), Chart()];
   List url = [];
-  var selectedTheme;
 
   fetchData() async {
     // 고정 URL 나오면 변경
@@ -284,32 +284,12 @@ class _TabPageState extends State<TabPage> {
     }
   }
 
-  // void selectedColor() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   if(MyApp.themeNotifier.value == ThemeMode.dark) {
-  //     selectedTheme = ThemeMode.dark;
-  //     // String Theme = (prefs.getString('Theme')?? selectedTheme);
-  //     // await prefs.setString('Theme', selectedTheme);
-  //     print('aaa');
-  //   } else if(MyApp.themeNotifier.value == ThemeMode.light) {
-  //     selectedTheme = ThemeMode.light;
-  //
-  //     await prefs.setString('Theme', selectedTheme);
-  //     print('bbb');
-  //   }
-  //   setState(() {
-  //     print('setstate >> ${selectedTheme}');
-  //     MyApp.themeNotifier == selectedTheme;
-  //     print('setStatee >> ${MyApp.themeNotifier}');
-  //   });
-  // }
-
   @override
   void initState() {
     // fetchData();   고정url 받으면 활성화
     _launchUpdate();
     // selectedColor();
-    print('selectedTheme >> ${selectedTheme}');
+    // print('selectedTheme >> ${selectedTheme}');
     initPlatformState();
     // MyApp.history  = Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=');
     // MyApp.rank = Uri.parse('http://dev.przm.kr/przm_api/get_song_ranks');
