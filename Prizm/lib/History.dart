@@ -332,7 +332,8 @@ class _History extends State<History> {
                                   String song_id = info['SONG_ID'];
                                   _songid = song_id;
                                   double c_width = MediaQuery.of(context).size.width;
-                                  final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+                                  // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+                                  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
                                   return Container(
                                     width: c_width,
                                     padding: const EdgeInsets.only(top: 14),

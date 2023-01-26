@@ -45,9 +45,10 @@ class _Settings extends State<Settings> {
   void initState() {
     if(MyApp.themeNotifier.value == ThemeMode.dark) {
       _style = Style.dark;
-    } else if(MyApp.themeNotifier.value == ThemeMode.dark) {
-      _style = Style.light;
     }
+    // if(Theme.of(context).brightness == Brightness.dark) {
+    //   _style = Style.dark;
+    // }      이거 활성화하면 에러
     super.initState();
   }
 
@@ -64,7 +65,8 @@ class _Settings extends State<Settings> {
           SystemUiOverlay.bottom
         ]
     );
-    final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+    // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -77,7 +79,8 @@ class _Settings extends State<Settings> {
                 bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
             title: Text(
               '설정',
-              style: (MyApp.themeNotifier.value == ThemeMode.dark
+              style: (Theme.of(context).brightness == Brightness.dark
+                  // MyApp.themeNotifier.value == ThemeMode.dark
                   ? const TextStyle(color: Colors.white)
                   : const TextStyle(color: Colors.black)),
             ),
@@ -268,7 +271,8 @@ class _Settings extends State<Settings> {
                                       onChanged: (Style? value) {
                                         setState(() {
                                           _style = value!;
-                                          MyApp.themeNotifier.value = ThemeMode.light;
+                                          Theme.of(context).brightness == Brightness.light;
+                                          // MyApp.themeNotifier.value = ThemeMode.light;
                                         });
                                       },
                                       activeColor: const Color.fromRGBO(64, 220, 196, 1)
@@ -298,7 +302,8 @@ class _Settings extends State<Settings> {
                                     onChanged: (Style? value) {
                                       setState(() {
                                         _style = value!;
-                                        MyApp.themeNotifier.value = ThemeMode.dark;
+                                        // MyApp.themeNotifier.value = ThemeMode.dark;
+                                        Theme.of(context).brightness == Brightness.dark;
                                       });
                                     },
                                     activeColor: const Color.fromRGBO(64, 220, 196, 1),

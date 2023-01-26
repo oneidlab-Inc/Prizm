@@ -324,7 +324,8 @@ class _Chart extends State<Chart> {
                                   itemCount: 1,
                                   itemBuilder: (context, index) {
                                     double c_width = MediaQuery.of(context).size.width;
-                                    final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+                                    // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+                                    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
                                     return Column(
                                         crossAxisAlignment:
                                         CrossAxisAlignment.start,

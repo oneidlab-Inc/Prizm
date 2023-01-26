@@ -114,6 +114,7 @@ class _Home extends State<Home> {
     print('height >> $c_height');
     print('width >> ${c_width}');
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
     final isPad = c_width > 550;
     final isFlip = c_height > 800;
     return WillPopScope(

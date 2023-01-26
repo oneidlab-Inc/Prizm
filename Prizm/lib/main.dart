@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_theme_provider/flutter_theme_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,12 +17,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_color_generator/material_color_generator.dart';
 import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
 import 'History.dart';
 import 'Home.dart';
 import 'Search_Result.dart';
+import 'Theme/Theme_Provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -34,7 +37,7 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  /*-----------------------ThemeMode-----------------------
+  /*-----------------------ThemeMode-----------------------*/
   final prefs = await SharedPreferences.getInstance();
   ThemeMode themeMode = ThemeMode.light;
 
@@ -49,7 +52,7 @@ void main() async {
   } else if(savedThemeMode == "system") {
     themeMode = ThemeMode.system;
   }
-  -------------------------------------------------------*/
+ /* -------------------------------------------------------*/
 
   /*--------------------------- firebase --------------------------------
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
@@ -75,7 +78,7 @@ class MyApp extends StatelessWidget {
   // final themeMode;
 
   static final ValueNotifier<ThemeMode> themeNotifier =
-      ValueNotifier(ThemeMode.light);
+      ValueNotifier(ThemeMode.system);
 
   MyApp({Key? key}) : super(key: key);
 
@@ -110,7 +113,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 primarySwatch: generateMaterialColor(color: Colors.white)
             ),
-            darkTheme: ThemeData.dark(),
+            darkTheme: ThemeData.dark().copyWith(),
             themeMode: currentMode,
             home: TabPage(),
           );
@@ -357,7 +360,8 @@ class _TabPageState extends State<TabPage> {
         child: Scaffold(
           body: buildPageView(),
           bottomNavigationBar: StyleProvider(
-              style: MyApp.themeNotifier.value == ThemeMode.dark
+              // style: MyApp.themeNotifier.value == ThemeMode.dark
+              style: Theme.of(context).brightness == Brightness.dark
                   ? Style_dark()
                   : Style(),
               child: ConvexAppBar(
@@ -368,7 +372,8 @@ class _TabPageState extends State<TabPage> {
                     title: '히스토리',
                   ),
                   TabItem(
-                    icon: MyApp.themeNotifier.value == ThemeMode.dark
+                    // icon: MyApp.themeNotifier.value == ThemeMode.dark
+                    icon: Theme.of(context).brightness == Brightness.dark
                         ? Image.asset('assets/search_dark.png')
                         : Image.asset('assets/search.png'),
                   ),
@@ -382,11 +387,14 @@ class _TabPageState extends State<TabPage> {
                 style: TabStyle.fixedCircle,
                 curveSize: 100,
                 elevation: 2.0,
-                backgroundColor: MyApp.themeNotifier.value == ThemeMode.dark
+                // backgroundColor: MyApp.themeNotifier.value == ThemeMode.dark
+                backgroundColor : Theme.of(context).brightness == Brightness.dark
                     ? Colors.black
                     : Colors.white,
-              )),
-        ));
+              )
+          ),
+        )
+    );
   }
 
 /* =======================================================*/
