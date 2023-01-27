@@ -26,14 +26,43 @@ class _Home extends State<Home> {
   final _ctrl = StreamController<List>();
   String _id = '';
 
-  final Image _icon = MyApp.themeNotifier.value == ThemeMode.light
-      ? Image.asset('assets/_prizm.png')
-      : Image.asset('assets/_prizm_dark.png');
+  // final Image _icon = MyApp.themeNotifier.value == ThemeMode.light
+  //     ? Image.asset('assets/_prizm.png')
+  //     : Image.asset('assets/_prizm_dark.png');
 
-  late dynamic _background =
-  const ColorFilter.mode(Colors.transparent, BlendMode.clear);
-  late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
-      ? const TextSpan(children: [
+  late var _textSpan_light = const TextSpan(children: [
+    TextSpan(
+        text: '지금 이 곡을 찾으려면 ',
+        style: TextStyle(fontSize: 17, color: Colors.black)),
+    TextSpan(
+        text: '프리즘 ',
+        style: TextStyle(
+            color: Color.fromRGBO(43, 226, 193, 1),
+            fontSize: 17,
+            fontWeight: FontWeight.bold)),
+    TextSpan(
+        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)),
+  ]);
+
+  late TextSpan _textSpan_dark = const TextSpan(children: [
+    TextSpan(
+        text: '지금 이 곡을 찾으려면 ',
+        style: TextStyle(fontSize: 17, color: Colors.white)),
+    TextSpan(
+        text: '프리즘 ',
+        style: TextStyle(
+            color: Color.fromRGBO(43, 226, 193, 1),
+            fontSize: 17,
+            fontWeight: FontWeight.bold)),
+    TextSpan(
+        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.white)),
+  ]);
+
+  late dynamic _background = const ColorFilter.mode(Colors.transparent, BlendMode.clear);
+
+  /*late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
+      ? const TextSpan(
+      children: [
     TextSpan(
         text: '지금 이 곡을 찾으려면 ',
         style: TextStyle(fontSize: 17, color: Colors.black)),
@@ -61,11 +90,13 @@ class _Home extends State<Home> {
         text: '을 눌러주세요!',
         style: TextStyle(fontSize: 17, color: Colors.white)),
   ]);
-
+*/
 /*--------------------------------------------------------------*/
 
   @override
   void initState() {
+    print(MyApp.themeNotifier.value);
+
     Permission.microphone.request();
     initConnectivity();
     _connectivitySubscription =
@@ -102,7 +133,7 @@ class _Home extends State<Home> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(
-      //상단 상태바 제거
+        //상단 상태바 제거
         SystemUiMode.manual,
         overlays: [
           SystemUiOverlay.bottom,
@@ -159,78 +190,97 @@ class _Home extends State<Home> {
                       padding: const EdgeInsets.only(bottom: 50),
                       decoration: isPad
                           ? BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(isDarkMode
-                                ? ('assets/BG_dark.gif')
-                                : ('assets/BG_light.gif')),
-                            alignment: const Alignment(0, -2),
-                            fit: BoxFit.cover,
-                            colorFilter: _background),
-                      )
+                              image: DecorationImage(
+                                  image: AssetImage(isDarkMode
+                                      ? ('assets/BG_dark.gif')
+                                      : ('assets/BG_light.gif')),
+                                  alignment: const Alignment(0, -2),
+                                  fit: BoxFit.cover,
+                                  colorFilter: _background),
+                            )
                           : BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(isDarkMode
-                                  ? ('assets/BG_dark.gif')
-                                  : ('assets/BG_light.gif')),
-                              alignment: isFlip
-                                  ? const Alignment(0, 1)
-                                  : const Alignment(0, 1),
-                              // fit: BoxFit.contain,
-                              colorFilter: _background)),
+                              image: DecorationImage(
+                                  image: AssetImage(isDarkMode
+                                      ? ('assets/BG_dark.gif')
+                                      : ('assets/BG_light.gif')),
+                                  alignment: isFlip
+                                      ? const Alignment(0, 1)
+                                      : const Alignment(0, 1),
+                                  // fit: BoxFit.contain,
+                                  colorFilter: _background)),
                       child: Center(
                           child: Column(children: <Widget>[
-                            Center(
-                                child: Container(
-                                    margin: const EdgeInsets.only(bottom: 20),
-                                    child: RichText(text: _textSpan))),
-                            IconButton(
-                                icon: _icon,
-                                padding: const EdgeInsets.only(bottom: 30),
-                                iconSize: _size,
-                                onPressed: () async {
-                                  var status = await Permission.microphone.status;
-                                  if (status ==
-                                      PermissionStatus.permanentlyDenied) {
-                                    PermissionToast();
-                                    requestMicPermission(context);
-                                    print('status >> $status');
-                                    return;
-                                  } else if (status == PermissionStatus.denied) {
-                                    PermissionToast();
-                                    requestMicPermission(context);
-                                    print('status >> $status');
-                                    Permission.microphone.request();
-                                    return;
-                                  }
-                                  print(_connectionStatus);
-                                  if (_connectionStatus.endsWith('none') == true) {
-                                    NetworkToast();
-                                    return;
-                                  } else if (await Permission
+                        Center(
+                            child: Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          // child: RichText(text: _textSpan)
+                          child: RichText(
+                              text: isDarkMode
+                                  ? _textSpan_dark
+                                  : _textSpan_light
+                          ),
+                        )),
+                        IconButton(
+                            // icon: _icon,
+                            icon: isDarkMode
+                                ? Image.asset('assets/_prizm_dark.png')
+                                : Image.asset('assets/_prizm.png'),
+                            padding: const EdgeInsets.only(bottom: 30),
+                            iconSize: _size,
+                            onPressed: () async {
+                              var status = await Permission.microphone.status;
+                              if (status ==
+                                  PermissionStatus.permanentlyDenied) {
+                                PermissionToast();
+                                requestMicPermission(context);
+                                print('status >> $status');
+                                return;
+                              } else if (status == PermissionStatus.denied) {
+                                PermissionToast();
+                                requestMicPermission(context);
+                                print('status >> $status');
+                                Permission.microphone.request();
+                                return;
+                              }
+                              print(_connectionStatus);
+                              if (_connectionStatus.endsWith('none') == true) {
+                                NetworkToast();
+                                return;
+                              } else if (await Permission
                                       .microphone.status.isGranted &&
-                                      _connectionStatus.endsWith('none') == false) {
-                                    // _vmidc.start();
-                                    setState(() {
-                                      _textSpan = const TextSpan(
-                                        text: '노래 분석중',
-                                        style: TextStyle(
-                                            color: Color.fromRGBO(43, 226, 193, 1),
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
-                                      );
-                                      _background = const ColorFilter.mode(
-                                          Colors.transparent, BlendMode.color);
-                                    });
-                                    if (_vmidc.isRunning() == true) {
-                                      _vmidc.stop();
-                                      setState(() {
-                                        _background = const ColorFilter.mode(
-                                            Colors.transparent, BlendMode.clear);
-                                      });
-                                    }
-                                  }
-                                }),
-                          ]))),
+                                  _connectionStatus.endsWith('none') == false) {
+                                // _vmidc.start();
+                                setState(() {
+                                  isDarkMode
+                                      ? _textSpan_dark = const TextSpan(
+                                          text: '노래 분석중',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  43, 226, 193, 1),
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : _textSpan_light = const TextSpan(
+                                          text: '노래 분석중',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  43, 226, 193, 1),
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                  _background = const ColorFilter.mode(
+                                      Colors.transparent, BlendMode.color);
+                                });
+                                if (_vmidc.isRunning() == true) {
+                                  _vmidc.stop();
+                                  setState(() {
+                                    _background = const ColorFilter.mode(
+                                        Colors.transparent, BlendMode.clear);
+                                  });
+                                }
+                              }
+                            }),
+                      ]))),
                 ],
               )),
         ));
@@ -245,7 +295,7 @@ class _Home extends State<Home> {
       builder: (BuildContext context) {
         return Dialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
               width: 400,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
@@ -285,9 +335,9 @@ class _Home extends State<Home> {
                                       right: BorderSide(
                                           color: isDarkMode
                                               ? const Color.fromRGBO(
-                                              94, 94, 94, 1)
+                                                  94, 94, 94, 1)
                                               : Colors.black
-                                              .withOpacity(0.1)))),
+                                                  .withOpacity(0.1)))),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
                                   onPressed: () {

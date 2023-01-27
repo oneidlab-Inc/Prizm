@@ -38,22 +38,26 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  /*-----------------------ThemeMode-----------------------*/
+  /*-----------------------ThemeMode-----------------------
   final prefs = await SharedPreferences.getInstance();
   ThemeMode themeMode = ThemeMode.light;
 
   final String? savedThemeMode = prefs.getString('themeMode');
 
   if(savedThemeMode == null) {
+    print('null');
     themeMode = ThemeMode.light;
   } else if(savedThemeMode == "light") {
+    print('light');
     themeMode = ThemeMode.light;
   } else if(savedThemeMode == "dark") {
+    print('dark');
     themeMode = ThemeMode.dark;
   } else if(savedThemeMode == "system") {
+    print('system');
     themeMode = ThemeMode.system;
   }
- /* -------------------------------------------------------*/
+  -------------------------------------------------------*/
 
   /*--------------------------- firebase --------------------------------
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
