@@ -1,32 +1,44 @@
-//
 // import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 //
-// class Theme_Provider extends ChangeNotifier {
-//   ThemeMode themeMode = ThemeMode.light;
+// class AppProvider with ChangeNotifier {
+//   String _theme = 'system';
 //
-//   setThemeMode(ThemeMode newThemeMode) {
-//     themeMode = newThemeMode;
-//     saveThemeModePrefs(themeMode.toString().replaceAll("ThemeMode.", ""));
+//   String get theme => _theme;
+//
+//   set theme(String value) {
+//     _theme = value;
 //     notifyListeners();
 //   }
+//   ThemeMode getTheme() {
+//     switch(_theme) {
+//       case "light" :
+//         return ThemeMode.light;
 //
-//   saveThemeModePrefs(String value) async {
-//     final prefs = await SharedPreferences.getInstance();
-//     await prefs.setString("themeMode", value);
-//   }
+//       case 'dark' :
+//         return ThemeMode.dark;
 //
-//   ThemeProvider({ThemeMode initThemeMode = ThemeMode.light}) {
-//     themeMode = initThemeMode;
+//       default :
+//         return ThemeMode.system;
+//     }
 //   }
+//   // ThemeMode themeMode = ThemeMode.light;
+//   //
+//   // // themeMode를 편하게 String으로 바꿔 저장하려고 replaceAll 함수를 사용했습니다.
+//   // setThemeMode(ThemeMode newThemeMode) {
+//   //   themeMode = newThemeMode;
+//   //   saveThemeModePrefs(themeMode.toString().replaceAll("ThemeMode.", ""));
+//   //   notifyListeners();
+//   // }
+//   //
+//   // saveThemeModePrefs(String value) async {
+//   //   final prefs = await SharedPreferences.getInstance();
+//   //   // key값은 "themeMode", 저장하는 value값은 String 타입의 "light" or "dark" or "system" 입니다.
+//   //   await prefs.setString("themeMode", value);
+//   // }
+//   //
+//   // ThemeProvider({ThemeMode initThemeMode = ThemeMode.light}) {
+//   //   themeMode = initThemeMode;
+//   // }
 // }
 
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-//
-// class MyThemeModel extends ChangeNotifier {
-//   late ThemeData _themedata;
-//
-//   MyThemeModel(bool isActivate) {
-//   }
-// }
