@@ -241,35 +241,39 @@ class _Settings extends State<Settings> {
                   ),
                 ),
                 Container(
+                    // height: 50,
+                    margin: const EdgeInsets.fromLTRB(30, 20, 10, 0),
+                    // width: c_width * 0.21,
+                    child: Text('화면스타일',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                    )
+                ),
+                Container(
                   height: 70,
-                  margin: const EdgeInsets.fromLTRB(30, 20, 10, 0),
+                  // margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(
-                            width: c_width * 0.22,
-                            child: Text('화면스타일',
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: isDarkMode ? Colors.white : Colors.black,
-                              ),
-                            )
-                        ),
+
                         Expanded(
                           child: SizedBox(
-                              width: c_width * 0.30,
+                              // width: c_width * 0.3,
                               child: Theme(
                                   data: Theme.of(context).copyWith(
                                       unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
                                       disabledColor: Colors.blue),
                                   child: RadioListTile<Style>(
-                                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                      contentPadding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       title: Align(
                                         alignment: const Alignment(-1, -0.1),
                                         child: Text('라이트',
                                             style: TextStyle(
-                                                fontSize: 14,
-                                                color: isDarkMode ? Colors.white : Colors.black)),
+                                                fontSize: 13,
+                                                color: isDarkMode ? Colors.white : Colors.black)
+                                        ),
                                       ),
                                       groupValue: _style,
                                       value: Style.light,
@@ -287,7 +291,7 @@ class _Settings extends State<Settings> {
                         ),
                         Expanded(
                           child: SizedBox(
-                              width: c_width * 0.30,
+                              // width: c_width * 0.3,
                               child: Theme(
                                   data: Theme.of(context).copyWith(
                                       unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
@@ -299,7 +303,7 @@ class _Settings extends State<Settings> {
                                       alignment: const Alignment(-1, -0.1),
                                       child: Text('다크',
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 13,
                                               color: isDarkMode ? Colors.white : Colors.black)),
                                     ),
                                     groupValue: _style,
@@ -318,18 +322,18 @@ class _Settings extends State<Settings> {
                         ),
                         Expanded(
                           child: SizedBox(
-                              width: c_width * 0.30,
+                              // width: c_width * 0.3,
                               child: Theme(
                                   data: Theme.of(context).copyWith(
                                       unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
                                       disabledColor: Colors.blue),
                                   child: RadioListTile<Style>(
-                                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                      contentPadding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       title: Align(
                                         alignment: const Alignment(-1, -0.1),
                                         child: Text('시스템',
                                             style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 color: isDarkMode ? Colors.white : Colors.black)),
                                       ),
                                       groupValue: _style,
