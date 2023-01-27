@@ -41,9 +41,9 @@ class _History extends State<History> {
     });
   }
 
-  static RegExp basicReg = (RegExp(
-      r'[a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|\s|~!@#$%^&*()_+=:`,./><?{}*|-]'));
-
+  static RegExp basicReg = (
+      RegExp(r'[a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|\s|~!@#$%^&*()_+=:`,./><?{}*|-]')
+  );
   List song_info = [];
   List original = [];
   List info = [];
@@ -101,8 +101,6 @@ class _History extends State<History> {
     setState(() {});
   }
 
-  /* ----------------------------------------------------- */
-
   final duplicateItems = List<String>.generate(10000, (i) => "Item $i");
 
   var items = <String>[];
@@ -157,19 +155,13 @@ class _History extends State<History> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     int len = song_info.length;
     final isExist = len == 0;
-
     SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [
           SystemUiOverlay.bottom
         ]
     );
-    // SystemChrome.setEnabledSystemUIMode(
-    //   SystemUiMode.manual,
-    //   overlays: [
-    //     SystemUiOverlay.top
-    //   ]
-    // );
+
     return WillPopScope(
         onWillPop: () async {
           return _onBackKey();
@@ -219,30 +211,30 @@ class _History extends State<History> {
                             padding: const EdgeInsets.only(bottom: 20),
                             child: Row(
                               children: [
-                                const Text('발견한 노래 ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold, fontSize: 20)),
-                                Text('$len',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                const Text('발견한 노래 ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                Text('$len', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                                 const Text(
                                     ' 곡',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+                                ),
                               ],
-                            )),
+                            )
+                        ),
                         TextFormField(
                             controller: txtQuery,
                             inputFormatters: [FilteringTextInputFormatter.allow(basicReg)],
                             onChanged: search,
                             textInputAction: TextInputAction.search,
                             onFieldSubmitted: (value) {
-                              print('text : ${txtQuery.text}');
+                              // print('text : ${txtQuery.text}');
                             },
                             decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(vertical: 20),
                                 labelText: '곡/가수/앨범명으로 검색해주세요',
                                 labelStyle: TextStyle(
                                     color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2),
-                                    fontSize: 15),
+                                    fontSize: 15
+                                ),
                                 enabledBorder: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(10)),
                                     borderSide: BorderSide(color: Colors.greenAccent)),
@@ -251,16 +243,16 @@ class _History extends State<History> {
                                 prefixIcon: const Icon(Icons.search, color: Colors.greenAccent),
                                 suffixIcon: txtQuery.text.isNotEmpty
                                     ? IconButton(
-                                  icon: Icon(
-                                    Icons.clear,
-                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2),
-                                  ),
+                                        icon: Icon(
+                                          Icons.clear,
+                                          color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2)),
                                   onPressed: () {
                                     txtQuery.text = '';
                                     search(txtQuery.text);
                                   },
-                                )
-                                    : null)),
+                                ) : null
+                            )
+                        ),
                       ],
                     ),
                   ),
@@ -273,9 +265,7 @@ class _History extends State<History> {
                         Center(
                           child: Text('최근 검색 기록이 없습니다.',
                             style: TextStyle(
-                                color: isDarkMode
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: isDarkMode ? Colors.white : Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 22
                             ),
@@ -332,7 +322,6 @@ class _History extends State<History> {
                                   String song_id = info['SONG_ID'];
                                   _songid = song_id;
                                   double c_width = MediaQuery.of(context).size.width;
-                                  // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
                                   final isDarkMode = Theme.of(context).brightness == Brightness.dark;
                                   return Container(
                                     width: c_width,
