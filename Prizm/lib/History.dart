@@ -389,7 +389,8 @@ class _History extends State<History> {
                                                                           fontWeight: FontWeight.bold,
                                                                           fontSize: 20,
                                                                           overflow: TextOverflow.ellipsis,
-                                                                          color: isDarkMode ? Colors.white : Colors.black)),
+                                                                          color: isDarkMode ? Colors.white : Colors.black)
+                                                                  ),
                                                                 ),
                                                                 Padding(
                                                                   padding: const EdgeInsets.only(left: 20, top: 10),
@@ -403,7 +404,8 @@ class _History extends State<History> {
                                                                       style: TextStyle(
                                                                           color: isDarkMode
                                                                               ? Colors.grey.withOpacity(0.8)
-                                                                              : Colors.black.withOpacity(0.4)),
+                                                                              : Colors.black.withOpacity(0.4)
+                                                                      ),
                                                                       overflow: TextOverflow.ellipsis),
                                                                 ),
                                                               ],
