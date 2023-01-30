@@ -153,11 +153,24 @@ class _Home extends State<Home> {
             backgroundColor: isDarkMode
                 ? const Color.fromRGBO(47, 47, 47, 1)
                 : const Color.fromRGBO(244, 245, 247, 1),
+            centerTitle: true,
+            toolbarHeight: 90,
+            elevation: 0.0,
             title: Image.asset(
               isDarkMode ? 'assets/logo_dark.png' : 'assets/logo_light.png',
               height: 25,
             ),
-            automaticallyImplyLeading: false,
+            // automaticallyImplyLeading: false,
+            leading: IconButton(
+              icon: Image.asset('assets/x_icon.png', width: 20,
+                  color: isTransParents ? isDarkMode ?Colors.white : Colors.grey : Colors.transparent),
+              splashColor: Colors.transparent,
+              onPressed: () {
+                _vmidc.stop();
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => TabPage()));
+              },
+            ),
             actions: [
               IconButton(
                 // icon: ImageIcon(Image.asset('assets/settings.png').image),
@@ -174,9 +187,6 @@ class _Home extends State<Home> {
                 },
               )
             ],
-            centerTitle: true,
-            toolbarHeight: 90,
-            elevation: 0.0,
           ),
           body: Container(
               width: double.infinity,
@@ -251,7 +261,7 @@ class _Home extends State<Home> {
                               } else if (await Permission
                                       .microphone.status.isGranted &&
                                   _connectionStatus.endsWith('none') == false) {
-                                // _vmidc.start();
+                                _vmidc.start();
                                 setState(() {
                                   settingIcon = ImageIcon(Image.asset('assets/settings.png').image,
                                     color: Colors.transparent,
@@ -278,10 +288,8 @@ class _Home extends State<Home> {
                                 });
 
                                 if (_vmidc.isRunning() == true) {
-                                  // setState((){
-                                  //   _background = const ColorFilter.mode(Colors.transparent,  BlendMode.clear);
-                                  // });
                                   _vmidc.stop();
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
                                 }
                               }
                             }),
