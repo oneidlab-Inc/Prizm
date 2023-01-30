@@ -93,7 +93,8 @@ class _Settings extends State<Settings> {
                   bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
               title: Text(
                 '설정',
-                style: (isDarkMode
+                style: (
+                    isDarkMode
                     ? const TextStyle(color: Colors.white)
                     : const TextStyle(color: Colors.black)),
               ),

@@ -141,7 +141,6 @@ class _Home extends State<Home> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    // final isTransParents = Colors == Colors.transparent;
     final isTransParents = settingIcon.color == const Color(0x00000000);
     final isPad = c_width > 550;
     final isFlip = c_height > 800;
@@ -163,10 +162,11 @@ class _Home extends State<Home> {
               IconButton(
                 // icon: ImageIcon(Image.asset('assets/settings.png').image),
                 icon: settingIcon,
+                splashColor: Colors.transparent,
                 visualDensity: const VisualDensity(horizontal: 4.0),
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
-                  print(settingIcon.color);
+                  // print(settingIcon.color);
                   isTransParents
                       ? const Text('')
                       : Navigator.push(context,
@@ -197,7 +197,8 @@ class _Home extends State<Home> {
                                       : ('assets/BG_light.gif')),
                                   alignment: const Alignment(0, -2),
                                   fit: BoxFit.cover,
-                                  colorFilter: _background),
+                                  colorFilter: _background
+                              ),
                             )
                           : BoxDecoration(
                               image: DecorationImage(
@@ -243,7 +244,7 @@ class _Home extends State<Home> {
                                 Permission.microphone.request();
                                 return;
                               }
-                              print(_connectionStatus);
+                              // print(_connectionStatus);
                               if (_connectionStatus.endsWith('none') == true) {
                                 NetworkToast();
                                 return;
@@ -395,7 +396,6 @@ class _Home extends State<Home> {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            // print('status => $status');
             return _showDialog(context);
           });
       return false;
