@@ -614,6 +614,10 @@ class _Result extends State<Result> {
           itemCount: programs == null ? 0 : programs.length,
           itemBuilder: (context, index) {
             final program = programs[index];
+
+            String programDate = program['F_DATE'];
+            String parseProgramDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(programDate)).toString();
+
             final isDarkMode = Theme.of(context).brightness == Brightness.dark;
             return Row(children: [
               Column(
@@ -716,7 +720,7 @@ class _Result extends State<Result> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12)),
                               ),
-                              Text(program['F_DATE'],
+                              Text(parseProgramDate,
                                   style: TextStyle(
                                       color: isDarkMode
                                           ? Colors.grey.withOpacity(0.8)
@@ -861,11 +865,11 @@ class _Result extends State<Result> {
                 show: true,
                 getDotPainter: (spot, percent, barData, index) =>
                     FlDotCirclePainter(
-                        radius: 2.5,
+                        radius: 3.0,
                         color: const Color.fromRGBO(51, 211, 180, 1),
                         strokeColor:
                         isDarkMode ? Colors.white : Colors.grey.shade200,
-                        strokeWidth: 2.5),
+                        strokeWidth: 5.0),
               ),
               color: const Color.fromRGBO(51, 211, 180, 1),
               isCurved: true,
@@ -878,12 +882,12 @@ class _Result extends State<Result> {
                 gradient: isDarkMode ? const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.grey]
+                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.white10]
                 )
                     : const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.white]
+                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.white24]
                 ),
               ),
               spots: FlSpotData

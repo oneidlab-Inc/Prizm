@@ -629,7 +629,7 @@ class _History extends State<History> {
                     height: c_height * 0.115,
                     child: Center(
                       child: Text('이 항목을 삭제하시겠습니까?',
-                          style: TextStyle(fontSize: 18)),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     ),
                   ),
                   Container(

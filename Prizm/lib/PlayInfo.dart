@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import 'main.dart';
 
@@ -271,6 +272,10 @@ class _PlayInfo extends State<PlayInfo> {
           scrollDirection: Axis.horizontal,
           itemCount: info_radio == null ? 0 : info_radio.length,
           itemBuilder: (context, index) {
+
+            String radioDate = info_radio[index]['RADIO_DATE'];
+            String parseRadioDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(radioDate)).toString();
+
             final isDarkMode = Theme.of(context).brightness == Brightness.dark;
             return Row(children: [
               Column(
@@ -350,7 +355,8 @@ class _PlayInfo extends State<PlayInfo> {
                                       fontSize: 12,
                                       color: isDarkMode ? Colors.white : Colors.black)),
                             ),
-                            Text(info_radio[index]['RADIO_DATE'],
+                            // Text(info_radio[index]['RADIO_DATE'],
+                                Text(parseRadioDate,
                                 style: TextStyle(
                                     color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.3))
                             )
@@ -373,6 +379,11 @@ Widget _tv_list(info, widget) {
         scrollDirection: Axis.horizontal,
         itemCount: info == null ? 0 : info.length,
         itemBuilder: (context, index) {
+
+          String tvDate = info[index]['TV_DATE'];
+          String parseTvDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(tvDate)).toString();
+          // print('radioDate >> $parseRadioDate');
+
           final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           return Row(children: [
             Column(
@@ -450,7 +461,7 @@ Widget _tv_list(info, widget) {
                                     fontSize: 12,
                                     color: isDarkMode ? Colors.white : Colors.black)),
                           ),
-                          Text(info[index]['TV_DATE'],
+                          Text(parseTvDate,
                               style: TextStyle(
                                   color: isDarkMode
                                       ? Colors.grey.withOpacity(0.8)
