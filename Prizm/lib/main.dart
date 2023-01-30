@@ -97,8 +97,8 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [
-              Locale('en', ''),
               Locale('ko', ''),
+              Locale('en', ''),
             ],
             debugShowCheckedModeBanner: false, // 화면 우상단 띠 제거
             navigatorKey: VMIDC.navigatorState, // 화면 이동을 위한 navigator

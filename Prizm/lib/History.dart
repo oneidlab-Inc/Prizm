@@ -42,7 +42,7 @@ class _History extends State<History> {
   }
 
   static RegExp basicReg = (
-      RegExp(r'[a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|\s|~!@#$%^&*()_+=:`,./><?{}*|-]')
+      RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-]')
   );
   List song_info = [];
   List original = [];
@@ -220,14 +220,15 @@ class _History extends State<History> {
                               ],
                             )
                         ),
-                        TextFormField(
+                        // TextFormField(
+                          TextField(
                             controller: txtQuery,
                             inputFormatters: [FilteringTextInputFormatter.allow(basicReg)],
                             onChanged: search,
                             textInputAction: TextInputAction.search,
-                            onFieldSubmitted: (value) {
+                            // onFieldSubmitted: (value) {
                               // print('text : ${txtQuery.text}');
-                            },
+                            // },
                             decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(vertical: 20),
                                 labelText: '곡/가수/앨범명으로 검색해주세요',
