@@ -79,8 +79,8 @@ class _Settings extends State<Settings> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
-    // final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
     return
@@ -115,30 +115,6 @@ class _Settings extends State<Settings> {
               elevation: 0.3,
               toolbarHeight: 90,
     ),
-    // final isDarkMode = MyApp.themeNotifier.value == ThemeMode.dark;
-//     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-//     var themeContext = Theme.of(context).brightness;
-//     theme = themeContext;
-//     double c_width = MediaQuery.of(context).size.width;
-//     double c_height = MediaQuery.of(context).size.height;
-//
-//
-//     return WillPopScope(
-//         onWillPop:
-//           _onBackKey,
-//         child:
-//       Scaffold(
-//           appBar: AppBar(
-//             shape: Border(
-//                 bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
-//             title: Text(
-//               '설정',
-//               style: (Theme.of(context).brightness == Brightness.dark
-//                   // MyApp.themeNotifier.value == ThemeMode.dark
-//                   ? const TextStyle(color: Colors.white)
-//                   : const TextStyle(color: Colors.black)),
-// >>>>>>> system_theme
-//             ),
             body: Container(
               color: isDarkMode ? Colors.black : Colors.white,
               child: ListView(
@@ -171,7 +147,9 @@ class _Settings extends State<Settings> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Terms()));
+                              builder: (context) => const Terms()
+                          )
+                      );
                     },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,
@@ -185,7 +163,8 @@ class _Settings extends State<Settings> {
                                   ? const TextStyle(
                                       fontSize: 17, color: Colors.white)
                                   : const TextStyle(
-                                      fontSize: 17, color: Colors.black)),
+                                      fontSize: 17, color: Colors.black)
+                          ),
                           Align(
                             child: Image.asset(
                               'assets/move.png',
@@ -201,7 +180,9 @@ class _Settings extends State<Settings> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Private()));
+                              builder: (context) => const Private()
+                          )
+                      );
                     },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,
@@ -294,9 +275,8 @@ class _Settings extends State<Settings> {
                       ),
                     )
                 ),
-                Container(
+                SizedBox(
                   height: 70,
-                  // margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -376,7 +356,7 @@ class _Settings extends State<Settings> {
                                         alignment: const Alignment(-1, -0.1),
                                         child: Text('시스템',
                                             style: TextStyle(
-                                                fontSize: 12,
+                                                fontSize: 13,
                                                 color: isDarkMode ? Colors.white : Colors.black)),
                                       ),
                                       groupValue: _style,

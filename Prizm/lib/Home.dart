@@ -19,6 +19,7 @@ class _Home extends State<Home> {
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   // var brightness;
   final double _size = 220;
 
@@ -33,30 +34,12 @@ class _Home extends State<Home> {
   late dynamic _background =
       const ColorFilter.mode(Colors.transparent, BlendMode.clear);
 
-  late var _textSpan_light = const TextSpan(children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.black
-        )
-    ),
-    TextSpan(
-        text: '프리즘 ',
-        style: TextStyle(
-            color: Color.fromRGBO(43, 226, 193, 1),
-            fontSize: 17,
-            fontWeight: FontWeight.bold
-        )
-    ),
-    TextSpan(
-        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)
-    ),
-  ]);
+  late var settingIcon = ImageIcon(Image.asset('assets/settings.png').image);
 
-  late TextSpan _textSpan_dark = const TextSpan(children: [
+  late TextSpan _textSpan_light = const TextSpan(children: [
     TextSpan(
         text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.white)
-    ),
+        style: TextStyle(fontSize: 17, color: Colors.black)),
     TextSpan(
         text: '프리즘 ',
         style: TextStyle(
@@ -64,8 +47,21 @@ class _Home extends State<Home> {
             fontSize: 17,
             fontWeight: FontWeight.bold)),
     TextSpan(
-        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.white)
-    ),
+        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)),
+  ]);
+
+  late TextSpan _textSpan_dark = const TextSpan(children: [
+    TextSpan(
+        text: '지금 이 곡을 찾으려면 ',
+        style: TextStyle(fontSize: 17, color: Colors.white)),
+    TextSpan(
+        text: '프리즘 ',
+        style: TextStyle(
+            color: Color.fromRGBO(43, 226, 193, 1),
+            fontSize: 17,
+            fontWeight: FontWeight.bold)),
+    TextSpan(
+        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.white)),
   ]);
 
   /*late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
@@ -103,8 +99,6 @@ class _Home extends State<Home> {
 
   @override
   void initState() {
-    print(MyApp.themeNotifier.value);
-
     Permission.microphone.request();
     initConnectivity();
     _connectivitySubscription =
@@ -138,11 +132,10 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
-    SystemChrome.setEnabledSystemUIMode( //상단 상태바 제거
+    SystemChrome.setEnabledSystemUIMode(
+        //상단 상태바 제거
         SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]
-    );
+        overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setSystemUIOverlayStyle(// 상태바 색 설정
         const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     double c_height = MediaQuery.of(context).size.height;
@@ -167,16 +160,15 @@ class _Home extends State<Home> {
             automaticallyImplyLeading: false,
             actions: [
               IconButton(
-                icon: ImageIcon(Image.asset('assets/settings.png').image),
+                // icon: ImageIcon(Image.asset('assets/settings.png').image),
+                icon: settingIcon,
                 visualDensity: const VisualDensity(horizontal: 4.0),
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Settings()
-                      )
-                  );
+                          builder: (context) => const Settings()));
                 },
               )
             ],
@@ -209,16 +201,13 @@ class _Home extends State<Home> {
                               image: DecorationImage(
                                   image: AssetImage(isDarkMode
                                       ? ('assets/BG_dark.gif')
-                                      : ('assets/BG_light.gif')
-                                  ),
+                                      : ('assets/BG_light.gif')),
                                   alignment: isFlip
                                       ? const Alignment(0, 1)
                                       : const Alignment(0, 1),
                                   // fit: BoxFit.contain,
 
-                                  colorFilter: _background
-                              )
-                      ),
+                                  colorFilter: _background)),
                       child: Center(
                           child: Column(children: <Widget>[
                         Center(
@@ -228,8 +217,7 @@ class _Home extends State<Home> {
                           child: RichText(
                               text: isDarkMode
                                   ? _textSpan_dark
-                                  : _textSpan_light
-                          ),
+                                  : _textSpan_light),
                         )),
                         IconButton(
                             // icon: _icon,
@@ -257,28 +245,33 @@ class _Home extends State<Home> {
                               if (_connectionStatus.endsWith('none') == true) {
                                 NetworkToast();
                                 return;
-                              } else if(await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false){
+                              } else if (await Permission
+                                      .microphone.status.isGranted &&
+                                  _connectionStatus.endsWith('none') == false) {
                                 _vmidc.start();
                                 setState(() {
-    isDarkMode
-    ? _textSpan_dark = const TextSpan(
-    text: '노래 분석중',
-    style: TextStyle(
-    color: Color.fromRGBO(
-    43, 226, 193, 1),
-    fontSize: 17,
-    fontWeight: FontWeight.bold),
-    )
-        : _textSpan_light = const TextSpan(
-    text: '노래 분석중',
-    style: TextStyle(
-    color: Color.fromRGBO(43, 226, 193, 1),
-    fontSize: 17,
-    fontWeight: FontWeight.bold),
-    );
-    _background = const ColorFilter.mode(
-        Colors.transparent, BlendMode.color
-    );
+                                  settingIcon = ImageIcon(Image.asset('assets/settings.png').image,
+                                    color: Colors.transparent,
+                                  );
+                                  isDarkMode
+                                      ? _textSpan_dark = const TextSpan(
+                                          text: '노래 분석중',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  43, 226, 193, 1),
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : _textSpan_light = const TextSpan(
+                                          text: '노래 분석중',
+                                          style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  43, 226, 193, 1),
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                  _background = const ColorFilter.mode(
+                                      Colors.transparent, BlendMode.color);
                                 });
 
                                 if (_vmidc.isRunning() == true) {
@@ -289,7 +282,7 @@ class _Home extends State<Home> {
                                 }
                               }
                             }),
-                          ]))),
+                      ]))),
                 ],
               )),
         ));
@@ -348,9 +341,9 @@ class _Home extends State<Home> {
                                       right: BorderSide(
                                           color: isDarkMode
                                               ? const Color.fromRGBO(
-                                              94, 94, 94, 1)
+                                                  94, 94, 94, 1)
                                               : Colors.black
-                                              .withOpacity(0.1)))),
+                                                  .withOpacity(0.1)))),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
                                   onPressed: () {
@@ -392,6 +385,7 @@ class _Home extends State<Home> {
       },
     );
   }
+
   Future<bool> requestMicPermission(BuildContext context) async {
     PermissionStatus status = await Permission.microphone.request();
     // print('permission manage >> $status');
@@ -432,8 +426,7 @@ class _Home extends State<Home> {
         setState(() => _connectionStatus = result.toString());
         break;
       default:
-        setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.'
-        );
+        setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.');
     }
   }
 
@@ -456,8 +449,7 @@ void NetworkToast() {
       msg: '네트워크 연결을 확인 해주세요.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER
-  );
+      gravity: ToastGravity.CENTER);
 }
 
 void PermissionToast() {
@@ -465,6 +457,5 @@ void PermissionToast() {
       msg: '마이크 권한을 허용해주세요.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER
-  );
+      gravity: ToastGravity.CENTER);
 }

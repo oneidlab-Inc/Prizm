@@ -102,12 +102,6 @@ class MyApp extends StatelessWidget {
             ],
             debugShowCheckedModeBanner: false, // 화면 우상단 띠 제거
             navigatorKey: VMIDC.navigatorState, // 화면 이동을 위한 navigator
-// <<<<<<< HEAD
-//             theme: ThemeData(
-//                 primarySwatch: generateMaterialColor(color: Colors.white)
-//             ),
-//             darkTheme: ThemeData.dark(),
-// =======
             theme: ThemeData(primarySwatch: generateMaterialColor(color: Colors.white)),
             darkTheme: ThemeData.dark().copyWith(),
             themeMode: currentMode,
