@@ -141,7 +141,8 @@ class _Home extends State<Home> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
+    // final isTransParents = Colors == Colors.transparent;
+    final isTransParents = settingIcon.color == const Color(0x00000000);
     final isPad = c_width > 550;
     final isFlip = c_height > 800;
     return WillPopScope(
@@ -165,10 +166,11 @@ class _Home extends State<Home> {
                 visualDensity: const VisualDensity(horizontal: 4.0),
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Settings()));
+                  print(settingIcon.color);
+                  isTransParents
+                      ? const Text('')
+                      : Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Settings()));
                 },
               )
             ],
@@ -248,7 +250,7 @@ class _Home extends State<Home> {
                               } else if (await Permission
                                       .microphone.status.isGranted &&
                                   _connectionStatus.endsWith('none') == false) {
-                                _vmidc.start();
+                                // _vmidc.start();
                                 setState(() {
                                   settingIcon = ImageIcon(Image.asset('assets/settings.png').image,
                                     color: Colors.transparent,

@@ -85,9 +85,6 @@ class _Settings extends State<Settings> {
     double c_height = MediaQuery.of(context).size.height;
     return
         WillPopScope(
-          // onWillPop: () async {
-          //   return _onBackKey();
-          // },
           onWillPop: _onBackKey,
           child:
         Scaffold(
