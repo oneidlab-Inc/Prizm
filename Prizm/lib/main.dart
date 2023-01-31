@@ -119,7 +119,9 @@ class TabPage extends StatefulWidget {
 class _TabPageState extends State<TabPage> {
   int _selectedIndex = 1; // 처음에 나올 화면 지정
 
-  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  // static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  var deviceInfoPlugin = DeviceInfoPlugin();
+  var deviceIdentifier = 'unknown';
 
   var deviceData;
   var _deviceData;
@@ -136,9 +138,12 @@ class _TabPageState extends State<TabPage> {
       AndroidDeviceInfo androidDevice = await deviceInfoPlugin.androidInfo;
       deviceData = androidDevice.displayMetrics.widthPx;  //withPx 정보
     } else if (Platform.isIOS) {
-      IosDeviceInfo info = await deviceInfoPlugin.iosInfo;
+      // IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
+      var iosInfo = await deviceInfoPlugin.iosInfo;
+      deviceIdentifier = iosInfo.identifierForVendor!;
     }
-    setState(() {_deviceData = deviceData;});
+    setState(() {_deviceData = deviceData;
+    });
     // print('mount >> ${mounted.toString()}');
   }
 

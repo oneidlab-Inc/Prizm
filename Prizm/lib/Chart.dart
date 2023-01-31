@@ -317,7 +317,7 @@ class _Chart extends State<Chart> {
                         context: context,
                         builder: (BuildContext context) {
                           var chart = charts[index];
-                          final deviceId = _deviceId;
+                          // final deviceId = _deviceId;
                           return SizedBox(
                               height: 230,
                               child: ListView.builder(

@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'Search_Result.dart';
 import 'package:logger/logger.dart';
-import 'Searching_bottom.dart';
+import 'Notfound_bottom.dart';
 import 'wavbuf.dart';
 
 final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android

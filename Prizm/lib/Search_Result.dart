@@ -1,4 +1,5 @@
 // --no-sound-null-safety
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -49,7 +50,21 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    _uid = await PlatformDeviceId.getDeviceId;
+
+    String? _uid;
+    var deviceInfoPlugin = DeviceInfoPlugin();
+    var deviceIdentifier = 'unknown';
+    try{
+      if(Platform.isAndroid) {
+        _uid = await PlatformDeviceId.getDeviceId;
+      } else if(Platform.isIOS) {
+        var iosInfo = await deviceInfoPlugin.iosInfo;
+        _uid = iosInfo.identifierForVendor!;
+      }
+    } on PlatformException {
+      _uid = 'Failed to get Id';
+    }
+    // _uid = await PlatformDeviceId.getDeviceId;
     print('uid : $_uid');
 
 // json for title album artist
@@ -180,9 +195,9 @@ class _Result extends State<Result> {
     final isUltra =c_height > 1000;
     final isPlus = 1000 < c_height && 1300 >= c_height && c_width > 500;
     final isNormal = c_height < 850;
-    print('height = ${c_height.toInt()}');
-    print('width = ${c_width.toInt()}');
-    print('height / width = ${c_height / c_width} ');
+    // print('height = ${c_height.toInt()}');
+    // print('width = ${c_width.toInt()}');
+    // print('height / width = ${c_height / c_width} ');
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();
