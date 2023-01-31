@@ -31,28 +31,6 @@ void main() async {
   ]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  /*----------------------------ThemeMode----------------------------
-  ThemeMode 저장시 사용하려고 만들었으나 나중에 Firebase에서 활용가능한지 확인
-  final prefs = await SharedPreferences.getInstance();
-  ThemeMode themeMode = ThemeMode.light;
-
-  final String? savedThemeMode = prefs.getString('themeMode');
-
-  if(savedThemeMode == null) {
-    print('null');
-    themeMode = ThemeMode.light;
-  } else if(savedThemeMode == "light") {
-    print('light');
-    themeMode = ThemeMode.light;
-  } else if(savedThemeMode == "dark") {
-    print('dark');
-    themeMode = ThemeMode.dark;
-  } else if(savedThemeMode == "system") {
-    print('system');
-    themeMode = ThemeMode.system;
-  }
-  --------------------------------------------------------------------*/
-
   /*---------------------------- firebase -------------------------------
   Firebase 버전 업데이트 없이 코드변경  아직 미완성
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
@@ -81,8 +59,8 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key? key}) : super(key: key);
 
+  // static var fixed;
   static var Uri;
-  static var fixed;
   static var appVersion;
 
   @override
@@ -136,15 +114,14 @@ class _TabPageState extends State<TabPage> {
     if (!mounted) return;
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidDevice = await deviceInfoPlugin.androidInfo;
+
       deviceData = androidDevice.displayMetrics.widthPx;  //withPx 정보
     } else if (Platform.isIOS) {
-      // IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
       var iosInfo = await deviceInfoPlugin.iosInfo;
       deviceIdentifier = iosInfo.identifierForVendor!;
     }
     setState(() {_deviceData = deviceData;
     });
-    // print('mount >> ${mounted.toString()}');
   }
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -153,7 +130,6 @@ class _TabPageState extends State<TabPage> {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
     MyApp.appVersion = packageVersion;
-
 
     // _versionCheck.checkUpdatable(version);
 // 스토어 업로드 후 주소 받고 활성화
@@ -268,12 +244,12 @@ class _TabPageState extends State<TabPage> {
     // 고정 URL 나오면 변경
     try {
       http.Response response =
-          await http.get(Uri.parse('http://dev.przm.kr/przm_api/'));
+      await http.get(Uri.parse('http://www.przm.kr/przm.php'));
       String jsonData = response.body;
       Map<String, dynamic> url = jsonDecode(jsonData.toString());
       setState(() {});
-      MyApp.fixed = url[''];
-      MyApp.Uri = MyApp.fixed.toString();
+      MyApp.Uri = url;
+      // print('url >> ${MyApp.Uri}');
     } catch (e) {
       print('error >> $e');
     }
@@ -281,11 +257,10 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
-    // fetchData();   고정url 받으면 활성화
-
+    fetchData();  // 고정url 받으면 활성화
     _launchUpdate();
     initPlatformState();
-    MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
+    // MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
     super.initState();
   }
 

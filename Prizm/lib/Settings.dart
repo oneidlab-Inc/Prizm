@@ -42,7 +42,7 @@ class _Settings extends State<Settings> {
   String? uid;
   String? _deviceId;
   var currentVersion;
-
+  var delete = MyApp.Uri['history'];
   var theme;
 
   @override
@@ -454,7 +454,10 @@ class _Settings extends State<Settings> {
                                                       uid = _deviceId!;
                                                       try {
                                                         Response response =
-                                                        await http.get(Uri.parse('${MyApp.Uri}get_song_history?uid=$uid&proc=del'));
+                                                        await http.get(
+                                                            // Uri.parse('${MyApp.Uri}get_song_history?uid=$uid&proc=del')
+                                                          Uri.parse('http://$delete?uid=$uid&proc=del')
+                                                        );
                                                         if (response.statusCode == 200) {
                                                           showToast();
                                                         } else {

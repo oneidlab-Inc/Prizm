@@ -42,9 +42,11 @@ class _PlayInfo extends State<PlayInfo> {
   late int statuscode;
 
   fetchData() async {
+    var search = MyApp.Uri['search'];
 
     http.Response response = await http.get(
-        Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.song_id}')
+        // Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.song_id}')
+      Uri.parse('http://$search/json?id=${widget.song_id}')
     );
 
     statuscode = response.statusCode;

@@ -38,9 +38,11 @@ class _Chart extends State<Chart> {
   List original = [];
 
   void fetchData() async {
+    var chart = MyApp.Uri['ranks'];
     try {
       http.Response response = await http.get(
-          Uri.parse('${MyApp.Uri}get_song_ranks')
+          // Uri.parse('${MyApp.Uri}get_song_ranks')
+              Uri.parse('http://$chart')
       );
       String jsonData = response.body;
       charts = jsonDecode(jsonData.toString());

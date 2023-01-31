@@ -50,6 +50,8 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
+    var search = MyApp.Uri['search'];
+    var program = MyApp.Uri['programs'];
 
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
@@ -72,7 +74,8 @@ class _Result extends State<Result> {
     try {
       http.Response response = await http.get(
         // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-          Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid'));
+        //   Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.id}&uid=$_uid'));
+      Uri.parse('http://$search/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -89,7 +92,8 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-          Uri.parse('${MyApp.Uri}get_song_programs/json?id=${widget.id}')
+        Uri.parse('http://$program/json?id=${widget.id}')
+          // Uri.parse('${MyApp.Uri}get_song_programs/json?id=${widget.id}')
         // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
       );
       String jsonData = response.body;
