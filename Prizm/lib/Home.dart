@@ -168,9 +168,10 @@ class _Home extends State<Home> {
                   color: isTransParents ? isDarkMode ?Colors.white : Colors.grey : Colors.transparent),
               splashColor: Colors.transparent,
               onPressed: () {
-                leadingTransparent
-                    ? const Text('')
-                    : Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                _vmidc.stop();
+                isTransParents
+                    ? Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()))
+                    : const Text('');
               },
             ),
             actions: [
@@ -184,10 +185,7 @@ class _Home extends State<Home> {
                   print(settingIcon.color);
                   isTransParents
                       ? const Text('')
-                      : Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Settings()));
+                      : Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings()));
                 },
               )
             ],
