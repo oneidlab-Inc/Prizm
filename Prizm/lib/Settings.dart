@@ -455,7 +455,6 @@ class _Settings extends State<Settings> {
                                                       try {
                                                         Response response =
                                                         await http.get(
-                                                            // Uri.parse('${MyApp.Uri}get_song_history?uid=$uid&proc=del')
                                                           Uri.parse('http://$delete?uid=$uid&proc=del')
                                                         );
                                                         if (response.statusCode == 200) {
@@ -849,7 +848,6 @@ width: 10,
     Uri _url = Uri.parse('');
     if (Platform.isAndroid) {
       //플레이 스토어 주소 입력
-      _url = Uri.parse('http://www.naver.com');
       // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
     } else if (Platform.isIOS) {
       //앱스토어 주소 입력

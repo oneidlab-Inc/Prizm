@@ -96,7 +96,6 @@ class VMIDC {
     _id = null;
     _score = null;
     print('vmid.start()');
-    print('start');
     await _recorder.startRecorder(
       toStream: recCtrl.sink,
       codec: Codec.pcm16,

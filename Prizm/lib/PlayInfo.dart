@@ -45,7 +45,6 @@ class _PlayInfo extends State<PlayInfo> {
     var search = MyApp.Uri['search'];
 
     http.Response response = await http.get(
-        // Uri.parse('${MyApp.Uri}get_song_search/json?id=${widget.song_id}')
       Uri.parse('http://$search/json?id=${widget.song_id}')
     );
 

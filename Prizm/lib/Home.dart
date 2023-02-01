@@ -35,6 +35,8 @@ class _Home extends State<Home> {
       const ColorFilter.mode(Colors.transparent, BlendMode.clear);
 
   late var settingIcon = ImageIcon(Image.asset('assets/settings.png').image);
+  late var x_icon = ImageIcon(Image.asset('assets/x_icon.png',).image);
+  // late var x_icon = Image.asset('assets/x_icon', width: 20);
 
   late TextSpan _textSpan_light = const TextSpan(children: [
     TextSpan(
@@ -141,6 +143,7 @@ class _Home extends State<Home> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final leadingTransparent = settingIcon.color != const Color(0x00000000);
     final isTransParents = settingIcon.color == const Color(0x00000000);
     final isPad = c_width > 550;
     final isFlip = c_height > 800;
@@ -160,15 +163,14 @@ class _Home extends State<Home> {
               isDarkMode ? 'assets/logo_dark.png' : 'assets/logo_light.png',
               height: 25,
             ),
-            // automaticallyImplyLeading: false,
             leading: IconButton(
               icon: Image.asset('assets/x_icon.png', width: 20,
                   color: isTransParents ? isDarkMode ?Colors.white : Colors.grey : Colors.transparent),
               splashColor: Colors.transparent,
               onPressed: () {
-                _vmidc.stop();
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TabPage()));
+                leadingTransparent
+                    ? const Text('')
+                    : Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
               },
             ),
             actions: [
@@ -179,11 +181,13 @@ class _Home extends State<Home> {
                 visualDensity: const VisualDensity(horizontal: 4.0),
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
-                  // print(settingIcon.color);
+                  print(settingIcon.color);
                   isTransParents
                       ? const Text('')
-                      : Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Settings()));
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Settings()));
                 },
               )
             ],
@@ -207,8 +211,7 @@ class _Home extends State<Home> {
                                       : ('assets/BG_light.gif')),
                                   alignment: const Alignment(0, -2),
                                   fit: BoxFit.cover,
-                                  colorFilter: _background
-                              ),
+                                  colorFilter: _background),
                             )
                           : BoxDecoration(
                               image: DecorationImage(
@@ -219,7 +222,6 @@ class _Home extends State<Home> {
                                       ? const Alignment(0, 1)
                                       : const Alignment(0, 1),
                                   // fit: BoxFit.contain,
-
                                   colorFilter: _background)),
                       child: Center(
                           child: Column(children: <Widget>[
@@ -245,7 +247,6 @@ class _Home extends State<Home> {
                                   PermissionStatus.permanentlyDenied) {
                                 PermissionToast();
                                 requestMicPermission(context);
-
                                 return;
                               } else if (status == PermissionStatus.denied) {
                                 PermissionToast();
@@ -263,7 +264,8 @@ class _Home extends State<Home> {
                                   _connectionStatus.endsWith('none') == false) {
                                 _vmidc.start();
                                 setState(() {
-                                  settingIcon = ImageIcon(Image.asset('assets/settings.png').image,
+                                  settingIcon = ImageIcon(
+                                    Image.asset('assets/settings.png').image,
                                     color: Colors.transparent,
                                   );
                                   isDarkMode
@@ -289,7 +291,10 @@ class _Home extends State<Home> {
 
                                 if (_vmidc.isRunning() == true) {
                                   _vmidc.stop();
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TabPage()));
                                 }
                               }
                             }),

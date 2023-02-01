@@ -57,11 +57,8 @@ class _History extends State<History> {
 
     try {
       http.Response response = await http.get(
-        // Uri.parse('http://dev.przm.kr/przm_api/get_song_history/json?uid=$uid')
           Uri.parse('http://$history/json?uid=$uid')
       );
-      // var test = MyApp.fixed;
-      // print('fixed >>> ${test[3]}');
       String jsonData = response.body;
       song_info = jsonDecode(jsonData.toString());
       original = song_info;
