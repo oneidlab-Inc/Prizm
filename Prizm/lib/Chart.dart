@@ -333,18 +333,15 @@ class _Chart extends State<Chart> {
                                                         child: IconButton(
                                                             padding:
                                                                 const EdgeInsets.only(bottom: 80),
-                                                            icon: ImageIcon(
-                                                                Image.asset('assets/x_icon.png').image,
-                                                                size: 15),
-                                                            color: isDarkMode
-                                                                ? Colors.white
-                                                                : Colors.grey,
+                                                            icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
+                                                            color: isDarkMode ? Colors.white : Colors.grey,
                                                             onPressed: () {
                                                               Navigator.pop(
                                                                   context);
                                                             }),
                                                       )
-                                                    ])),
+                                                    ])
+                                                ),
                                               ],
                                             ),
                                           ),
