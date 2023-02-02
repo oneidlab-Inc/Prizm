@@ -1,3 +1,5 @@
+//identifierForVendotr << ios    androidId << android
+
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity/connectivity.dart';
@@ -176,7 +178,6 @@ class _Home extends State<Home> {
             ),
             actions: [
               IconButton(
-                // icon: ImageIcon(Image.asset('assets/settings.png').image),
                 icon: settingIcon,
                 splashColor: Colors.transparent,
                 visualDensity: const VisualDensity(horizontal: 4.0),

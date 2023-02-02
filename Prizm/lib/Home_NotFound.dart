@@ -81,7 +81,8 @@ class _NotFound extends State<NotFound> {
                   ),
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TabPage()));
+                        MaterialPageRoute(builder: (context) => TabPage())
+                    );
                   }),
             ),
             backgroundColor: isDarkMode
@@ -93,7 +94,8 @@ class _NotFound extends State<NotFound> {
                     ? const Color.fromRGBO(47, 47, 47, 1)
                     : const Color.fromRGBO(244, 245, 247, 1),
                 child:
-                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    Column(mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
                   Container(
                       height: c_height * 0.59,
                       padding: const EdgeInsets.only(bottom: 50),
@@ -102,9 +104,9 @@ class _NotFound extends State<NotFound> {
                         Center(
                             child: Container(
                                 padding: const EdgeInsets.only(bottom: 20),
-                                child: isDarkMode ? _textColumn_dark : _textColumn_light
-                            )
-                        ),
+                                child: isDarkMode
+                                    ? _textColumn_dark
+                                    : _textColumn_light)),
                         IconButton(
                           icon: isDarkMode
                               ? Image.asset('assets/_prizm_dark.png')
@@ -120,7 +122,10 @@ class _NotFound extends State<NotFound> {
                           },
                         )
                       ])))
-                ]))));
+                ])
+            )
+        )
+    );
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
