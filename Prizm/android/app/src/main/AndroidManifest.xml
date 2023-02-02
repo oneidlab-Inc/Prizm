@@ -2,12 +2,13 @@
     package="com.android.prizm">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-<!--    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>-->
     <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>-->
-<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"></uses-permission>-->
     <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
+    <queries>
+        <package android:name="com.android.prizm" />
+    </queries>
 
    <application
         android:label="Prizm"
@@ -35,6 +36,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

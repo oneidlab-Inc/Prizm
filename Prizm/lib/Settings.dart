@@ -111,7 +111,7 @@ class _Settings extends State<Settings> {
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
               centerTitle: true,
               elevation: 0.3,
-              toolbarHeight: 90,
+              toolbarHeight: 70,
     ),
             body: Container(
               color: isDarkMode ? Colors.black : Colors.white,

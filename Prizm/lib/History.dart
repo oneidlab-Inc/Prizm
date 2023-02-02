@@ -181,7 +181,7 @@ class _History extends State<History> {
               ),
               centerTitle: true,
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
-              toolbarHeight: 80,
+              toolbarHeight: 70,
               elevation: 0.0,
               automaticallyImplyLeading: false,
               actions: [
@@ -386,29 +386,31 @@ class _History extends State<History> {
                                                               children: [
                                                                 Padding(
                                                                   padding: const EdgeInsets.only(left: 15),
-                                                                  child: Text(info['TITLE'],
+                                                                  child: RichText(
+                                                                    overflow: TextOverflow.ellipsis,
+                                                                    maxLines: 2,
+                                                                    strutStyle: const StrutStyle(fontSize: 18),
+                                                                    text: TextSpan(
+                                                                      text: info['TITLE'],
                                                                       style: TextStyle(
                                                                           fontWeight: FontWeight.bold,
-                                                                          fontSize: 20,
-                                                                          overflow: TextOverflow.ellipsis,
-                                                                          color: isDarkMode ? Colors.white : Colors.black)
-                                                                  ),
+                                                                          fontSize: 18,
+                                                                          color: isDarkMode ? Colors.white : Colors.black
+                                                                      )
+                                                                    )
+                                                                  )
                                                                 ),
                                                                 Padding(
                                                                   padding: const EdgeInsets.only(left: 20, top: 10),
-                                                                  child: isArtistNull
-                                                                      ? Text('Various Artists',
-                                                                      style: TextStyle(
-                                                                          color: isDarkMode
-                                                                              ? Colors.grey.withOpacity(0.8)
-                                                                              : Colors.black.withOpacity(0.4)))
-                                                                      : Text(info['ARTIST'],
+                                                                  child: Text(
+                                                                    isArtistNull ? 'Various Artists' : info['ARTIST'],
                                                                       style: TextStyle(
                                                                           color: isDarkMode
                                                                               ? Colors.grey.withOpacity(0.8)
                                                                               : Colors.black.withOpacity(0.4)
                                                                       ),
-                                                                      overflow: TextOverflow.ellipsis),
+                                                                      overflow: TextOverflow.ellipsis
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
@@ -416,7 +418,7 @@ class _History extends State<History> {
                                                           SizedBox(
                                                             width: c_width * 0.05,
                                                             child: IconButton(
-                                                                padding: const EdgeInsets.only(bottom: 80, right: 10),
+                                                                padding: const EdgeInsets.only(bottom: 80),
                                                                 icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
                                                                 color: isDarkMode ? Colors.white : Colors.grey,
                                                                 onPressed: () {

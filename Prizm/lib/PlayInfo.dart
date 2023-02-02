@@ -112,7 +112,7 @@ class _PlayInfo extends State<PlayInfo> {
         centerTitle: true,
         elevation: 1.0,
         backgroundColor: isDarkMode ? Colors.black : Colors.white,
-        toolbarHeight: 90,
+        toolbarHeight: 70,
       ),
       body: Container(
         height: 2800,
