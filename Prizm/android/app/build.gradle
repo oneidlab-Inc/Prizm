@@ -21,7 +21,7 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -72,6 +72,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-config-ktx:21.2.0'
     implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-dynamic-links:21.1.0'
 }
 
 flutter {

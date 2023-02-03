@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -441,6 +442,7 @@ class _TabPageState extends State<TabPage> {
       },
     );
   }
+  
 
   Future<bool> _backToHome() async {
     return await showDialog(

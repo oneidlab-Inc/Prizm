@@ -773,7 +773,7 @@ class _Result extends State<Result> {
               MediaQuery.of(context).size.width,
               MediaQuery.of(context).size.height * 0.5));
     } else if (Platform.isAndroid) {
-      await Share.share('www.oneidlab.kr/app_check.html', subject: 'Prizm');
+      await Share.share('https://oneidlab.page.link/prizm&apn=com.android.prizm', subject: 'Prizm');
     }
     // box!.localToGlobal(Offset.zero) & box.size);
   }
