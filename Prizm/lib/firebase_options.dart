@@ -25,8 +25,8 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
+      // case TargetPlatform.iOS:
+      //   return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -58,14 +58,14 @@ class DefaultFirebaseOptions {
     storageBucket: 'prizm-oneidlab.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBjoFdSmbSDfgHlXPQgAqE1pWMoUeaoFz0',
-    appId: '1:296859940615:ios:fd469208c77d6b7d4bb7a2',
-    messagingSenderId: '296859940615',
-    projectId: 'prizm-oneidlab',
-    databaseURL: 'https://prizm-oneidlab-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'prizm-oneidlab.appspot.com',
-    iosClientId: '296859940615-b9mh6kgf4ah53h38itc4pm2l78n0ttn7.apps.googleusercontent.com',
-    iosBundleId: 'com.ios.prizm',
-  );
+  // static const FirebaseOptions ios = FirebaseOptions(
+  //   apiKey: 'AIzaSyBjoFdSmbSDfgHlXPQgAqE1pWMoUeaoFz0',
+  //   appId: '1:296859940615:ios:fd469208c77d6b7d4bb7a2',
+  //   messagingSenderId: '296859940615',
+  //   projectId: 'prizm-oneidlab',
+  //   databaseURL: 'https://prizm-oneidlab-default-rtdb.asia-southeast1.firebasedatabase.app',
+  //   storageBucket: 'prizm-oneidlab.appspot.com',
+  //   iosClientId: '296859940615-b9mh6kgf4ah53h38itc4pm2l78n0ttn7.apps.googleusercontent.com',
+  //   iosBundleId: 'com.ios.prizm',
+  // );
 }

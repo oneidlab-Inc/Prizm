@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
@@ -30,7 +31,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  print(Firebase.apps.toString());
 
   /*---------------------------- firebase -------------------------------
   Firebase 버전 업데이트 없이 코드변경  아직 미완성
@@ -54,13 +55,14 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.system);
 
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+
   MyApp({Key? key}) : super(key: key);
 
-  // static var fixed;
   static var Uri;
   static var appVersion;
 
@@ -70,6 +72,7 @@ class MyApp extends StatelessWidget {
         valueListenable: themeNotifier,
         builder: (_, ThemeMode currentMode, __) {
           return MaterialApp(
+            navigatorObservers: [observer],
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -79,9 +82,12 @@ class MyApp extends StatelessWidget {
               Locale('ko', ''),
               Locale('en', ''),
             ],
-            debugShowCheckedModeBanner: false, // 화면 우상단 띠 제거
-            navigatorKey: VMIDC.navigatorState, // 화면 이동을 위한 navigator
-            theme: ThemeData(primarySwatch: generateMaterialColor(color: Colors.white)),
+            debugShowCheckedModeBanner: false,
+            // 화면 우상단 띠 제거
+            navigatorKey: VMIDC.navigatorState,
+            // 화면 이동을 위한 navigator
+            theme: ThemeData(
+                primarySwatch: generateMaterialColor(color: Colors.white)),
             darkTheme: ThemeData.dark().copyWith(),
             themeMode: currentMode,
             home: TabPage(),
@@ -91,6 +97,9 @@ class MyApp extends StatelessWidget {
 }
 
 class TabPage extends StatefulWidget {
+  // TabPage({analytics}) : super();
+
+  // final FirebaseAnalytics analytics;
   @override
   _TabPageState createState() => _TabPageState();
 }
@@ -105,8 +114,12 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
 
+  void _handleDynamicLink(Uri deepLink) {
+
+  }
+
   Future<void> initPlatformState() async {
-    String? deviceId;//기기 uid
+    String? deviceId; //기기 uid
     try {
       deviceId = await PlatformDeviceId.getDeviceId;
     } on PlatformException {
@@ -116,12 +129,13 @@ class _TabPageState extends State<TabPage> {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidDevice = await deviceInfoPlugin.androidInfo;
 
-      deviceData = androidDevice.displayMetrics.widthPx;  //withPx 정보
+      deviceData = androidDevice.displayMetrics.widthPx; //withPx 정보
     } else if (Platform.isIOS) {
       var iosInfo = await deviceInfoPlugin.iosInfo;
       deviceIdentifier = iosInfo.identifierForVendor!;
     }
-    setState(() {_deviceData = deviceData;
+    setState(() {
+      _deviceData = deviceData;
     });
   }
 
@@ -169,8 +183,7 @@ class _TabPageState extends State<TabPage> {
                       height: c_height * 0.115,
                       child: const Center(
                         child: Text('업데이트를 위해 스토어로 이동합니다.',
-                            style: TextStyle(fontSize: 18)
-                        ),
+                            style: TextStyle(fontSize: 18)),
                       ),
                     ),
                     Container(
@@ -179,10 +192,7 @@ class _TabPageState extends State<TabPage> {
                               top: BorderSide(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(94, 94, 94, 1)
-                                      : Colors.black.withOpacity(0.1)
-                              )
-                          )
-                      ),
+                                      : Colors.black.withOpacity(0.1)))),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -223,8 +233,7 @@ class _TabPageState extends State<TabPage> {
                                         : Colors.black.withOpacity(0.3),
                                   ),
                                 ),
-                              )
-                          ),
+                              )),
                         ],
                       ),
                     )
@@ -245,7 +254,7 @@ class _TabPageState extends State<TabPage> {
     // 고정 URL 나오면 변경
     try {
       http.Response response =
-      await http.get(Uri.parse('http://www.przm.kr/przm.php'));
+          await http.get(Uri.parse('http://www.przm.kr/przm.php'));
       String jsonData = response.body;
       Map<String, dynamic> url = jsonDecode(jsonData.toString());
       setState(() {});
@@ -256,9 +265,10 @@ class _TabPageState extends State<TabPage> {
     }
   }
 
+
   @override
   void initState() {
-    fetchData();  // 고정url 받으면 활성화
+    fetchData(); // 고정url 받으면 활성화
     _launchUpdate();
     initPlatformState();
     // MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
@@ -292,12 +302,14 @@ class _TabPageState extends State<TabPage> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    SystemChrome.setEnabledSystemUIMode(  // 상단 상태바 제거
+    SystemChrome.setEnabledSystemUIMode(
+        // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     return WillPopScope(
         onWillPop: () {
-          if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {  //디바이스 widthPx / 3 의 값이 page offset 값과 같을때
+          if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {
+            //디바이스 widthPx / 3 의 값이 page offset 값과 같을때
             return _onBackKey();
           } else {
             // print(pageController.offset);
@@ -309,9 +321,7 @@ class _TabPageState extends State<TabPage> {
           body: buildPageView(),
           bottomNavigationBar: StyleProvider(
               // style: MyApp.themeNotifier.value == ThemeMode.dark
-              style: isDarkMode
-                  ? Style_dark()
-                  : Style(),
+              style: isDarkMode ? Style_dark() : Style(),
               child: ConvexAppBar(
                 items: [
                   TabItem(
@@ -335,13 +345,9 @@ class _TabPageState extends State<TabPage> {
                 curveSize: 100,
                 elevation: 2.0,
                 // backgroundColor: MyApp.themeNotifier.value == ThemeMode.dark
-                backgroundColor : isDarkMode
-                    ? Colors.black
-                    : Colors.white,
-              )
-          ),
-        )
-    );
+                backgroundColor: isDarkMode ? Colors.black : Colors.white,
+              )),
+        ));
   }
 
 /* =======================================================*/
@@ -355,8 +361,8 @@ class _TabPageState extends State<TabPage> {
         double c_height = MediaQuery.of(context).size.height;
         double c_width = MediaQuery.of(context).size.width;
         return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
               height: c_height * 0.18,
               width: c_width * 0.8,
@@ -380,10 +386,7 @@ class _TabPageState extends State<TabPage> {
                             top: BorderSide(
                                 color: isDarkMode
                                     ? const Color.fromRGBO(94, 94, 94, 1)
-                                    : Colors.black.withOpacity(0.1)
-                            )
-                        )
-                    ),
+                                    : Colors.black.withOpacity(0.1)))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -398,19 +401,18 @@ class _TabPageState extends State<TabPage> {
                                   border: Border(
                                       right: BorderSide(
                                           color: isDarkMode
-                                              ? const Color.fromRGBO(94, 94, 94, 1)
-                                              : Colors.black.withOpacity(0.1)
-                                      )
-                                  )
-                              ),
+                                              ? const Color.fromRGBO(
+                                                  94, 94, 94, 1)
+                                              : Colors.black
+                                                  .withOpacity(0.1)))),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
-                                  onPressed: () {exit(0);},
+                                  onPressed: () {
+                                    exit(0);
+                                  },
                                   child: const Text('종료',
-                                      style: TextStyle(fontSize: 20, color: Colors.red)
-                                  )
-                              )
-                          ),
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.red)))),
                         ),
                         Container(
                             margin: const EdgeInsets.only(right: 20),
@@ -420,7 +422,9 @@ class _TabPageState extends State<TabPage> {
                             width: c_width * 0.345,
                             height: c_height * 0.08,
                             child: TextButton(
-                              onPressed: () {Navigator.pop(context);},
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               child: Text(
                                 '취소',
                                 style: TextStyle(
@@ -430,19 +434,16 @@ class _TabPageState extends State<TabPage> {
                                       : Colors.black.withOpacity(0.3),
                                 ),
                               ),
-                            )
-                        ),
+                            )),
                       ],
                     ),
                   )
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }
-  
 
   Future<bool> _backToHome() async {
     return await showDialog(

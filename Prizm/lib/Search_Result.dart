@@ -1,5 +1,6 @@
 // --no-sound-null-safety
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -56,10 +57,10 @@ class _Result extends State<Result> {
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
     var deviceIdentifier = 'unknown';
-    try{
-      if(Platform.isAndroid) {
+    try {
+      if (Platform.isAndroid) {
         _uid = await PlatformDeviceId.getDeviceId;
-      } else if(Platform.isIOS) {
+      } else if (Platform.isIOS) {
         var iosInfo = await deviceInfoPlugin.iosInfo;
         _uid = iosInfo.identifierForVendor!;
       }
@@ -73,8 +74,8 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-        // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-      Uri.parse('http://$search/json?id=${widget.id}&uid=$_uid'));
+          // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
+          Uri.parse('http://$search/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -91,9 +92,9 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://$program/json?id=${widget.id}')
-        // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
-      );
+          Uri.parse('http://$program/json?id=${widget.id}')
+          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
+          );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
@@ -157,12 +158,44 @@ class _Result extends State<Result> {
   }
 
   final duplicateItems =
-  List<String>.generate(1000, (i) => "$Container(child:Text $i)");
+      List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
+
+  Future<void> getLink() async {
+    final dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://oneidlab.page.link/"),
+      // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
+      uriPrefix: 'https://oneidlab.page.link/prizm/',
+      androidParameters: const AndroidParameters(
+        packageName: "com.android.prizm",
+        minimumVersion: 28,
+      ),
+      // iosParameters: const IOSParameters(
+      //   bundleId: "com.example.app.ios",
+      //   appStoreId: "123456789",
+      //   minimumVersion: "1.0.1",
+      // ),
+    );
+    // final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
+    //     dynamicLinkParams);
+
+    // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
+    print(
+        'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
+    print(
+        'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
+    print(
+        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    print(
+        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    print('link >>> ${dynamicLinkParams.link}');
+    print('dynamicLink >>> ${dynamicLinkParams.link.data}');
+  }
 
   @override
   void initState() {
     fetchData();
+    getLink();
     super.initState();
   }
 
@@ -178,11 +211,11 @@ class _Result extends State<Result> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     SystemChrome.setEnabledSystemUIMode(
-      // 상단 상태바 제거
+        // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setEnabledSystemUIMode(
-      // 상단 상태바 제거
+        // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height * 1.0;
@@ -194,7 +227,7 @@ class _Result extends State<Result> {
     final isImage = maps['IMAGE'].toString().startsWith('assets') != true;
     final isPad = c_width > 800;
     final isFlip = c_height / c_width > 2.3;
-    final isUltra =c_height > 1000;
+    final isUltra = c_height > 1000;
     final isPlus = 1000 < c_height && 1300 >= c_height && c_width > 500;
     final isNormal = c_height < 850;
     // print('height = ${c_height.toInt()}');
@@ -218,140 +251,142 @@ class _Result extends State<Result> {
                         Center(
                           child: isFlip
                               ? SizedBox(
-                              child: Image.network(
-                                '${maps['IMAGE']}',
-                                height: c_height * 0.57,
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return SizedBox(
-                                    child: Image.asset(
-                                      'assets/no_image.png',
-                                      height: c_height * 0.57,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  );
-                                },
-                              ))  // << flip
+                                  child: Image.network(
+                                  '${maps['IMAGE']}',
+                                  height: c_height * 0.57,
+                                  fit: BoxFit.fill,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return SizedBox(
+                                      child: Image.asset(
+                                        'assets/no_image.png',
+                                        height: c_height * 0.57,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    );
+                                  },
+                                )) // << flip
                               : isPad
-                              ? SizedBox(
-                              child: Image.network(
-                                '${maps['IMAGE']}',
-                                height: c_height * 0.5,
-                                width: c_height * 0.5,
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return SizedBox(
-                                    child: Image.asset(
-                                      'assets/no_image.png',
+                                  ? SizedBox(
+                                      child: Image.network(
+                                      '${maps['IMAGE']}',
                                       height: c_height * 0.5,
+                                      width: c_height * 0.5,
                                       fit: BoxFit.fill,
-                                    ),
-                                  );
-                                },
-                              )) //  << fold
-                              : isPlus ? SizedBox(
-                              child: Image.network(
-                                '${maps['IMAGE']}',
-                                width: c_width,
-                                height: c_height * 0.4,
-                                fit: BoxFit.fill,
-                                errorBuilder:
-                                    (context, error, stackTrace) {
-                                  return SizedBox(
-                                    child: Image.asset(
-                                      'assets/no_image.png',
-                                      height: c_height * 0.4,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  );
-                                },
-                              ))
-                              : isUltra
-                              ? SizedBox(
-                              child: Image.network(
-                                '${maps['IMAGE']}',
-                                height: c_height * 0.5,
-                                fit: BoxFit.fill,
-                                errorBuilder:
-                                    (context, error, stackTrace) {
-                                  return SizedBox(
-                                    child: Image.asset(
-                                      'assets/no_image.png',
-                                      height: c_height * 0.5,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  );
-                                },
-                              ))
-                              : isNormal
-                              ? SizedBox(
-                              child: Image.network(
-                                '${maps['IMAGE']}',
-                                height: c_height * 0.6,
-                                fit: BoxFit.fill,
-                                errorBuilder:
-                                    (context, error, stackTrace) {
-                                  return SizedBox(
-                                    child: Image.asset(
-                                      'assets/no_image.png',
-                                      height: c_height * 0.6,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  );
-                                },
-                              ))
-                              : SizedBox(
-                              child: Image.network(
-                                '${maps['IMAGE']}',
-                                height: c_height * 0.5,
-                                fit: BoxFit.fill,
-                                errorBuilder:
-                                    (context, error, stackTrace) {
-                                  return SizedBox(
-                                    child: Image.asset(
-                                      'assets/no_image.png',
-                                      height: c_height * 0.5,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  );
-                                },
-                              )),
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return SizedBox(
+                                          child: Image.asset(
+                                            'assets/no_image.png',
+                                            height: c_height * 0.5,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        );
+                                      },
+                                    )) //  << fold
+                                  : isPlus
+                                      ? SizedBox(
+                                          child: Image.network(
+                                          '${maps['IMAGE']}',
+                                          width: c_width,
+                                          height: c_height * 0.4,
+                                          fit: BoxFit.fill,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return SizedBox(
+                                              child: Image.asset(
+                                                'assets/no_image.png',
+                                                height: c_height * 0.4,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            );
+                                          },
+                                        ))
+                                      : isUltra
+                                          ? SizedBox(
+                                              child: Image.network(
+                                              '${maps['IMAGE']}',
+                                              height: c_height * 0.5,
+                                              fit: BoxFit.fill,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return SizedBox(
+                                                  child: Image.asset(
+                                                    'assets/no_image.png',
+                                                    height: c_height * 0.5,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                );
+                                              },
+                                            ))
+                                          : isNormal
+                                              ? SizedBox(
+                                                  child: Image.network(
+                                                  '${maps['IMAGE']}',
+                                                  height: c_height * 0.6,
+                                                  fit: BoxFit.fill,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return SizedBox(
+                                                      child: Image.asset(
+                                                        'assets/no_image.png',
+                                                        height: c_height * 0.6,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    );
+                                                  },
+                                                ))
+                                              : SizedBox(
+                                                  child: Image.network(
+                                                  '${maps['IMAGE']}',
+                                                  height: c_height * 0.5,
+                                                  fit: BoxFit.fill,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return SizedBox(
+                                                      child: Image.asset(
+                                                        'assets/no_image.png',
+                                                        height: c_height * 0.5,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    );
+                                                  },
+                                                )),
                         ),
                         Container(
                           decoration: BoxDecoration(
                               gradient: isDarkMode
                                   ? const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [Colors.black12, Colors.black],
-                                  stops: [.35, .75])
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [Colors.black12, Colors.black],
+                                      stops: [.35, .75])
                                   : const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [Colors.white10, Colors.white],
-                                  stops: [.35, .75])),
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [Colors.white10, Colors.white],
+                                      stops: [.35, .75])),
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
                                     icon:
-                                    const Icon(Icons.arrow_back_ios_sharp),
+                                        const Icon(Icons.arrow_back_ios_sharp),
                                     color: isImage
                                         ? isDarkMode
-                                        ? Colors.white
-                                        : Colors.black
+                                            ? Colors.white
+                                            : Colors.black
                                         : isPad
-                                        ? isDarkMode
-                                        ? Colors.white
-                                        : Colors.black
-                                        : isDarkMode
-                                        ? Colors.black
-                                        : Colors.black,
+                                            ? isDarkMode
+                                                ? Colors.white
+                                                : Colors.black
+                                            : isDarkMode
+                                                ? Colors.black
+                                                : Colors.black,
                                     onPressed: () {
                                       Navigator.push(
                                         context,
@@ -367,15 +402,15 @@ class _Result extends State<Result> {
                                     ),
                                     color: isImage
                                         ? isDarkMode
-                                        ? Colors.white
-                                        : Colors.black
+                                            ? Colors.white
+                                            : Colors.black
                                         : isPad
-                                        ? isDarkMode
-                                        ? Colors.white
-                                        : Colors.black
-                                        : isDarkMode
-                                        ? Colors.black
-                                        : Colors.black,
+                                            ? isDarkMode
+                                                ? Colors.white
+                                                : Colors.black
+                                            : isDarkMode
+                                                ? Colors.black
+                                                : Colors.black,
                                     onPressed: () {
                                       _onShare(context);
                                     },
@@ -409,45 +444,45 @@ class _Result extends State<Result> {
                                     children: [
                                       Flexible(
                                           child: RichText(
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            strutStyle:
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        strutStyle:
                                             const StrutStyle(fontSize: 17),
-                                            text: TextSpan(children: [
-                                              TextSpan(
-                                                text: isArtistNull
-                                                    ? 'Various Artist'
-                                                    : maps['ARTIST'],
-                                                style: TextStyle(
-                                                  fontSize: 17,
+                                        text: TextSpan(children: [
+                                          TextSpan(
+                                            text: isArtistNull
+                                                ? 'Various Artist'
+                                                : maps['ARTIST'],
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              color: isDarkMode
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                              text: ' · ',
+                                              style: TextStyle(
                                                   color: isDarkMode
-                                                      ? Colors.white
-                                                      : Colors.black,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                  text: ' · ',
-                                                  style: TextStyle(
-                                                      color: isDarkMode
-                                                          ? Colors.grey
-                                                          : Colors.black
+                                                      ? Colors.grey
+                                                      : Colors.black
                                                           .withOpacity(0.4),
-                                                      fontSize: 17)),
-                                              TextSpan(
-                                                text: isAlbumNull
-                                                    ? 'Various Album'
-                                                    : maps['ALBUM'],
-                                                style: TextStyle(
-                                                    color: isDarkMode
-                                                        ? Colors.grey
-                                                        : Colors.black
+                                                  fontSize: 17)),
+                                          TextSpan(
+                                            text: isAlbumNull
+                                                ? 'Various Album'
+                                                : maps['ALBUM'],
+                                            style: TextStyle(
+                                                color: isDarkMode
+                                                    ? Colors.grey
+                                                    : Colors.black
                                                         .withOpacity(0.4),
-                                                    overflow: TextOverflow.ellipsis,
-                                                    fontSize: 17),
-                                              )
-                                            ]),
-                                          ))
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 17),
+                                          )
+                                        ]),
+                                      ))
                                     ],
                                   )),
                               Container(
@@ -460,7 +495,7 @@ class _Result extends State<Result> {
                                           10, 5, 10, 5),
                                       decoration: BoxDecoration(
                                           borderRadius:
-                                          BorderRadius.circular(20),
+                                              BorderRadius.circular(20),
                                           color: const Color.fromRGBO(
                                               51, 211, 180, 1)),
                                       child: Text(
@@ -503,16 +538,16 @@ class _Result extends State<Result> {
                                 child: Container(
                                     child: isExist
                                         ? Center(
-                                        child: Text('최신 방송 재생정보가 없습니다.',
-                                            style: TextStyle(
-                                                color: isDarkMode
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20)))
+                                            child: Text('최신 방송 재생정보가 없습니다.',
+                                                style: TextStyle(
+                                                    color: isDarkMode
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20)))
                                         : Row(
-                                      children: [_listView(programs)],
-                                    ))),
+                                            children: [_listView(programs)],
+                                          ))),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -526,24 +561,24 @@ class _Result extends State<Result> {
                                     )),
                                 isCNTS
                                     ? ChartContainer(
-                                  color: isDarkMode
-                                      ? Colors.black
-                                      : Colors.white,
-                                  chart: line_chart(song_cnts),
-                                  title: '',
-                                )
+                                        color: isDarkMode
+                                            ? Colors.black
+                                            : Colors.white,
+                                        chart: line_chart(song_cnts),
+                                        title: '',
+                                      )
                                     : const SizedBox(
-                                    height: 200,
-                                    child: Center(
-                                        child: Text('차트 정보가 없습니다.',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20))))
+                                        height: 200,
+                                        child: Center(
+                                            child: Text('차트 정보가 없습니다.',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20))))
                               ],
                             ),
                             Container(
                               margin:
-                              const EdgeInsets.only(left: 00, right: 10),
+                                  const EdgeInsets.only(left: 00, right: 10),
                               decoration: BoxDecoration(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(42, 42, 42, 1)
@@ -555,14 +590,15 @@ class _Result extends State<Result> {
                                   Image.asset('assets/result_search.png',
                                       width: 20),
                                   Container(
-                                    margin: const EdgeInsets.only(left: 10, right:10),
+                                    margin: const EdgeInsets.only(
+                                        left: 10, right: 10),
                                     // padding: const EdgeInsets.only(right: 10),
                                     child: Text('총 검색 : ',
                                         style: TextStyle(
                                             fontSize: 17,
                                             color: isDarkMode
                                                 ? const Color.fromRGBO(
-                                                151, 151, 151, 1)
+                                                    151, 151, 151, 1)
                                                 : Colors.black)),
                                   ),
                                   Text('${maps['count']}',
@@ -578,10 +614,10 @@ class _Result extends State<Result> {
                               },
                               child: Container(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 100),
+                                    const EdgeInsets.symmetric(horizontal: 100),
                                 height: 70,
                                 margin:
-                                const EdgeInsets.fromLTRB(0, 30, 10, 40),
+                                    const EdgeInsets.fromLTRB(0, 30, 10, 40),
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
@@ -593,7 +629,7 @@ class _Result extends State<Result> {
                                   children: [
                                     Container(
                                         padding:
-                                        const EdgeInsets.only(right: 10),
+                                            const EdgeInsets.only(right: 10),
                                         child: const Text(
                                           '홈으로',
                                           style: TextStyle(
@@ -605,9 +641,9 @@ class _Result extends State<Result> {
                                       size: 17,
                                       color: isDarkMode
                                           ? const Color.fromRGBO(
-                                          125, 125, 125, 1)
+                                              125, 125, 125, 1)
                                           : const Color.fromRGBO(
-                                          208, 208, 208, 1),
+                                              208, 208, 208, 1),
                                     )
                                   ],
                                 ),
@@ -633,7 +669,9 @@ class _Result extends State<Result> {
             final program = programs[index];
 
             String programDate = program['F_DATE'];
-            String parseProgramDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(programDate)).toString();
+            String parseProgramDate = DateFormat('yyyy.MM.dd')
+                .format(DateTime.parse(programDate))
+                .toString();
 
             final isDarkMode = Theme.of(context).brightness == Brightness.dark;
             return Row(children: [
@@ -649,7 +687,7 @@ class _Result extends State<Result> {
                           width: 3,
                           color: isDarkMode
                               ? const Color.fromRGBO(189, 189, 189, 1)
-                          // : const Color.fromRGBO(228, 228, 228, 1),
+                              // : const Color.fromRGBO(228, 228, 228, 1),
                               : Colors.black.withOpacity(0.3),
                         ),
                         borderRadius: BorderRadius.circular(8),
@@ -701,27 +739,27 @@ class _Result extends State<Result> {
                                       color: isDarkMode
                                           ? Colors.white
                                           : Colors.black))
-                            // child: Image.network(
-                            //   program['F_LOGO'],
-                            //   width: 50,
-                            //   height: 22,
-                            //   errorBuilder: (context, error, stackTrace) {
-                            //     return SizedBox(
-                            //         width: 65,
-                            //         height: 22,
-                            //         child: Text(program['CL_NM'],
-                            //             style: TextStyle(
-                            //                 fontSize: 16,
-                            //                 overflow: TextOverflow.ellipsis,
-                            //                 fontWeight: FontWeight.bold,
-                            //                 color: isDarkMode
-                            //                     ? Colors.white
-                            //                     : Colors.black)
-                            //         )
-                            //     );
-                            //   },
-                            // ),
-                          )
+                              // child: Image.network(
+                              //   program['F_LOGO'],
+                              //   width: 50,
+                              //   height: 22,
+                              //   errorBuilder: (context, error, stackTrace) {
+                              //     return SizedBox(
+                              //         width: 65,
+                              //         height: 22,
+                              //         child: Text(program['CL_NM'],
+                              //             style: TextStyle(
+                              //                 fontSize: 16,
+                              //                 overflow: TextOverflow.ellipsis,
+                              //                 fontWeight: FontWeight.bold,
+                              //                 color: isDarkMode
+                              //                     ? Colors.white
+                              //                     : Colors.black)
+                              //         )
+                              //     );
+                              //   },
+                              // ),
+                              )
                         ]),
                         Container(
                           margin: const EdgeInsets.fromLTRB(0, 3, 0, 10),
@@ -765,7 +803,7 @@ class _Result extends State<Result> {
     final box = context.findRenderObject() as RenderBox?;
 
     if (Platform.isIOS) {
-      await Share.share('www.oneidlab.kr/app_check.html',
+      await Share.share('https://oneidlab.page.link/prizmios',
           subject: 'Prizm',
           sharePositionOrigin: Rect.fromLTRB(
               0,
@@ -773,7 +811,10 @@ class _Result extends State<Result> {
               MediaQuery.of(context).size.width,
               MediaQuery.of(context).size.height * 0.5));
     } else if (Platform.isAndroid) {
-      await Share.share('https://oneidlab.page.link/prizm&apn=com.android.prizm', subject: 'Prizm');
+      await Share.share('https://oneidlab.page.link/prizm',
+          subject: 'Prizm'); // 짧은 동적링크
+      // https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm[&afl='Play Store Url'] << 앱 설치x일때 스토어로 보내기
+      // await Share.share('https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm', subject: 'Prizm'); //긴 동적링크
     }
     // box!.localToGlobal(Offset.zero) & box.size);
   }
@@ -865,13 +906,11 @@ class _Result extends State<Result> {
                   strokeWidth: 1,
                   color: isDarkMode
                       ? Colors.grey.withOpacity(0.6)
-                      : Colors.grey.withOpacity(0.3)
-              );
+                      : Colors.grey.withOpacity(0.3));
             },
             drawVerticalLine: false,
             drawHorizontalLine: true,
-            horizontalInterval: minCnt ? avgY / 8 : 30
-        ),
+            horizontalInterval: minCnt ? avgY / 8 : 30),
         minX: 1,
         minY: 0,
         maxX: 12,
@@ -885,7 +924,7 @@ class _Result extends State<Result> {
                         radius: 3.0,
                         color: const Color.fromRGBO(51, 211, 180, 1),
                         strokeColor:
-                        isDarkMode ? Colors.white : Colors.grey.shade200,
+                            isDarkMode ? Colors.white : Colors.grey.shade200,
                         strokeWidth: 5.0),
               ),
               color: const Color.fromRGBO(51, 211, 180, 1),
@@ -896,19 +935,23 @@ class _Result extends State<Result> {
               isStrokeJoinRound: true,
               belowBarData: BarAreaData(
                 show: true,
-                gradient: isDarkMode ? const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.white10]
-                )
+                gradient: isDarkMode
+                    ? const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                            Color.fromRGBO(51, 215, 180, 1),
+                            Colors.white10
+                          ])
                     : const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color.fromRGBO(51, 215, 180, 1), Colors.white24]
-                ),
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                            Color.fromRGBO(51, 215, 180, 1),
+                            Colors.white24
+                          ]),
               ),
-              spots: FlSpotData
-          )
+              spots: FlSpotData)
         ],
         titlesData: FlTitlesData(
             topTitles: AxisTitles(
