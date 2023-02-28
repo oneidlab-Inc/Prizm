@@ -13,6 +13,12 @@ class NotFound extends StatefulWidget {
 }
 
 class _NotFound extends State<NotFound> {
+
+  Future<void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: '검색 실패');
+    await MyApp.analytics.logEvent(name: 'NotFound', parameters: null);
+  }
+
   final VMIDC _vmidc = VMIDC();
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
@@ -35,6 +41,7 @@ class _NotFound extends State<NotFound> {
 
   @override
   void initState() {
+    logSetscreen();
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -54,7 +61,7 @@ class _NotFound extends State<NotFound> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     if (_connectionStatus.endsWith('none') == true) {
-      print('network error');
+      // print('network error');
       NetworkToast();
     }
     return WillPopScope(

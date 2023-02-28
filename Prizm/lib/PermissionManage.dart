@@ -4,13 +4,13 @@ import 'package:permission_handler/permission_handler.dart';
 class PermissionManage {
   Future<bool> requestMicPermission(BuildContext context) async {
     PermissionStatus status = await Permission.microphone.request();
-    print('permission manage >> $status');
+    // print('permission manage >> $status');
 
     if(!status.isGranted) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            print('status => $status');
+            // print('status => $status');
             return _showDialog(context);
           });
       return false;

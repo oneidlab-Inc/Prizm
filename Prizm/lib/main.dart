@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
 import 'History.dart';
 import 'Home.dart';
+import 'Search_Result.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -31,7 +31,8 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  print(Firebase.apps.toString());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // print(Firebase.apps.toString());
 
   /*---------------------------- firebase -------------------------------
   Firebase 버전 업데이트 없이 코드변경  아직 미완성
@@ -55,16 +56,24 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final ValueNotifier<ThemeMode> themeNotifier =
-      ValueNotifier(ThemeMode.system);
 
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
+  Future<void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: 'TabPage');
+  }
+
   MyApp({Key? key}) : super(key: key);
 
-  static var Uri;
+  // static var Uri;
   static var appVersion;
+  static var search;
+  static var history;
+  static var programs;
+  static var ranks;
+  static var privacy;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +82,8 @@ class MyApp extends StatelessWidget {
         builder: (_, ThemeMode currentMode, __) {
           return MaterialApp(
             navigatorObservers: [observer],
+            // initialRoute: 'Category',
+            // routes: {'Category':(context) =>Category()},
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -87,7 +98,8 @@ class MyApp extends StatelessWidget {
             navigatorKey: VMIDC.navigatorState,
             // 화면 이동을 위한 navigator
             theme: ThemeData(
-                primarySwatch: generateMaterialColor(color: Colors.white)),
+                primarySwatch: generateMaterialColor(color: Colors.white)
+            ),
             darkTheme: ThemeData.dark().copyWith(),
             themeMode: currentMode,
             home: TabPage(),
@@ -97,9 +109,6 @@ class MyApp extends StatelessWidget {
 }
 
 class TabPage extends StatefulWidget {
-  // TabPage({analytics}) : super();
-
-  // final FirebaseAnalytics analytics;
   @override
   _TabPageState createState() => _TabPageState();
 }
@@ -113,11 +122,18 @@ class _TabPageState extends State<TabPage> {
 
   var deviceData;
   var _deviceData;
-
-  void _handleDynamicLink(Uri deepLink) {
-
-  }
-
+  
+  // Future<void> remoteconfig() async {
+  //   final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   var packageVersion = packageInfo.version;
+  //   remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
+  //   remoteConfig.fetchAndActivate();
+  //
+  //   String appVersion = remoteConfig.getString(MyApp.appVersion);
+  //   print(appVersion);
+  // }
+  
   Future<void> initPlatformState() async {
     String? deviceId; //기기 uid
     try {
@@ -246,8 +262,8 @@ class _TabPageState extends State<TabPage> {
 /*-----------------------------------------------------------------------------------------*/
 
   final List _pages = [History(), Home(), Chart()];
-
   // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
+
   List url = [];
 
   fetchData() async {
@@ -258,8 +274,13 @@ class _TabPageState extends State<TabPage> {
       String jsonData = response.body;
       Map<String, dynamic> url = jsonDecode(jsonData.toString());
       setState(() {});
-      MyApp.Uri = url;
-      // print('url >> ${MyApp.Uri}');
+      // MyApp.Uri = url;
+      MyApp.search = url['search'];
+      MyApp.history = url['history'];
+      MyApp.programs = url['programs'];
+      MyApp.ranks = url['ranks'];
+      MyApp.privacy = url['privacy'];
+      // print('MyApp.Uri >> ${url}');
     } catch (e) {
       print('error >> $e');
     }
@@ -271,7 +292,6 @@ class _TabPageState extends State<TabPage> {
     fetchData(); // 고정url 받으면 활성화
     _launchUpdate();
     initPlatformState();
-    // MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
     super.initState();
   }
 

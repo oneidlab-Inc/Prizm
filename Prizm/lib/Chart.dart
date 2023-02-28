@@ -1,4 +1,6 @@
 import 'dart:async';
+// import 'package:firebase/firebase.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -15,11 +17,15 @@ class Chart extends StatefulWidget {
 }
 
 class _Chart extends State<Chart> {
+  Future<void>logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: 'Chart');
+  }
+
+
   String? _deviceId;
 
   Future<void> initPlatformState() async {
     String? deviceId;
-
     try {
       deviceId = await PlatformDeviceId.getDeviceId;
     } on PlatformException {
@@ -38,11 +44,10 @@ class _Chart extends State<Chart> {
   List original = [];
 
   void fetchData() async {
-    var chart = MyApp.Uri['ranks'];
     try {
       http.Response response = await http.get(
           // Uri.parse('${MyApp.Uri}get_song_ranks')
-          Uri.parse('http://$chart'));
+          Uri.parse('http://${MyApp.ranks}'));
       String jsonData = response.body;
       charts = jsonDecode(jsonData.toString());
       original = charts;
@@ -56,6 +61,7 @@ class _Chart extends State<Chart> {
 
   @override
   void initState() {
+    logSetscreen();
     initPlatformState();
     fetchData();
     super.initState();

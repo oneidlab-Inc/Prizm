@@ -28,6 +28,11 @@ class Settings extends StatefulWidget {
 }
 
 class _Settings extends State<Settings> {
+
+  Future<void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: '설정');
+  }
+
   final controller = TextEditingController();
   final colorsController = ScrollController();
 
@@ -42,31 +47,16 @@ class _Settings extends State<Settings> {
   String? uid;
   String? _deviceId;
   var currentVersion;
-  var delete = MyApp.Uri['history'];
   var theme;
 
   @override
   void initState() {
+    logSetscreen();
     if(MyApp.themeNotifier.value == ThemeMode.dark) {
       _style = Style.dark;
     } else if(MyApp.themeNotifier.value == ThemeMode.system) {
       _style = Style.system;
     }
-    // var yaml;
-    // var version;
-    //
-    // rootBundle.loadString('pubspec.yaml').then((yamlValue) async {
-    //   setState(() {
-    //     if (MyApp.themeNotifier.value == ThemeMode.light) {
-    //       _style = Style.light;
-    //     } else if (MyApp.themeNotifier.value == ThemeMode.dark) {
-    //       _style = Style.dark;
-    //     }
-    //     yaml = loadYaml(yamlValue);
-    //     version = yaml['version'];
-    //     currentVersion = version;
-    //   });
-    // });
     super.initState();
   }
 
@@ -455,7 +445,7 @@ class _Settings extends State<Settings> {
                                                       try {
                                                         Response response =
                                                         await http.get(
-                                                          Uri.parse('http://$delete?uid=$uid&proc=del')
+                                                          Uri.parse('http://${MyApp.history}?uid=$uid&proc=del')
                                                         );
                                                         if (response.statusCode == 200) {
                                                           showToast();
@@ -491,282 +481,6 @@ class _Settings extends State<Settings> {
                           );
                         });
                   },
-//                   child: Container(
-//                     color: isDarkMode ? Colors.black : Colors.white,
-// >>>>>>> system_theme
-//                     height: 70,
-//                     decoration: BoxDecoration(
-//                         border: Border(
-//                       bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
-//                     )),
-//                   ),
-//                   Container(
-//                     height: 70,
-//                     margin: const EdgeInsets.fromLTRB(30, 40, 0, 0),
-//                     child: Row(
-//                       children: [
-//                         ImageIcon(
-//                           Image.asset('assets/app_setting.png').image,
-//                           color: Colors.greenAccent,
-//                           size: 25,
-//                         ),
-//                         Text(
-//                           ' 앱 설정 및 정보',
-//                           style: TextStyle(
-//                               fontSize: 20,
-//                               fontWeight: FontWeight.bold,
-//                               color: isDarkMode
-//                                   ? Colors.grey.withOpacity(0.8)
-//                                   : Colors.black),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   Container(
-//                     height: 70,
-//                     margin: const EdgeInsets.fromLTRB(30, 20, 10, 0),
-//                     child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.start,
-//                         children: <Widget>[
-//                           SizedBox(
-//                               width: c_width * 0.22,
-//                               child: Text(
-//                                 '화면스타일',
-//                                 style: TextStyle(
-//                                   fontSize: 17,
-//                                   color:
-//                                       isDarkMode ? Colors.white : Colors.black,
-//                                 ),
-//                               )),
-//                           Expanded(
-//                             child: SizedBox(
-//                                 width: c_width * 0.30,
-//                                 child: Theme(
-//                                     data: Theme.of(context).copyWith(
-//                                         unselectedWidgetColor:
-//                                             const Color.fromRGBO(
-//                                                 221, 221, 221, 1),
-//                                         disabledColor: Colors.blue),
-//                                     child: RadioListTile<Style>(
-//                                         contentPadding:
-//                                             const EdgeInsets.fromLTRB(15, 0, 0, 0),
-//                                         title: Align(
-//                                           alignment: const Alignment(-1, -0.1),
-//                                           child: Text('라이트',
-//                                               style: TextStyle(
-//                                                   fontSize: 14,
-//                                                   color: isDarkMode
-//                                                       ? Colors.white
-//                                                       : Colors.black)),
-//                                         ),
-//                                         groupValue: _style,
-//                                         value: Style.light,
-//                                         onChanged: (Style? value) {
-//                                           setState(() {
-//                                             _style = value!;
-//                                             MyApp.themeNotifier.value =
-//                                                 ThemeMode.light;
-//                                           });
-//                                         },
-//                                         activeColor: const Color.fromRGBO(
-//                                             64, 220, 196, 1)))),
-//                           ),
-//                           Expanded(
-//                             child: SizedBox(
-//                                 width: c_width * 0.30,
-//                                 child: Theme(
-//                                     data: Theme.of(context).copyWith(
-//                                         unselectedWidgetColor:
-//                                             const Color.fromRGBO(
-//                                                 221, 221, 221, 1),
-//                                         disabledColor: Colors.blue),
-//                                     child: RadioListTile<Style>(
-//                                       contentPadding:
-//                                           const EdgeInsets.only(left: 20),
-//                                       title: Align(
-//                                         alignment: const Alignment(-1, -0.1),
-//                                         child: Text('다크',
-//                                             style: TextStyle(
-//                                                 fontSize: 14,
-//                                                 color: isDarkMode
-//                                                     ? Colors.white
-//                                                     : Colors.black)),
-//                                       ),
-//                                       groupValue: _style,
-//                                       value: Style.dark,
-//                                       onChanged: (Style? value) {
-//                                         setState(() {
-//                                           _style = value!;
-//                                           MyApp.themeNotifier.value =
-//                                               ThemeMode.dark;
-//                                         });
-//                                       },
-//                                       activeColor:
-//                                           const Color.fromRGBO(64, 220, 196, 1),
-//                                     ))),
-//                           )
-//                         ]),
-//                   ), //RadioBox Container End
-
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     showDialog(
-                  //         context: context,
-                  //         builder: (BuildContext context) {
-                  //           return Dialog(
-                  //               backgroundColor: isDarkMode
-                  //                   ? const Color.fromRGBO(66, 66, 66, 1)
-                  //                   : Colors.white,
-                  //               shape: RoundedRectangleBorder(
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //               ),
-                  //               child: Container(
-                  //                   height: c_height * 0.18,
-                  //                   width: c_width * 0.8,
-                  //                   color: isDarkMode
-                  //                       ? const Color.fromRGBO(66, 66, 66, 1)
-                  //                       : Colors.white,
-                  //                   margin: const EdgeInsets.only(
-                  //                       top: 20, bottom: 20),
-                  //                   child: Column(
-                  //                     mainAxisAlignment:
-                  //                         MainAxisAlignment.center,
-                  //                     crossAxisAlignment:
-                  //                         CrossAxisAlignment.center,
-                  //                     children: [
-                  //                       SizedBox(
-                  //                         height: c_height * 0.115,
-                  //                         child: const Center(
-                  //                             child: Text('검색내역을 삭제하시겠습니까?',
-                  //                                 style: TextStyle(
-                  //                                     fontWeight:
-                  //                                         FontWeight.bold,
-                  //                                     fontSize: 18))),
-                  //                       ),
-                  //                       Container(
-                  //                         decoration: BoxDecoration(
-                  //                             border: Border(
-                  //                                 top: BorderSide(
-                  //                                     color: isDarkMode
-                  //                                         ? const Color
-                  //                                                 .fromRGBO(
-                  //                                             94, 94, 94, 1)
-                  //                                         : Colors.black
-                  //                                             .withOpacity(
-                  //                                                 0.1)))),
-                  //                         child: Row(
-                  //                           mainAxisAlignment:
-                  //                               MainAxisAlignment.center,
-                  //                           children: <Widget>[
-                  //                             SizedBox(
-                  //                                 width: c_width * 0.4,
-                  //                                 height: c_height * 0.08,
-                  //                                 child: Container(
-                  //                                   margin:
-                  //                                       const EdgeInsets.only(
-                  //                                           left: 20),
-                  //                                   decoration: BoxDecoration(
-                  //                                       color: isDarkMode
-                  //                                           ? const Color
-                  //                                                   .fromRGBO(
-                  //                                               66, 66, 66, 1)
-                  //                                           : Colors.white,
-                  //                                       border: Border(
-                  //                                           right: BorderSide(
-                  //                                               color: isDarkMode
-                  //                                                   ? const Color
-                  //                                                           .fromRGBO(
-                  //                                                       94,
-                  //                                                       94,
-                  //                                                       94,
-                  //                                                       1)
-                  //                                                   : Colors
-                  //                                                       .black
-                  //                                                       .withOpacity(
-                  //                                                           0.1)))),
-                  //                                   child: TextButton(
-                  //                                       onPressed: () {
-                  //                                         Navigator.pop(
-                  //                                             context);
-                  //                                       },
-                  //                                       child: Text(
-                  //                                         '취소',
-                  //                                         style: TextStyle(
-                  //                                             fontSize: 20,
-                  //                                             color: isDarkMode
-                  //                                                 ? Colors.white
-                  //                                                     .withOpacity(
-                  //                                                         0.8)
-                  //                                                 : const Color
-                  //                                                         .fromRGBO(
-                  //                                                     147,
-                  //                                                     147,
-                  //                                                     147,
-                  //                                                     1)),
-                  //                                       )),
-                  //                                 )),
-                  //                             Container(
-                  //                                 margin: const EdgeInsets.only(
-                  //                                     right: 20),
-                  //                                 color: isDarkMode
-                  //                                     ? const Color.fromRGBO(
-                  //                                         66, 66, 66, 1)
-                  //                                     : Colors.white,
-                  //                                 width: c_width * 0.345,
-                  //                                 height: c_height * 0.08,
-                  //                                 child: Center(
-                  //                                   child: TextButton(
-                  //                                     onPressed: () async {
-                  //                                       _deviceId =
-                  //                                           await PlatformDeviceId
-                  //                                               .getDeviceId;
-                  //                                       uid = _deviceId!;
-                  //                                       try {
-                  //                                         Response response =
-                  //                                             await http.get(
-                  //                                                 Uri.parse(
-                  //                                                     '${MyApp.Uri}get_song_history?uid=$uid&proc=del'));
-                  //                                         if (response
-                  //                                                 .statusCode ==
-                  //                                             200) {
-                  //                                           showToast();
-                  //                                         } else {
-                  //                                           failToast();
-                  //                                           throw "검색내역 삭제 실패";
-                  //                                         }
-                  //                                         setState(() {
-                  //                                           Navigator.pop(
-                  //                                               context);
-                  //                                         });
-                  //                                       } catch (e) {
-                  //                                         NetworkToast();
-                  //                                         print('실패');
-                  //                                         setState(() {
-                  //                                           Navigator.pop(
-                  //                                               context);
-                  //                                         });
-                  //                                       }
-                  //                                     },
-                  //                                     child: const Text(
-                  //                                       '삭제',
-                  //                                       style: TextStyle(
-                  //                                           fontSize: 20,
-                  //                                           color:
-                  //                                               Color.fromRGBO(
-                  //                                                   64,
-                  //                                                   220,
-                  //                                                   196,
-                  //                                                   1)),
-                  //                                     ),
-                  //                                   ),
-                  //                                 )),
-                  //                           ],
-                  //                         ),
-                  //                       )
-                  //                     ],
-                  //                   )));
-                  //         });
-                  //   },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,
                       height: 70,

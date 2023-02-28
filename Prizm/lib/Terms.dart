@@ -6,6 +6,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'main.dart';
+
 class Terms extends StatefulWidget {
   const Terms({Key? key}) : super(key: key);
 
@@ -14,6 +16,10 @@ class Terms extends StatefulWidget {
 }
 
 class _Terms extends State<Terms> {
+  Future<void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: '이용약관');
+  }
+  
   final Completer<WebViewController> _controller = Completer<WebViewController>();
 
   WebViewController? _webViewController;
@@ -25,10 +31,11 @@ class _Terms extends State<Terms> {
 
   @override
   void initState() {
+    logSetscreen();
     initConnectivity();
     _connectivitSubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    // ios 추후에 추가 (다른 라이브러리 필요할듯?? IOSWebviedw가 없음;
+    // ios 추후에 추가 (다른 라이브러리 필요할듯?? IOSWebview가 없음;
 
     super.initState();
   }
@@ -60,7 +67,7 @@ class _Terms extends State<Terms> {
           centerTitle: true,
           elevation: 1.0,
           backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-          toolbarHeight: 90,
+          toolbarHeight: 70,
         ),
         body: Container(
             color: Colors.transparent,

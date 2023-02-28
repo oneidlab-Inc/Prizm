@@ -1,4 +1,4 @@
-package com.android.prizm;
+package com.oneidlab.prizm;
 
 import io.flutter.embedding.android.FlutterActivity;
 

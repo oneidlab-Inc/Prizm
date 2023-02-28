@@ -51,8 +51,8 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    var search = MyApp.Uri['search'];
-    var program = MyApp.Uri['programs'];
+    // var search = MyApp.Uri['search'];
+    // var program = MyApp.Uri['programs'];
 
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
@@ -68,14 +68,16 @@ class _Result extends State<Result> {
       _uid = 'Failed to get Id';
     }
     // _uid = await PlatformDeviceId.getDeviceId;
-    print('uid : $_uid');
+    // print('uid : $_uid');
 
 // json for title album artist
 
     try {
       http.Response response = await http.get(
           // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-          Uri.parse('http://$search/json?id=${widget.id}&uid=$_uid'));
+
+          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
+      Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -84,7 +86,7 @@ class _Result extends State<Result> {
 
       setState(() {});
     } catch (e) {
-      print('json 가져오기 실패');
+      // print('json 가져오기 실패');
       print(e);
     }
 
@@ -92,15 +94,16 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-          Uri.parse('http://$program/json?id=${widget.id}')
+          Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
-          );
+          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
+    );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
       setState(() {});
     } catch (e) {
-      print('fail to get json');
+      // print('fail to get json');
       print(e);
     }
 
@@ -157,6 +160,11 @@ class _Result extends State<Result> {
     }
   }
 
+  Future<void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: '검색결과');
+    await MyApp.analytics.logEvent(name: 'Title', parameters: maps['TITLE']);
+  }
+
   final duplicateItems =
       List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
@@ -167,7 +175,7 @@ class _Result extends State<Result> {
       // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
       uriPrefix: 'https://oneidlab.page.link/prizm/',
       androidParameters: const AndroidParameters(
-        packageName: "com.android.prizm",
+        packageName: "com.oneidlab.prizm",
         minimumVersion: 28,
       ),
       // iosParameters: const IOSParameters(
@@ -180,20 +188,21 @@ class _Result extends State<Result> {
     //     dynamicLinkParams);
 
     // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
-    print(
-        'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
-    print(
-        'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
-    print(
-        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    print(
-        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    print('link >>> ${dynamicLinkParams.link}');
-    print('dynamicLink >>> ${dynamicLinkParams.link.data}');
+    // print(
+    //     'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
+    // print(
+    //     'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
+    // print(
+    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    // print(
+    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    // print('link >>> ${dynamicLinkParams.link}');
+    // print('dynamicLink >>> ${dynamicLinkParams.link.data}');
   }
 
   @override
   void initState() {
+    logSetscreen();
     fetchData();
     getLink();
     super.initState();
@@ -411,15 +420,18 @@ class _Result extends State<Result> {
                                             : isDarkMode
                                                 ? Colors.black
                                                 : Colors.black,
-                                    onPressed: () {
+                                    onPressed: () async {
+                                      await MyApp.analytics.logEvent(
+                                          name: 'ShareButton',
+                                          parameters: null);
                                       _onShare(context);
                                     },
                                   )
                                 ],
                               ),
                               Container(
-                                  margin: const EdgeInsets.only(top: 350),
-                                  // original : 400
+                                  margin: EdgeInsets.only(top: isPad ? 500 : 400),
+                                  // margin: EdgeInsets.only(top:400),
                                   width: c_width * 0.9,
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
@@ -803,16 +815,12 @@ class _Result extends State<Result> {
     final box = context.findRenderObject() as RenderBox?;
 
     if (Platform.isIOS) {
-      await Share.share('https://oneidlab.page.link/prizmios',
-          subject: 'Prizm',
-          sharePositionOrigin: Rect.fromLTRB(
-              0,
-              0,
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.height * 0.5));
+      await Share.share(
+          'https://oneidlab.page.link/prizmios', subject: 'Prizm',
+          sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),
+      );
     } else if (Platform.isAndroid) {
-      await Share.share('https://oneidlab.page.link/prizm',
-          subject: 'Prizm'); // 짧은 동적링크
+      await Share.share('https://oneidlab.page.link/prizm', subject: 'Prizm'); // 짧은 동적링크
       // https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm[&afl='Play Store Url'] << 앱 설치x일때 스토어로 보내기
       // await Share.share('https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm', subject: 'Prizm'); //긴 동적링크
     }
@@ -969,5 +977,19 @@ class _Result extends State<Result> {
             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
         lineTouchData: LineTouchData(enabled: true)));
     return result;
+  }
+}
+
+void avocado() {
+  var milk;
+  var avocado;
+  if(avocado == true) { //아보카도 있어?
+    milk == 6; //있어서 우유 6개
+  } else if(milk == true) { // 우유 사와
+    if(avocado == true) { // 아보카도 있어?
+      avocado == 6; // 있으니까 6개
+    } else {
+      avocado == 0;
+    }
   }
 }

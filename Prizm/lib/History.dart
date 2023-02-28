@@ -20,11 +20,16 @@ class History extends StatefulWidget {
 }
 
 class _History extends State<History> {
+
+  Future <void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: 'History');
+  }
+
   TextEditingController txtQuery = TextEditingController();
 
   String? _deviceId;
   String? uid;
-  var history = MyApp.Uri['history'];
+  // var history = MyApp.Uri['history'];
 
   Future<void> initPlatformState() async {
     String? deviceId;
@@ -57,15 +62,16 @@ class _History extends State<History> {
 
     try {
       http.Response response = await http.get(
-          Uri.parse('http://$history/json?uid=$uid')
+          Uri.parse('http://${MyApp.history}/json?uid=$uid')
       );
+      // print(MyApp.history);
       String jsonData = response.body;
       song_info = jsonDecode(jsonData.toString());
       original = song_info;
       setState(() {});
     } catch (e) {
       NetworkToast();
-      print('실패');
+      // print('실패');
       print(e);
     }
   }
@@ -81,7 +87,7 @@ class _History extends State<History> {
     }
 
     query = query.toLowerCase();
-    print(query);
+    // print(query);
     List result = [];
     for (var p in song_info) {
       // print('검색결과  : ' + p['TITLE']);
@@ -98,7 +104,7 @@ class _History extends State<History> {
     }
 
     song_info = result;
-    print('검색결과 : $result');
+    // print('검색결과 : $result');
     setState(() {});
   }
 
@@ -107,13 +113,14 @@ class _History extends State<History> {
   var items = <String>[];
 
   _printLatestValue() {
-    print('마지막 입력값 : ${txtQuery.text}');
+    // print('마지막 입력값 : ${txtQuery.text}');
     List<String> SearchList = <String>[];
     SearchList.addAll(duplicateItems);
   }
 
   @override
   void initState() {
+    logSetscreen();
     items.addAll(duplicateItems);
     txtQuery.addListener(_printLatestValue);
     initPlatformState();
@@ -248,9 +255,10 @@ class _History extends State<History> {
                                         icon: Icon(
                                           Icons.clear,
                                           color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2)),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     txtQuery.text = '';
                                     search(txtQuery.text);
+                                    await MyApp.analytics.logEvent(name: '히스토리 검색', parameters: null);
                                   },
                                 ) : null
                             )
@@ -687,14 +695,14 @@ class _History extends State<History> {
                               onPressed: () async {
                                 Response response = await http.get(
                                     // Uri.parse('${MyApp.Uri}get_song_history/json?uid=$uid&id=$_songid&proc=del')
-                                        Uri.parse('http://$history/json?uid=$uid&id=$_songid&proc=del')
+                                        Uri.parse('http://${MyApp.history}/json?uid=$uid&id=$_songid&proc=del')
                                 );
                                 if (response.statusCode == 200) {
-                                  print(response.statusCode);
+                                  // print(response.statusCode);
                                   showToast();
                                 } else {
                                   failToast();
-                                  print(response.statusCode);
+                                  // print(response.statusCode);
                                   throw "failed to delete history";
                                 }
                                 setState(() {

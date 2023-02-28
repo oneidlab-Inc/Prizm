@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 
+import 'main.dart';
+
 class Private extends StatefulWidget {
   const Private({Key? key}) : super(key: key);
 
@@ -14,6 +16,11 @@ class Private extends StatefulWidget {
 }
 
 class _Private extends State<Private> {
+
+  Future<void> logSetscreen() async {
+    await MyApp.analytics.setCurrentScreen(screenName: '개인정보 처리방침');
+  }
+
   final Completer<WebViewController> _controller = Completer<WebViewController>();
   WebViewController? _webViewController;
 
@@ -23,6 +30,8 @@ class _Private extends State<Private> {
 
   @override
   void initState() {
+    // print(MyApp.privacy);
+    logSetscreen();
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     super.initState();
@@ -32,7 +41,6 @@ class _Private extends State<Private> {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [
@@ -59,26 +67,30 @@ class _Private extends State<Private> {
           elevation: 1.0,
           backgroundColor:
           isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-          toolbarHeight: 90,
+          toolbarHeight: 70,
         ),
         body: Column(
           children: [
             Expanded(
                 child: WebView(
                   backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-                  initialUrl: 'http://www.przm.kr/js/privacy.html',
+                  initialUrl: 'http://${MyApp.privacy}',
+                  // initialUrl: 'http://www.przm.kr/js/privacy_app.html',
                   javascriptMode: JavascriptMode.unrestricted,
                   onWebViewCreated: (WebViewController webViewController) {
                     _controller.complete(webViewController);
                   },
                   onProgress: (int progress) {
-                    print("WebView is loading (progress : $progress%)");
+                    // print("WebView is loading (progress : $progress%)");
                   },
                   onPageStarted: (String url) {
                     if(_connectionStatus.endsWith('none') == true) {
                       NetworkToast();
                     }else {
-                      _webViewController?.loadUrl('http://www.prizm.kr/js/privacy.html');
+                      // _webViewController?.loadUrl('http://www.prizm.kr/js/privacy.html');
+                      _webViewController?.loadUrl('http://${MyApp.privacy}');
+                      // _webViewController?.loadUrl('http://www.przm.kr/js/privacy_app.html');
+                      // print('loadUrl >>  http://${MyApp.privacy}');
                     }
                   },
                 )
@@ -121,7 +133,7 @@ class _Private extends State<Private> {
     try{
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch(e) {
-      print(e.toString());
+      print(e);
     }
     if(!mounted) {
       return Future.value(null);
