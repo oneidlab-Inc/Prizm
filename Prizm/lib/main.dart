@@ -34,32 +34,17 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // print(Firebase.apps.toString());
 
-  /*---------------------------- firebase -------------------------------
-  Firebase 버전 업데이트 없이 코드변경  아직 미완성
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  remoteConfig.setDefaults({"version" : "person['ARTIST']"});
-  await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-         fetchTimeout: const Duration(seconds: 30),
-         minimumFetchInterval: const Duration(seconds: 30)
-      )
-  );
-
-  await remoteConfig.fetchAndActivate();
-
-  String title = remoteConfig.getString("version");
-  print('version > $title');
-  --------------------------------------------------------------------*/
   runApp(
     MyApp(),
   );
 }
 
 class MyApp extends StatelessWidget {
-
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.system);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: 'TabPage');
@@ -98,8 +83,7 @@ class MyApp extends StatelessWidget {
             navigatorKey: VMIDC.navigatorState,
             // 화면 이동을 위한 navigator
             theme: ThemeData(
-                primarySwatch: generateMaterialColor(color: Colors.white)
-            ),
+                primarySwatch: generateMaterialColor(color: Colors.white)),
             darkTheme: ThemeData.dark().copyWith(),
             themeMode: currentMode,
             home: TabPage(),
@@ -122,18 +106,25 @@ class _TabPageState extends State<TabPage> {
 
   var deviceData;
   var _deviceData;
-  
-  // Future<void> remoteconfig() async {
-  //   final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
-  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  //   var packageVersion = packageInfo.version;
-  //   remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
-  //   remoteConfig.fetchAndActivate();
-  //
-  //   String appVersion = remoteConfig.getString(MyApp.appVersion);
-  //   print(appVersion);
-  // }
-  
+
+  Future<void> remoteconfig() async { //Firebase Remote Config에 이름 기본값 설정 후 작동
+    final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var version = MyApp.appVersion;
+
+    remoteConfig.setDefaults({'appVersion':version}); //변수명 String으로 넣고 Default 값 설정
+    remoteConfig.setConfigSettings(RemoteConfigSettings( // Fetch 될 시간 설정
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: Duration.zero // 바로 Fetch
+    ));
+    await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
+    print('MyApp ?>>>>  $version');
+
+    String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
+    print('after config >>> $appVersion');
+    MyApp.appVersion = appVersion;
+  }
+
   Future<void> initPlatformState() async {
     String? deviceId; //기기 uid
     try {
@@ -262,6 +253,7 @@ class _TabPageState extends State<TabPage> {
 /*-----------------------------------------------------------------------------------------*/
 
   final List _pages = [History(), Home(), Chart()];
+
   // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
 
   List url = [];
@@ -286,9 +278,9 @@ class _TabPageState extends State<TabPage> {
     }
   }
 
-
   @override
   void initState() {
+    remoteconfig();
     fetchData(); // 고정url 받으면 활성화
     _launchUpdate();
     initPlatformState();
@@ -298,6 +290,7 @@ class _TabPageState extends State<TabPage> {
   PageController pageController = PageController(
     initialPage: 1,
   );
+
 
 /*--------------------------------------------------------------------*/
   Widget buildPageView() {
