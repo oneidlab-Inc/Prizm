@@ -107,22 +107,32 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
 
-  Future<void> remoteconfig() async { //Firebase Remote Config에 이름 기본값 설정 후 작동
-    final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
+  //Firebase Remote Config에 키값, default value 게시 후 작동 버전 확인 후 스토어로 보내기
+  Future<void> remoteconfig() async {
+    final FirebaseRemoteConfig remoteConfig =
+        await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var version = MyApp.appVersion;
-
-    remoteConfig.setDefaults({'appVersion':version}); //변수명 String으로 넣고 Default 값 설정
-    remoteConfig.setConfigSettings(RemoteConfigSettings( // Fetch 될 시간 설정
+    var packageVersion = packageInfo.version;
+    // var version = MyApp.appVersion;
+    remoteConfig.setDefaults(
+        {'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
+    remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+        // Fetch 될 시간 설정
         fetchTimeout: const Duration(minutes: 1),
         minimumFetchInterval: Duration.zero // 바로 Fetch
-    ));
+        )
+    );
     await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
-    print('MyApp ?>>>>  $version');
-
     String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
-    print('after config >>> $appVersion');
+
+    // appVersion = remoteConfig에서 변경가능한 값
+    // packageVersion = 현재 설치되어있는 패키지의 버전
+
     MyApp.appVersion = appVersion;
+    if (appVersion != packageVersion) {
+      showDefaultDialog();
+    }
   }
 
   Future<void> initPlatformState() async {
@@ -148,21 +158,6 @@ class _TabPageState extends State<TabPage> {
 
 /*----------------------------------------------------------------------------------------------------*/
 
-  Future _launchUpdate() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var packageVersion = packageInfo.version;
-    MyApp.appVersion = packageVersion;
-
-    // _versionCheck.checkUpdatable(version);
-// 스토어 업로드 후 주소 받고 활성화
-
-// if (version == version) {
-//
-// showDefaultDialog();
-//
-// } else {}
-  }
-
   void showDefaultDialog() {
     showDialog(
         context: context,
@@ -171,82 +166,85 @@ class _TabPageState extends State<TabPage> {
           final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           double c_height = MediaQuery.of(context).size.height;
           double c_width = MediaQuery.of(context).size.width;
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Container(
-                height: c_height * 0.18,
-                width: c_width * 0.8,
-                margin: const EdgeInsets.only(top: 20, bottom: 20),
-                color: isDarkMode
-                    ? const Color.fromRGBO(66, 66, 66, 1)
-                    : Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: c_height * 0.115,
-                      child: const Center(
-                        child: Text('업데이트를 위해 스토어로 이동합니다.',
-                            style: TextStyle(fontSize: 18)),
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  height: c_height * 0.18,
+                  width: c_width * 0.8,
+                  margin: const EdgeInsets.only(top: 20, bottom: 20),
+                  color: isDarkMode
+                      ? const Color.fromRGBO(66, 66, 66, 1)
+                      : Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: c_height * 0.115,
+                        child: const Center(
+                          child: Text('업데이트를 위해 스토어로 이동합니다.',
+                              style: TextStyle(fontSize: 18)),
+                        ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: isDarkMode
-                                      ? const Color.fromRGBO(94, 94, 94, 1)
-                                      : Colors.black.withOpacity(0.1)))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              margin: const EdgeInsets.only(right: 20),
-                              color: isDarkMode
-                                  ? const Color.fromRGBO(66, 66, 66, 1)
-                                  : Colors.white,
-                              width: c_width * 0.345,
-                              height: c_height * 0.08,
-                              child: TextButton(
-                                onPressed: () {
-                                  Uri _url = Uri.parse('');
-                                  if (Platform.isAndroid) {
-                                    // showDefaultDialog();
-                                    updateToast();
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                    color: isDarkMode
+                                        ? const Color.fromRGBO(94, 94, 94, 1)
+                                        : Colors.black.withOpacity(0.1)))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                margin: const EdgeInsets.only(right: 20),
+                                color: isDarkMode
+                                    ? const Color.fromRGBO(66, 66, 66, 1)
+                                    : Colors.white,
+                                width: c_width * 0.345,
+                                height: c_height * 0.08,
+                                child: TextButton(
+                                  onPressed: () {
+                                    Uri _url = Uri.parse('');
+                                    if (Platform.isAndroid) {
+                                      // showDefaultDialog();
+                                      updateToast();
 // _url = Uri.parse('http://www.naver.com');
 // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
 // 플레이스토어 주소 입력
-                                  } else if (Platform.isIOS) {
-                                    // print('ios platform');
-                                    // showDefaultDialog();
-                                    updateToast();
-                                  }
-                                  try {
-                                    launchUrl(_url);
-                                    canLaunchUrl(_url);
-                                  } catch (e) {
-                                    print(e);
-                                  }
-                                },
-                                child: Text(
-                                  '이동',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: isDarkMode
-                                        ? Colors.white.withOpacity(0.8)
-                                        : Colors.black.withOpacity(0.3),
+                                    } else if (Platform.isIOS) {
+                                      // print('ios platform');
+                                      // showDefaultDialog();
+                                      updateToast();
+                                    }
+                                    try {
+                                      launchUrl(_url);
+                                      canLaunchUrl(_url);
+                                    } catch (e) {
+                                      print(e);
+                                    }
+                                  },
+                                  child: Text(
+                                    '확인',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: isDarkMode
+                                          ? Colors.white.withOpacity(0.8)
+                                          : Colors.black.withOpacity(0.3),
+                                    ),
                                   ),
-                                ),
-                              )),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ));
+                                )),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          );
         });
   }
 
@@ -280,9 +278,9 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
+    // _launchUpdate();
     remoteconfig();
-    fetchData(); // 고정url 받으면 활성화
-    _launchUpdate();
+    fetchData();
     initPlatformState();
     super.initState();
   }
@@ -290,7 +288,6 @@ class _TabPageState extends State<TabPage> {
   PageController pageController = PageController(
     initialPage: 1,
   );
-
 
 /*--------------------------------------------------------------------*/
   Widget buildPageView() {
