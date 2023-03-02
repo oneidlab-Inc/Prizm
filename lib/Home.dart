@@ -277,18 +277,18 @@ class _Home extends State<Home> {
                                       ? _textSpan_dark = const TextSpan(
                                           text: '노래 분석중',
                                           style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  43, 226, 193, 1),
+                                              color: Color.fromRGBO(43, 226, 193, 1),
                                               fontSize: 17,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold
+                                          ),
                                         )
                                       : _textSpan_light = const TextSpan(
                                           text: '노래 분석중',
                                           style: TextStyle(
-                                              color: Color.fromRGBO(
-                                                  43, 226, 193, 1),
+                                              color: Color.fromRGBO(43, 226, 193, 1),
                                               fontSize: 17,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold
+                                          ),
                                         );
                                   _background = const ColorFilter.mode(
                                       Colors.transparent, BlendMode.color);
