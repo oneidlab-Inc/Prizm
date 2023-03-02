@@ -1,6 +1,7 @@
 // --no-sound-null-safety
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class Result extends StatefulWidget {
 
 class _Result extends State<Result> {
   String? _uid;
+  String shareUrl = 'https://oneidlab.page.link/prizm';
   var maps;
   List programs = [];
   List song_cnts = [];
@@ -162,49 +164,63 @@ class _Result extends State<Result> {
 
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '검색결과');
-    await MyApp.analytics.logEvent(name: 'Title', parameters: maps['TITLE']);
+    await MyApp.analytics.logEvent(name: 'Title');
   }
 
   final duplicateItems =
       List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
 
-  Future<void> getLink() async {
-    final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://oneidlab.page.link/"),
-      // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
-      uriPrefix: 'https://oneidlab.page.link/prizm/',
-      androidParameters: const AndroidParameters(
-        packageName: "com.oneidlab.prizm",
-        minimumVersion: 28,
-      ),
-      // iosParameters: const IOSParameters(
-      //   bundleId: "com.example.app.ios",
-      //   appStoreId: "123456789",
-      //   minimumVersion: "1.0.1",
-      // ),
-    );
-    // final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
-    //     dynamicLinkParams);
+  // Future<void> getLink() async {
+  //   final dynamicLinkParams = DynamicLinkParameters(
+  //     link: Uri.parse("https://oneidlab.page.link/"),
+  //     // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
+  //     uriPrefix: 'https://oneidlab.page.link/prizm/',
+  //     androidParameters: const AndroidParameters(
+  //       packageName: "com.oneidlab.prizm",
+  //       minimumVersion: 28,
+  //     ),
+  //     // iosParameters: const IOSParameters(
+  //     //   bundleId: "com.example.app.ios",
+  //     //   appStoreId: "123456789",
+  //     //   minimumVersion: "1.0.1",
+  //     // ),
+  //   );
+  //   // final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
+  //   //     dynamicLinkParams);
+  //
+  //   // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
+  //   // print(
+  //   //     'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
+  //   // print(
+  //   //     'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
+  //   // print(
+  //   //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+  //   // print(
+  //   //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+  //   // print('link >>> ${dynamicLinkParams.link}');
+  //   // print('dynamicLink >>> ${dynamicLinkParams.link.data}');
+  // }
 
-    // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
-    // print(
-    //     'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
-    // print(
-    //     'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
-    // print(
-    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    // print(
-    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    // print('link >>> ${dynamicLinkParams.link}');
-    // print('dynamicLink >>> ${dynamicLinkParams.link.data}');
+  Future<void> remoteConfig() async { //Firebase remoteConfig에서 shareUrl변경 후 게시하면 변경된 Url로 공유 
+    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+
+    remoteConfig.setDefaults({'shareUrl':shareUrl});
+    remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: Duration.zero)
+    );
+    await remoteConfig.fetchAndActivate();
+    String remoteUrl = remoteConfig.getString('shareUrl');
+    shareUrl = remoteUrl;
   }
 
   @override
   void initState() {
+    remoteConfig();
     logSetscreen();
     fetchData();
-    getLink();
+    // getLink();
     super.initState();
   }
 
@@ -813,7 +829,6 @@ class _Result extends State<Result> {
 
   void _onShare(BuildContext context) async {
     final box = context.findRenderObject() as RenderBox?;
-    String shareUrl = 'https://oneidlab.page.link/prizm';
 
     if (Platform.isIOS) {
       await Share.share(
