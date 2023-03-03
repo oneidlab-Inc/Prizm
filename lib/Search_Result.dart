@@ -217,6 +217,7 @@ class _Result extends State<Result> {
 
   @override
   void initState() {
+    HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
     remoteConfig();
     logSetscreen();
     fetchData();
@@ -235,14 +236,10 @@ class _Result extends State<Result> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    SystemChrome.setEnabledSystemUIMode(// 상하단 상태바 제거
+        SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
-    SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]);
+        SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height * 1.0;
     double c_width = MediaQuery.of(context).size.width * 1.0;
     final isCNTS = song_cnts.length > 3;

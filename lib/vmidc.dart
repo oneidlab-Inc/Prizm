@@ -113,15 +113,13 @@ class VMIDC {
 
     if (!_recorder.isRecording) return false;
 
-    if (_id != null && _score! >= 35) { //35점 기준으로 하였으나 추후 변경 가능성 높음
+    if (_id != null && _score! >= 33) {
       String id = _id!;
-      HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
       navigatorState.currentState?.push(//얻어온 context로 id값 가지고 push
           MaterialPageRoute(builder: (context) => Result(id: id)));
 
     } else {
       print('NOT FOUND');
-      HapticFeedback.vibrate();
       navigatorState.currentState
           ?.push(MaterialPageRoute(builder: (context) => Notfound_Bottom()));
     }
@@ -162,7 +160,7 @@ class VMIDC {
     for (int i = 0; i < len; i++) msg[6 + i] = _dna[i];
     _sock.add(msg);
     print("sendQuery");
-    Timer(const Duration(seconds: 10), () {
+    Timer(const Duration(seconds: 2), () {
       stop();
     });
   }

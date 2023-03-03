@@ -41,6 +41,7 @@ class _NotFound extends State<NotFound> {
 
   @override
   void initState() {
+    HapticFeedback.lightImpact();
     logSetscreen();
     initConnectivity();
     _connectivitySubscription =
