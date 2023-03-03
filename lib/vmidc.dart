@@ -5,18 +5,23 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_sound_lite/flutter_sound.dart';
 import 'Search_Result.dart';
 import 'package:logger/logger.dart';
 import 'Notfound_bottom.dart';
 import 'wavbuf.dart';
 
-final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android
+// final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android
 // final DynamicLibrary nativeLib = DynamicLibrary.process(); //IOS
 
-int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna =
-      nativeLib.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
+final DynamicLibrary nativeLibAnd = DynamicLibrary.open('libnative.so');
+final DynamicLibrary nativeLibIos = DynamicLibrary.process();
+final platform = Platform.isAndroid == true;
+
+int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna = platform
+    ? nativeLibAnd.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction()
+    : nativeLibIos.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
+
 
 const srate = 22050;
 const pcmLen = 74656; //3.39sec
@@ -117,7 +122,6 @@ class VMIDC {
       String id = _id!;
       navigatorState.currentState?.push(//얻어온 context로 id값 가지고 push
           MaterialPageRoute(builder: (context) => Result(id: id)));
-
     } else {
       print('NOT FOUND');
       navigatorState.currentState
@@ -160,7 +164,7 @@ class VMIDC {
     for (int i = 0; i < len; i++) msg[6 + i] = _dna[i];
     _sock.add(msg);
     print("sendQuery");
-    Timer(const Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 10), () {
       stop();
     });
   }

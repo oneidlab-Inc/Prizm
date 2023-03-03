@@ -75,7 +75,6 @@ class _Private extends State<Private> {
                 child: WebView(
                   backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                   initialUrl: 'http://${MyApp.privacy}',
-                  // initialUrl: 'http://www.przm.kr/js/privacy_app.html',
                   javascriptMode: JavascriptMode.unrestricted,
                   onWebViewCreated: (WebViewController webViewController) {
                     _controller.complete(webViewController);

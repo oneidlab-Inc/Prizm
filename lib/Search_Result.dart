@@ -98,14 +98,12 @@ class _Result extends State<Result> {
       http.Response response = await http.get(
           Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
     );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
       setState(() {});
     } catch (e) {
-      // print('fail to get json');
       print(e);
     }
 
@@ -171,37 +169,6 @@ class _Result extends State<Result> {
       List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
 
-  // Future<void> getLink() async {
-  //   final dynamicLinkParams = DynamicLinkParameters(
-  //     link: Uri.parse("https://oneidlab.page.link/"),
-  //     // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
-  //     uriPrefix: 'https://oneidlab.page.link/prizm/',
-  //     androidParameters: const AndroidParameters(
-  //       packageName: "com.oneidlab.prizm",
-  //       minimumVersion: 28,
-  //     ),
-  //     // iosParameters: const IOSParameters(
-  //     //   bundleId: "com.example.app.ios",
-  //     //   appStoreId: "123456789",
-  //     //   minimumVersion: "1.0.1",
-  //     // ),
-  //   );
-  //   // final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
-  //   //     dynamicLinkParams);
-  //
-  //   // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
-  //   // print(
-  //   //     'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
-  //   // print(
-  //   //     'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
-  //   // print(
-  //   //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-  //   // print(
-  //   //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-  //   // print('link >>> ${dynamicLinkParams.link}');
-  //   // print('dynamicLink >>> ${dynamicLinkParams.link.data}');
-  // }
-
   Future<void> remoteConfig() async { //Firebase remoteConfig에서 shareUrl변경 후 게시하면 변경된 Url로 공유 
     final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
@@ -252,9 +219,6 @@ class _Result extends State<Result> {
     final isUltra = c_height > 1000;
     final isPlus = 1000 < c_height && 1300 >= c_height && c_width > 500;
     final isNormal = c_height < 850;
-    // print('height = ${c_height.toInt()}');
-    // print('width = ${c_width.toInt()}');
-    // print('height / width = ${c_height / c_width} ');
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();

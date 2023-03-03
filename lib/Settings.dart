@@ -530,7 +530,7 @@ width: 10,
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('현재버전   v   ${MyApp.appVersion}',
+                        Text('현재버전   v   ${MyApp.appVersion}', // remoteConfig에서 변경시 자동으로 바뀜
                             style: TextStyle(
                                 fontSize: 17,
                                 color:
@@ -583,18 +583,4 @@ width: 10,
           return TabPage();
         });
   }
-
-/*versionChange() async {    //firebase 필요시 적용
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults({"version": "1.0.0+1"});
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 30),
-        minimumFetchInterval: const Duration(seconds: 30)));
-
-    await remoteConfig.fetchAndActivate();
-
-    version = remoteConfig.getString("version");
-    print('version >>> $version');
-    // version1 = version;
-  }*/
 }
