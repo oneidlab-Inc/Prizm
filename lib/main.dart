@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -43,11 +42,10 @@ class MyApp extends StatelessWidget {
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.system);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   Future<void> logSetscreen() async {
-    await MyApp.analytics.setCurrentScreen(screenName: 'TabPage');
+    analytics.setCurrentScreen(screenName: 'TabPage');
   }
 
   MyApp({Key? key}) : super(key: key);
@@ -68,7 +66,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             navigatorObservers: [observer],
             // initialRoute: 'Category',
-            // routes: {'Category':(context) =>Category()},
+            // routes: {'Category': (context) => Categories()},
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -116,9 +114,8 @@ class _TabPageState extends State<TabPage> {
     // var version = MyApp.appVersion;
     remoteConfig.setDefaults(
         {'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
-    remoteConfig.setConfigSettings(
-        RemoteConfigSettings(
-        // Fetch 될 시간 설정
+    await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(// Fetch 될 시간 설정
         fetchTimeout: const Duration(minutes: 1),
         minimumFetchInterval: Duration.zero // 바로 Fetch
         )
@@ -270,7 +267,6 @@ class _TabPageState extends State<TabPage> {
       MyApp.programs = url['programs'];
       MyApp.ranks = url['ranks'];
       MyApp.privacy = url['privacy'];
-      // print('MyApp.Uri >> ${url}');
     } catch (e) {
       print('error >> $e');
     }
@@ -278,7 +274,6 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
-    // _launchUpdate();
     remoteconfig();
     fetchData();
     initPlatformState();
@@ -464,12 +459,16 @@ class _TabPageState extends State<TabPage> {
   }
 }
 
-void updateToast() {
+Future<void> updateToast() async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  var packageVersion = packageInfo.version;
+var currentVersion = MyApp.appVersion == packageVersion;
   Fluttertoast.showToast(
-      msg: '업데이트를 위해 스토어로 이동합니다.',
+      msg: currentVersion? '최신버전입니다.' :'업데이트를 위해 스토어로 이동합니다.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
 }
 
 class Style_dark extends StyleHook {

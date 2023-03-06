@@ -22,13 +22,10 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
 
-  Future<void> logSetscreen() async {
-    await MyApp.analytics.setCurrentScreen(screenName: 'Home');
+  Future<void> logSetscreen()  async {
+    // void logSetscreen() {
+     await MyApp.analytics.setCurrentScreen(screenName: 'Home');
   }
-
-  // Future<void> recordCount() async {
-  //   await MyApp.analytics.logEvent(name: 'vmidc.start');
-  // }
 
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
@@ -76,37 +73,6 @@ class _Home extends State<Home> {
         text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.white)),
   ]);
 
-  /*late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
-      ? const TextSpan(
-      children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.black)),
-    TextSpan(
-        text: '프리즘 ',
-        style: TextStyle(
-            color: Color.fromRGBO(43, 226, 193, 1),
-            fontSize: 17,
-            fontWeight: FontWeight.bold)),
-    TextSpan(
-        text: '을 눌러주세요!',
-        style: TextStyle(fontSize: 17, color: Colors.black)),
-  ])
-      : const TextSpan(children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.white)),
-    TextSpan(
-        text: '프리즘 ',
-        style: TextStyle(
-            color: Color.fromRGBO(43, 226, 193, 1),
-            fontSize: 17,
-            fontWeight: FontWeight.bold)),
-    TextSpan(
-        text: '을 눌러주세요!',
-        style: TextStyle(fontSize: 17, color: Colors.white)),
-  ]);
-*/
 /*--------------------------------------------------------------*/
 
   @override
@@ -178,8 +144,9 @@ class _Home extends State<Home> {
               icon: Image.asset('assets/x_icon.png', width: 20,
                   color: isTransParents ? isDarkMode ?Colors.white : Colors.grey : Colors.transparent),
               splashColor: Colors.transparent,
-              onPressed: () {
+              onPressed: () async {
                 _vmidc.stop();
+                await MyApp.analytics.logEvent(name: 'x검색취소');
                 isTransParents
                     ? Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()))
                     : const Text('');
@@ -267,7 +234,7 @@ class _Home extends State<Home> {
                                 return;
                               } else if (await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false) {
                                 _vmidc.start();
-                                await MyApp.analytics.logEvent(name: 'vmidc_start', parameters: null);
+                                await MyApp.analytics.logEvent(name: 'vmidc_start');
                                 setState(() {
                                   settingIcon = ImageIcon(
                                     Image.asset('assets/settings.png').image,
@@ -296,6 +263,7 @@ class _Home extends State<Home> {
 
                                 if (_vmidc.isRunning() == true) {
                                   _vmidc.stop();
+                                  await MyApp.analytics.logEvent(name: 'Prizm검색취소');
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
                                 }
                               }

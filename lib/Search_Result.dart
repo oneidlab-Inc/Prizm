@@ -173,7 +173,7 @@ class _Result extends State<Result> {
     final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
     remoteConfig.setDefaults({'shareUrl':shareUrl});
-    remoteConfig.setConfigSettings(RemoteConfigSettings(
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(minutes: 1),
         minimumFetchInterval: Duration.zero)
     );
