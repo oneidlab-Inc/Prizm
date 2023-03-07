@@ -44,10 +44,6 @@ class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
-  Future<void> logSetscreen() async {
-    analytics.setCurrentScreen(screenName: 'TabPage');
-  }
-
   MyApp({Key? key}) : super(key: key);
 
   // static var Uri;
