@@ -53,8 +53,8 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    // var search = MyApp.Uri['search'];
-    // var program = MyApp.Uri['programs'];
+    var search = MyApp.Uri['search'];
+    var program = MyApp.Uri['programs'];
 
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
@@ -70,16 +70,14 @@ class _Result extends State<Result> {
       _uid = 'Failed to get Id';
     }
     // _uid = await PlatformDeviceId.getDeviceId;
-    // print('uid : $_uid');
+    print('uid : $_uid');
 
 // json for title album artist
 
     try {
       http.Response response = await http.get(
           // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-      Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$_uid'));
+          Uri.parse('http://$search/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -88,7 +86,7 @@ class _Result extends State<Result> {
 
       setState(() {});
     } catch (e) {
-      // print('json 가져오기 실패');
+      print('json 가져오기 실패');
       print(e);
     }
 
@@ -96,7 +94,7 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-          Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
+          Uri.parse('http://$program/json?id=${widget.id}')
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
     );
       String jsonData = response.body;
@@ -169,10 +167,11 @@ class _Result extends State<Result> {
       List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
 
-  Future<void> remoteConfig() async { //Firebase remoteConfig에서 shareUrl변경 후 게시하면 변경된 Url로 공유 
+  Future<void> remoteConfig() async {
+    //Firebase remoteConfig에서 shareUrl변경 후 게시하면 변경된 Url로 공유
     final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
-    remoteConfig.setDefaults({'shareUrl':shareUrl});
+    remoteConfig.setDefaults({'shareUrl': shareUrl});
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(minutes: 1),
         minimumFetchInterval: Duration.zero)
@@ -181,11 +180,41 @@ class _Result extends State<Result> {
     String remoteUrl = remoteConfig.getString('shareUrl');
     shareUrl = remoteUrl;
   }
+  Future<void> getLink() async {
+    final dynamicLinkParams = DynamicLinkParameters(
+      link: Uri.parse("https://oneidlab.page.link/"),
+      // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
+      uriPrefix: 'https://oneidlab.page.link/prizm/',
+      androidParameters: const AndroidParameters(
+        packageName: "com.android.prizm",
+        minimumVersion: 28,
+      ),
+      // iosParameters: const IOSParameters(
+      //   bundleId: "com.example.app.ios",
+      //   appStoreId: "123456789",
+      //   minimumVersion: "1.0.1",
+      // ),
+    );
+    // final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
+    //     dynamicLinkParams);
+
+    // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
+    print(
+        'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
+    print(
+        'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
+    print(
+        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    print(
+        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    print('link >>> ${dynamicLinkParams.link}');
+    print('dynamicLink >>> ${dynamicLinkParams.link.data}');
+  }
 
   @override
   void initState() {
     HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
-    remoteConfig();
+    // remoteConfig();
     logSetscreen();
     fetchData();
     // getLink();
@@ -397,18 +426,15 @@ class _Result extends State<Result> {
                                             : isDarkMode
                                                 ? Colors.black
                                                 : Colors.black,
-                                    onPressed: () async {
-                                      await MyApp.analytics.logEvent(
-                                          name: 'ShareButton',
-                                          parameters: null);
+                                    onPressed: () {
                                       _onShare(context);
                                     },
                                   )
                                 ],
                               ),
                               Container(
-                                  margin: EdgeInsets.only(top: isPad ? 500 : 400),
-                                  // margin: EdgeInsets.only(top:400),
+                                  margin: const EdgeInsets.only(top: 350),
+                                  // original : 400
                                   width: c_width * 0.9,
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
@@ -803,6 +829,16 @@ class _Result extends State<Result> {
           await Share.share(shareUrl,
           subject: 'Prizm'
       ); // 짧은 동적링크
+      await Share.share('https://oneidlab.page.link/prizmios',
+          subject: 'Prizm',
+          sharePositionOrigin: Rect.fromLTRB(
+              0,
+              0,
+              MediaQuery.of(context).size.width,
+              MediaQuery.of(context).size.height * 0.5));
+    } else if (Platform.isAndroid) {
+      await Share.share('https://oneidlab.page.link/prizm',
+          subject: 'Prizm'); // 짧은 동적링크
       // https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm[&afl='Play Store Url'] << 앱 설치x일때 스토어로 보내기
       // await Share.share('https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm', subject: 'Prizm'); //긴 동적링크
     }
@@ -955,23 +991,14 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
-        lineTouchData: LineTouchData(enabled: true)));
+                    getTitlesWidget: bottomTitleWidgets
+                )
+            ),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)
+            )
+        ),
+        lineTouchData: LineTouchData(enabled: true)
+    ));
     return result;
-  }
-}
-
-void avocado() {
-  var milk;
-  var avocado;
-  if(avocado == true) { //아보카도 있어?
-    milk == 6; //있어서 우유 6개
-  } else if(milk == true) { // 우유 사와
-    if(avocado == true) { // 아보카도 있어?
-      avocado == 6; // 있으니까 6개
-    } else {
-      avocado == 0;
-    }
   }
 }

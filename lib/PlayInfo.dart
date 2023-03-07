@@ -9,7 +9,7 @@ import 'main.dart';
 enum _HighlightTextType { text }
 
 class PlayInfo extends StatefulWidget {
-  
+
   final String title;
   final String image;
   final String artist;
@@ -32,10 +32,6 @@ class PlayInfo extends StatefulWidget {
 }
 
 class _PlayInfo extends State<PlayInfo> {
-
-  Future<void> logSetscreen() async {
-    await MyApp.analytics.setCurrentScreen(screenName: '프리즘 방송 재생정보');
-  }
   TextAlign textAlign = TextAlign.justify;
   FontWeight fontWeight = FontWeight.bold;
   _HighlightTextType type = _HighlightTextType.text;
@@ -47,12 +43,12 @@ class _PlayInfo extends State<PlayInfo> {
   late int statuscode;
 
   fetchData() async {
+    var search = MyApp.Uri['search'];
 
     http.Response response = await http.get(
-      Uri.parse('http://${MyApp.search}/json?id=${widget.song_id}')
+      Uri.parse('http://$search/json?id=${widget.song_id}')
     );
 
-    print(MyApp.search);
     statuscode = response.statusCode;
     try {
 
@@ -61,11 +57,10 @@ class _PlayInfo extends State<PlayInfo> {
       info = map['tv'];
       info_radio = map['radio'];
       original = info;
-      print(widget.song_id);
       setState(() {});
 
     } catch (e) {
-      // print('json 통신 실패');
+      print('json 통신 실패');
       print(e);
     }
   }
@@ -76,7 +71,6 @@ class _PlayInfo extends State<PlayInfo> {
 
   @override
   void initState() {
-    logSetscreen();
     items.addAll(duplicateItems);
     fetchData();
     super.initState();
@@ -453,8 +447,7 @@ Widget _tv_list(info, widget) {
                                     color: isDarkMode ? Colors.white : Colors.black,
                                     fontSize: 16)),
                           ),
-                        ]
-                    ),
+                        ]),
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 3, 0, 10),
                       width: 140,
@@ -468,8 +461,7 @@ Widget _tv_list(info, widget) {
                                     overflow: TextOverflow.ellipsis,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
-                                    color: isDarkMode ? Colors.white : Colors.black)
-                            ),
+                                    color: isDarkMode ? Colors.white : Colors.black)),
                           ),
                           Text(parseTvDate,
                               style: TextStyle(

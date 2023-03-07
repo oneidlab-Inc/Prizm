@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:Prizm/History_Bottom.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:Prizm/vmidc.dart';
 
@@ -10,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'Home_NotFound.dart';
-import 'Notfound_bottom.dart';
 import 'Settings.dart';
 import 'main.dart';
 
@@ -21,7 +18,6 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-
   Future<void> logSetscreen()  async {
     // void logSetscreen() {
      await MyApp.analytics.setCurrentScreen(screenName: 'Home');
@@ -37,6 +33,10 @@ class _Home extends State<Home> {
   final VMIDC _vmidc = VMIDC();
   final _ctrl = StreamController<List>();
   String _id = '';
+
+  // final Image _icon = MyApp.themeNotifier.value == ThemeMode.light
+  //     ? Image.asset('assets/_prizm.png')
+  //     : Image.asset('assets/_prizm_dark.png');
 
   late dynamic _background =
       const ColorFilter.mode(Colors.transparent, BlendMode.clear);
@@ -77,7 +77,6 @@ class _Home extends State<Home> {
 
   @override
   void initState() {
-    logSetscreen();
     Permission.microphone.request();
     initConnectivity();
     _connectivitySubscription =
@@ -95,7 +94,7 @@ class _Home extends State<Home> {
             _id = 'error';
           }
           await _vmidc.stop();
-          // print('_vmidc.isRuning() : ${_vmidc.isRunning()}');
+          print('_vmidc.isRuning() : ${_vmidc.isRunning()}');
           setState(() {});
         });
       }
@@ -159,7 +158,7 @@ class _Home extends State<Home> {
                 visualDensity: const VisualDensity(horizontal: 4.0),
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
-                  // print(settingIcon.color);
+                  print(settingIcon.color);
                   isTransParents
                       ? const Text('')
                       : Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings()));
@@ -218,7 +217,8 @@ class _Home extends State<Home> {
                             iconSize: _size,
                             onPressed: () async {
                               var status = await Permission.microphone.status;
-                              if (status == PermissionStatus.permanentlyDenied) {
+                              if (status ==
+                                  PermissionStatus.permanentlyDenied) {
                                 PermissionToast();
                                 requestMicPermission(context);
                                 return;
@@ -232,7 +232,9 @@ class _Home extends State<Home> {
                               if (_connectionStatus.endsWith('none') == true) {
                                 NetworkToast();
                                 return;
-                              } else if (await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false) {
+                              } else if (await Permission
+                                      .microphone.status.isGranted &&
+                                  _connectionStatus.endsWith('none') == false) {
                                 _vmidc.start();
                                 await MyApp.analytics.logEvent(name: 'vmidc_start');
                                 setState(() {
@@ -265,6 +267,10 @@ class _Home extends State<Home> {
                                   _vmidc.stop();
                                   await MyApp.analytics.logEvent(name: 'Prizm검색취소');
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TabPage()));
                                 }
                               }
                             }),

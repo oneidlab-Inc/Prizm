@@ -63,7 +63,7 @@ class _NotFound extends State<NotFound> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     if (_connectionStatus.endsWith('none') == true) {
-      // print('network error');
+      print('network error');
       NetworkToast();
     }
     return WillPopScope(

@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,7 +22,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
 import 'History.dart';
 import 'Home.dart';
-import 'Search_Result.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -30,8 +31,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // print(Firebase.apps.toString());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  print(Firebase.apps.toString());
 
   runApp(
     MyApp(),
@@ -50,13 +50,13 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key? key}) : super(key: key);
 
-  // static var Uri;
-  static var appVersion;
   static var search;
   static var history;
   static var programs;
   static var ranks;
   static var privacy;
+  static var Uri;
+  static var appVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +91,9 @@ class MyApp extends StatelessWidget {
 }
 
 class TabPage extends StatefulWidget {
+  // TabPage({analytics}) : super();
+
+  // final FirebaseAnalytics analytics;
   @override
   _TabPageState createState() => _TabPageState();
 }
@@ -108,16 +111,16 @@ class _TabPageState extends State<TabPage> {
   //Firebase Remote Config에 키값, default value 게시 후 작동 버전 확인 후 스토어로 보내기
   Future<void> remoteconfig() async {
     final FirebaseRemoteConfig remoteConfig =
-        await FirebaseRemoteConfig.instance;
+    await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
     // var version = MyApp.appVersion;
     remoteConfig.setDefaults(
         {'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
     await remoteConfig.setConfigSettings(
-        RemoteConfigSettings(// Fetch 될 시간 설정
-        fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval: Duration.zero // 바로 Fetch
+        RemoteConfigSettings( // Fetch 될 시간 설정
+            fetchTimeout: const Duration(minutes: 1),
+            minimumFetchInterval: Duration.zero // 바로 Fetch
         )
     );
     await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
@@ -249,8 +252,8 @@ class _TabPageState extends State<TabPage> {
 
   final List _pages = [History(), Home(), Chart()];
 
-  // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
 
+  // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
   List url = [];
 
   fetchData() async {
@@ -267,6 +270,8 @@ class _TabPageState extends State<TabPage> {
       MyApp.programs = url['programs'];
       MyApp.ranks = url['ranks'];
       MyApp.privacy = url['privacy'];
+      MyApp.Uri = url;
+      // print('url >> ${MyApp.Uri}');
     } catch (e) {
       print('error >> $e');
     }
@@ -277,6 +282,7 @@ class _TabPageState extends State<TabPage> {
     remoteconfig();
     fetchData();
     initPlatformState();
+    // MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
     super.initState();
   }
 
@@ -486,7 +492,6 @@ class Style_dark extends StyleHook {
     return const TextStyle(fontSize: 14, color: Colors.white);
   }
 }
-
 class Style extends StyleHook {
   @override
   double get activeIconMargin => 10;
