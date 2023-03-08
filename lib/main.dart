@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Prizm/firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,7 +22,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
 import 'History.dart';
 import 'Home.dart';
-import 'Search_Result.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -39,23 +39,20 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.system);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
-  Future<void> logSetscreen() async {
-    await MyApp.analytics.setCurrentScreen(screenName: 'TabPage');
-  }
-
   MyApp({Key? key}) : super(key: key);
 
-  static var appVersion;
   static var search;
   static var history;
   static var programs;
   static var ranks;
   static var privacy;
+  static var Uri;
+  static var appVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +62,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             navigatorObservers: [observer],
             // initialRoute: 'Category',
-            // routes: {'Category':(context) =>Category()},
+            // routes: {'Category': (context) => Categories()},
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -80,8 +77,7 @@ class MyApp extends StatelessWidget {
             navigatorKey: VMIDC.navigatorState,
             // 화면 이동을 위한 navigator
             theme: ThemeData(
-                primarySwatch: generateMaterialColor(color: Colors.white)
-            ),
+                primarySwatch: generateMaterialColor(color: Colors.white)),
             darkTheme: ThemeData.dark().copyWith(),
             themeMode: currentMode,
             home: TabPage(),
@@ -91,6 +87,9 @@ class MyApp extends StatelessWidget {
 }
 
 class TabPage extends StatefulWidget {
+  // TabPage({analytics}) : super();
+
+  // final FirebaseAnalytics analytics;
   @override
   _TabPageState createState() => _TabPageState();
 }
@@ -105,17 +104,41 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
   
+  // Future<void> remoteconfig() async {
+  //   final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   var packageVersion = packageInfo.version;
+  //   remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
+  //   remoteConfig.fetchAndActivate();
+  //
+  //   String appVersion = remoteConfig.getString(MyApp.appVersion);
+  //   print(appVersion);
+  // }
+
+  //Firebase Remote Config에 키값, default value 게시 후 작동 버전 확인 후 스토어로 보내기
   Future<void> remoteconfig() async {
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
-    remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
-    remoteConfig.fetchAndActivate();
+    remoteConfig.setDefaults({'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
+    await remoteConfig.setConfigSettings(
+        RemoteConfigSettings( // Fetch 될 시간 설정
+            fetchTimeout: const Duration(minutes: 1),
+            minimumFetchInterval: Duration.zero // 바로 Fetch
+        )
+    );
+    await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
+    String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
 
-    String appVersion = remoteConfig.getString(MyApp.appVersion);
-    print(appVersion);
+    // appVersion = remoteConfig에서 변경가능한 값
+    // packageVersion = 현재 설치되어있는 패키지의 버전
+
+    MyApp.appVersion = appVersion;
+    if (appVersion != packageVersion) {
+      showDefaultDialog();
+    }
   }
-  
+
   Future<void> initPlatformState() async {
     String? deviceId; //기기 uid
     try {
@@ -139,21 +162,6 @@ class _TabPageState extends State<TabPage> {
 
 /*----------------------------------------------------------------------------------------------------*/
 
-  Future _launchUpdate() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var packageVersion = packageInfo.version;
-    MyApp.appVersion = packageVersion;
-
-    // _versionCheck.checkUpdatable(version);
-// 스토어 업로드 후 주소 받고 활성화
-
-// if (version == version) {
-//
-// showDefaultDialog();
-//
-// } else {}
-  }
-
   void showDefaultDialog() {
     showDialog(
         context: context,
@@ -162,90 +170,94 @@ class _TabPageState extends State<TabPage> {
           final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           double c_height = MediaQuery.of(context).size.height;
           double c_width = MediaQuery.of(context).size.width;
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Container(
-                height: c_height * 0.18,
-                width: c_width * 0.8,
-                margin: const EdgeInsets.only(top: 20, bottom: 20),
-                color: isDarkMode
-                    ? const Color.fromRGBO(66, 66, 66, 1)
-                    : Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: c_height * 0.115,
-                      child: const Center(
-                        child: Text('업데이트를 위해 스토어로 이동합니다.',
-                            style: TextStyle(fontSize: 18)),
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  height: c_height * 0.18,
+                  width: c_width * 0.8,
+                  margin: const EdgeInsets.only(top: 20, bottom: 20),
+                  color: isDarkMode
+                      ? const Color.fromRGBO(66, 66, 66, 1)
+                      : Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: c_height * 0.115,
+                        child: const Center(
+                          child: Text('업데이트를 위해 스토어로 이동합니다.',
+                              style: TextStyle(fontSize: 18)),
+                        ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: isDarkMode
-                                      ? const Color.fromRGBO(94, 94, 94, 1)
-                                      : Colors.black.withOpacity(0.1)))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                              margin: const EdgeInsets.only(right: 20),
-                              color: isDarkMode
-                                  ? const Color.fromRGBO(66, 66, 66, 1)
-                                  : Colors.white,
-                              width: c_width * 0.345,
-                              height: c_height * 0.08,
-                              child: TextButton(
-                                onPressed: () {
-                                  Uri _url = Uri.parse('');
-                                  if (Platform.isAndroid) {
-                                    // showDefaultDialog();
-                                    updateToast();
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                    color: isDarkMode
+                                        ? const Color.fromRGBO(94, 94, 94, 1)
+                                        : Colors.black.withOpacity(0.1)))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                                margin: const EdgeInsets.only(right: 20),
+                                color: isDarkMode
+                                    ? const Color.fromRGBO(66, 66, 66, 1)
+                                    : Colors.white,
+                                width: c_width * 0.345,
+                                height: c_height * 0.08,
+                                child: TextButton(
+                                  onPressed: () {
+                                    Uri _url = Uri.parse('');
+                                    if (Platform.isAndroid) {
+                                      // showDefaultDialog();
+                                      updateToast();
 // _url = Uri.parse('http://www.naver.com');
 // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
 // 플레이스토어 주소 입력
-                                  } else if (Platform.isIOS) {
-                                    // print('ios platform');
-                                    // showDefaultDialog();
-                                    updateToast();
-                                  }
-                                  try {
-                                    launchUrl(_url);
-                                    canLaunchUrl(_url);
-                                  } catch (e) {
-                                    print(e);
-                                  }
-                                },
-                                child: Text(
-                                  '이동',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: isDarkMode
-                                        ? Colors.white.withOpacity(0.8)
-                                        : Colors.black.withOpacity(0.3),
+                                    } else if (Platform.isIOS) {
+                                      // print('ios platform');
+                                      // showDefaultDialog();
+                                      updateToast();
+                                    }
+                                    try {
+                                      launchUrl(_url);
+                                      canLaunchUrl(_url);
+                                    } catch (e) {
+                                      print(e);
+                                    }
+                                  },
+                                  child: Text(
+                                    '확인',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: isDarkMode
+                                          ? Colors.white.withOpacity(0.8)
+                                          : Colors.black.withOpacity(0.3),
+                                    ),
                                   ),
-                                ),
-                              )),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ));
+                                )),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          );
         });
   }
 
 /*-----------------------------------------------------------------------------------------*/
 
   final List _pages = [History(), Home(), Chart()];
-  // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
 
+
+  // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
   List url = [];
 
   fetchData() async {
@@ -262,19 +274,19 @@ class _TabPageState extends State<TabPage> {
       MyApp.programs = url['programs'];
       MyApp.ranks = url['ranks'];
       MyApp.privacy = url['privacy'];
-      // print('MyApp.Uri >> ${url}');
+      MyApp.Uri = url;
+      // print('url >> ${MyApp.Uri}');
     } catch (e) {
       print('error >> $e');
     }
   }
 
-
   @override
   void initState() {
     remoteconfig();
-    fetchData(); // 고정url 받으면 활성화
-    _launchUpdate();
+    fetchData();
     initPlatformState();
+    // MyApp.Uri = Uri.parse('http://dev.przm.kr/przm_api/');
     super.initState();
   }
 
@@ -465,7 +477,8 @@ void updateToast() async {
       msg: currentVersion ? '최신버전입니다.' : '업데이트를 위해 스토어로 이동합니다.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
 }
 
 class Style_dark extends StyleHook {
@@ -483,7 +496,6 @@ class Style_dark extends StyleHook {
     return const TextStyle(fontSize: 14, color: Colors.white);
   }
 }
-
 class Style extends StyleHook {
   @override
   double get activeIconMargin => 10;

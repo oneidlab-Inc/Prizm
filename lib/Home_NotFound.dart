@@ -15,6 +15,7 @@ class NotFound extends StatefulWidget {
 class _NotFound extends State<NotFound> {
 
   Future<void> logSetscreen() async {
+  // void logSetscreen() {
     await MyApp.analytics.setCurrentScreen(screenName: '검색 실패');
     await MyApp.analytics.logEvent(name: 'NotFound', parameters: null);
   }
@@ -41,6 +42,7 @@ class _NotFound extends State<NotFound> {
 
   @override
   void initState() {
+    HapticFeedback.lightImpact();
     logSetscreen();
     initConnectivity();
     _connectivitySubscription =
@@ -61,7 +63,7 @@ class _NotFound extends State<NotFound> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     if (_connectionStatus.endsWith('none') == true) {
-      // print('network error');
+      print('network error');
       NetworkToast();
     }
     return WillPopScope(
@@ -86,7 +88,8 @@ class _NotFound extends State<NotFound> {
                     width: 20,
                     color: isDarkMode ? Colors.white : Colors.grey,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                       await MyApp.analytics.logEvent(name: 'Back to Home');
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => TabPage())
                     );
@@ -113,7 +116,8 @@ class _NotFound extends State<NotFound> {
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: isDarkMode
                                     ? _textColumn_dark
-                                    : _textColumn_light)),
+                                    : _textColumn_light)
+                        ),
                         IconButton(
                           icon: isDarkMode
                               ? Image.asset('assets/_prizm_dark.png')

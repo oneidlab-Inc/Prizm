@@ -1,6 +1,7 @@
 // --no-sound-null-safety
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -28,7 +29,6 @@ class Result extends StatefulWidget {
 class _Result extends State<Result> {
   String? _uid;
   String shareUrl = 'https://oneidlab.page.link/prizm';
-
   var maps;
   List programs = [];
   List song_cnts = [];
@@ -53,8 +53,8 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    // var search = MyApp.Uri['search'];
-    // var program = MyApp.Uri['programs'];
+    var search = MyApp.Uri['search'];
+    var program = MyApp.Uri['programs'];
 
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
@@ -70,16 +70,14 @@ class _Result extends State<Result> {
       _uid = 'Failed to get Id';
     }
     // _uid = await PlatformDeviceId.getDeviceId;
-    // print('uid : $_uid');
+    print('uid : $_uid');
 
 // json for title album artist
 
     try {
       http.Response response = await http.get(
           // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-      Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$_uid'));
+          Uri.parse('http://$search/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -88,7 +86,7 @@ class _Result extends State<Result> {
 
       setState(() {});
     } catch (e) {
-      // print('json 가져오기 실패');
+      print('json 가져오기 실패');
       print(e);
     }
 
@@ -96,8 +94,7 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-          Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
+          Uri.parse('http://$program/json?id=${widget.id}')
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
     );
       String jsonData = response.body;
@@ -105,7 +102,6 @@ class _Result extends State<Result> {
       programs = jsonDecode(jsonData.toString());
       setState(() {});
     } catch (e) {
-      // print('fail to get json');
       print(e);
     }
 
@@ -164,20 +160,33 @@ class _Result extends State<Result> {
 
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '검색결과');
-    await MyApp.analytics.logEvent(name: 'Title', parameters: maps['TITLE']);
+    await MyApp.analytics.logEvent(name: 'Title');
   }
 
   final duplicateItems =
       List<String>.generate(1000, (i) => "$Container(child:Text $i)");
   var items = <String>[];
 
+  Future<void> remoteConfig() async {
+    //Firebase remoteConfig에서 shareUrl변경 후 게시하면 변경된 Url로 공유
+    final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+
+    remoteConfig.setDefaults({'shareUrl': shareUrl});
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: Duration.zero)
+    );
+    await remoteConfig.fetchAndActivate();
+    String remoteUrl = remoteConfig.getString('shareUrl');
+    shareUrl = remoteUrl;
+  }
   Future<void> getLink() async {
     final dynamicLinkParams = DynamicLinkParameters(
       link: Uri.parse("https://oneidlab.page.link/"),
       // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
       uriPrefix: 'https://oneidlab.page.link/prizm/',
       androidParameters: const AndroidParameters(
-        packageName: "com.oneidlab.prizm",
+        packageName: "com.android.prizm",
         minimumVersion: 28,
       ),
       // iosParameters: const IOSParameters(
@@ -190,23 +199,25 @@ class _Result extends State<Result> {
     //     dynamicLinkParams);
 
     // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
-    // print(
-    //     'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
-    // print(
-    //     'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
-    // print(
-    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    // print(
-    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    // print('link >>> ${dynamicLinkParams.link}');
-    // print('dynamicLink >>> ${dynamicLinkParams.link.data}');
+    print(
+        'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
+    print(
+        'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
+    print(
+        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    print(
+        'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
+    print('link >>> ${dynamicLinkParams.link}');
+    print('dynamicLink >>> ${dynamicLinkParams.link.data}');
   }
 
   @override
   void initState() {
+    HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
+    // remoteConfig();
     logSetscreen();
     fetchData();
-    getLink();
+    // getLink();
     super.initState();
   }
 
@@ -221,14 +232,10 @@ class _Result extends State<Result> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    SystemChrome.setEnabledSystemUIMode(// 상하단 상태바 제거
+        SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
-    SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]);
+        SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height * 1.0;
     double c_width = MediaQuery.of(context).size.width * 1.0;
     final isCNTS = song_cnts.length > 3;
@@ -241,9 +248,6 @@ class _Result extends State<Result> {
     final isUltra = c_height > 1000;
     final isPlus = 1000 < c_height && 1300 >= c_height && c_width > 500;
     final isNormal = c_height < 850;
-    // print('height = ${c_height.toInt()}');
-    // print('width = ${c_width.toInt()}');
-    // print('height / width = ${c_height / c_width} ');
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();
@@ -422,18 +426,15 @@ class _Result extends State<Result> {
                                             : isDarkMode
                                                 ? Colors.black
                                                 : Colors.black,
-                                    onPressed: () async {
-                                      await MyApp.analytics.logEvent(
-                                          name: 'ShareButton',
-                                          parameters: null);
+                                    onPressed: () {
                                       _onShare(context);
                                     },
                                   )
                                 ],
                               ),
                               Container(
-                                  margin: EdgeInsets.only(top: isPad ? 500 : 400),
-                                  // margin: EdgeInsets.only(top:400),
+                                  margin: const EdgeInsets.only(top: 350),
+                                  // original : 400
                                   width: c_width * 0.9,
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
@@ -818,13 +819,22 @@ class _Result extends State<Result> {
 
     if (Platform.isIOS) {
       await Share.share(
-          '${shareUrl}ios',
-          sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),
+        '${shareUrl}ios',
+        sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery
+            .of(context)
+            .size
+            .width, MediaQuery
+            .of(context)
+            .size
+            .height * 0.5),
       );
     } else if (Platform.isAndroid) {
-      await Share.share('${shareUrl}', subject: 'Prizm'); // 짧은 동적링크
+      // await Share.share('https://oneidlab.page.link/prizm',
+      await Share.share(shareUrl,
+          subject: 'Prizm'
+      );
+      // box!.localToGlobal(Offset.zero) & box.size);
     }
-    // box!.localToGlobal(Offset.zero) & box.size);
   }
 
   late String text;
@@ -973,23 +983,14 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
-        lineTouchData: LineTouchData(enabled: true)));
+                    getTitlesWidget: bottomTitleWidgets
+                )
+            ),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)
+            )
+        ),
+        lineTouchData: LineTouchData(enabled: true)
+    ));
     return result;
-  }
-}
-
-void avocado() {
-  var milk;
-  var avocado;
-  if(avocado == true) { //아보카도 있어?
-    milk == 6; //있어서 우유 6개
-  } else if(milk == true) { // 우유 사와
-    if(avocado == true) { // 아보카도 있어?
-      avocado == 6; // 있으니까 6개
-    } else {
-      avocado == 0;
-    }
   }
 }
