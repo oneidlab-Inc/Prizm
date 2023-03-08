@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:material_color_generator/material_color_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:yaml/yaml.dart';
 import 'Home.dart';
@@ -559,21 +560,22 @@ width: 10,
   }
 
   _launchUpdate() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var packageVersion = packageInfo.version;
+    var currentVersion = MyApp.appVersion == packageVersion;
     Uri _url = Uri.parse('');
-    if (Platform.isAndroid) {
-      //플레이 스토어 주소 입력
-      // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
-    } else if (Platform.isIOS) {
-      //앱스토어 주소 입력
-      // _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
+    if (Platform.isAndroid) { //플레이 스토어 주소 입력
+      _url = Uri.parse(currentVersion ? '' : /* Play Store Url */'');
+    } else if (Platform.isIOS) { //앱스토어 주소 입력
+      _url = Uri.parse(currentVersion ? '' : /* App Store Url*/ '');
     }
-    await launchUrl(_url);
-    // if (await launchUrl(_url)) {
-    //   print('launching $_url');
-    //   await canLaunchUrl(_url);
-    // } else {
-    //   throw '$_url 연결 실패';
-    // }
+    if (await launchUrl(_url)) {
+      await canLaunchUrl(_url);
+    } else {
+      NetworkToast();
+      throw '$_url 연결 실패';
+    }
+    // await launchUrl(_url);
   }
 
   Future<bool> _onBackKey() async {

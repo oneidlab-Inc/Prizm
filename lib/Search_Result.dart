@@ -27,6 +27,8 @@ class Result extends StatefulWidget {
 
 class _Result extends State<Result> {
   String? _uid;
+  String shareUrl = 'https://oneidlab.page.link/prizm';
+
   var maps;
   List programs = [];
   List song_cnts = [];
@@ -816,13 +818,11 @@ class _Result extends State<Result> {
 
     if (Platform.isIOS) {
       await Share.share(
-          'https://oneidlab.page.link/prizmios', subject: 'Prizm',
+          '${shareUrl}ios',
           sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),
       );
     } else if (Platform.isAndroid) {
-      await Share.share('https://oneidlab.page.link/prizm', subject: 'Prizm'); // 짧은 동적링크
-      // https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm[&afl='Play Store Url'] << 앱 설치x일때 스토어로 보내기
-      // await Share.share('https://oneidlab.page.link/?link=https://oneidlab.page.link/prizm%26apn%3Dcom.android.prizm&apn=com.android.prizm', subject: 'Prizm'); //긴 동적링크
+      await Share.share('${shareUrl}', subject: 'Prizm'); // 짧은 동적링크
     }
     // box!.localToGlobal(Offset.zero) & box.size);
   }

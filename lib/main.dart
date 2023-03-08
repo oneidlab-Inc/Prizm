@@ -33,23 +33,6 @@ void main() async {
   ]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // print(Firebase.apps.toString());
-
-  /*---------------------------- firebase -------------------------------
-  Firebase 버전 업데이트 없이 코드변경  아직 미완성
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  remoteConfig.setDefaults({"version" : "person['ARTIST']"});
-  await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-         fetchTimeout: const Duration(seconds: 30),
-         minimumFetchInterval: const Duration(seconds: 30)
-      )
-  );
-
-  await remoteConfig.fetchAndActivate();
-
-  String title = remoteConfig.getString("version");
-  print('version > $title');
-  --------------------------------------------------------------------*/
   runApp(
     MyApp(),
   );
@@ -67,7 +50,6 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key? key}) : super(key: key);
 
-  // static var Uri;
   static var appVersion;
   static var search;
   static var history;
@@ -123,16 +105,16 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
   
-  // Future<void> remoteconfig() async {
-  //   final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
-  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  //   var packageVersion = packageInfo.version;
-  //   remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
-  //   remoteConfig.fetchAndActivate();
-  //
-  //   String appVersion = remoteConfig.getString(MyApp.appVersion);
-  //   print(appVersion);
-  // }
+  Future<void> remoteconfig() async {
+    final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var packageVersion = packageInfo.version;
+    remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
+    remoteConfig.fetchAndActivate();
+
+    String appVersion = remoteConfig.getString(MyApp.appVersion);
+    print(appVersion);
+  }
   
   Future<void> initPlatformState() async {
     String? deviceId; //기기 uid
@@ -289,7 +271,7 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
-    //remoteconfig();
+    remoteconfig();
     fetchData(); // 고정url 받으면 활성화
     _launchUpdate();
     initPlatformState();
@@ -475,9 +457,12 @@ class _TabPageState extends State<TabPage> {
   }
 }
 
-void updateToast() {
+void updateToast() async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  var packageVersion = packageInfo.version;
+  var currentVersion = MyApp.appVersion == packageVersion;
   Fluttertoast.showToast(
-      msg: '업데이트를 위해 스토어로 이동합니다.',
+      msg: currentVersion ? '최신버전입니다.' : '업데이트를 위해 스토어로 이동합니다.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER);
