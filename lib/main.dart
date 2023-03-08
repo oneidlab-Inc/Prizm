@@ -289,6 +289,7 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
+    //remoteconfig();
     fetchData(); // 고정url 받으면 활성화
     _launchUpdate();
     initPlatformState();
