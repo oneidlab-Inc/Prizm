@@ -563,6 +563,7 @@ width: 10,
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
     var currentVersion = MyApp.appVersion == packageVersion;
+
     Uri _url = Uri.parse('');
     if (Platform.isAndroid) { //플레이 스토어 주소 입력
       _url = Uri.parse(currentVersion ? '' : /* Play Store Url */'');
@@ -585,18 +586,4 @@ width: 10,
           return TabPage();
         });
   }
-
-/*versionChange() async {    //firebase 필요시 적용
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    remoteConfig.setDefaults({"version": "1.0.0+1"});
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 30),
-        minimumFetchInterval: const Duration(seconds: 30)));
-
-    await remoteConfig.fetchAndActivate();
-
-    version = remoteConfig.getString("version");
-    print('version >>> $version');
-    // version1 = version;
-  }*/
 }

@@ -109,7 +109,7 @@ class _TabPageState extends State<TabPage> {
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
-    remoteConfig.setDefaults({MyApp.appVersion:packageVersion});
+    remoteConfig.setDefaults({'appVersion':packageVersion});
     remoteConfig.fetchAndActivate();
 
     String appVersion = remoteConfig.getString(MyApp.appVersion);
