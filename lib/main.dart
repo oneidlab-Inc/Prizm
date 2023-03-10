@@ -105,12 +105,10 @@ class _TabPageState extends State<TabPage> {
   var deviceData;
   var _deviceData;
 
-  //Firebase Remote Config에 키값, default value 게시 후 작동 버전 확인 후 스토어로 보내기
   Future<void> remoteconfig() async {
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
-    // var version = MyApp.appVersion;
     remoteConfig.setDefaults({'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
     await remoteConfig.setConfigSettings(
         RemoteConfigSettings(  // Fetch 될 시간 설정
@@ -120,19 +118,21 @@ class _TabPageState extends State<TabPage> {
     );
     await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
     String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
-/**
- *
- * appVersion = remoteConfig에서 변경가능한 값
- * packageVersion = 현재 설치되어있는 패키지의 버전
- *
- **/
+
+    /**
+     *  appVersion = remoteConfig에서 변경가능한 값
+     *  packageVersion = 현재 설치되어있는 패키지의 버전
+     *
+     *  Firebase의 RemoteConfig 에서 인앱 기본값 사용을 해제하고
+     *  Default Value에 변경하고 싶은 값을 입력
+     *
+     *  값 변경 후 꼭 '게시' 를 눌러야 적용됨
+     */
 
     MyApp.appVersion = appVersion;
     if (appVersion != packageVersion) {
       showDefaultDialog();
     }
-    print('appversion >>> ${MyApp.appVersion}');
-    print('packageVersion >>> $packageVersion');
   }
   
   Future<void> initPlatformState() async {
@@ -157,21 +157,6 @@ class _TabPageState extends State<TabPage> {
   }
 
 /*----------------------------------------------------------------------------------------------------*/
-
-  Future _launchUpdate() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var packageVersion = packageInfo.version;
-    MyApp.appVersion = packageVersion;
-
-    // _versionCheck.checkUpdatable(version);
-// 스토어 업로드 후 주소 받고 활성화
-
-// if (version == version) {
-//
-// showDefaultDialog();
-//
-// } else {}
-  }
 
   void showDefaultDialog() {
     showDialog(
@@ -224,14 +209,10 @@ class _TabPageState extends State<TabPage> {
                                 onPressed: () {
                                   Uri _url = Uri.parse('');
                                   if (Platform.isAndroid) {
-                                    // showDefaultDialog();
                                     updateToast();
-// _url = Uri.parse('http://www.naver.com');
-// _url = Uri.parse('http://www.oneidlab.kr/app_check.html');
-// 플레이스토어 주소 입력
+                                    _url = Uri.parse(/* 플레이스토어 주소 입력 */'');
                                   } else if (Platform.isIOS) {
-                                    // print('ios platform');
-                                    // showDefaultDialog();
+                                    _url = Uri.parse(/* 앱스토어 주소 입력 */'');
                                     updateToast();
                                   }
                                   try {
