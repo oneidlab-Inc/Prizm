@@ -109,11 +109,13 @@ class _TabPageState extends State<TabPage> {
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
-    remoteConfig.setDefaults({'appVersion':packageVersion});
+    remoteConfig.setDefaults({'appVersion':MyApp.appVersion});
     remoteConfig.fetchAndActivate();
 
-    String appVersion = remoteConfig.getString(MyApp.appVersion);
-    print(appVersion);
+    String appVersion = remoteConfig.getString('appVersion');
+    // MyApp.appVersion = appVersion;
+    print('appVersion >>>>>>>>> ${MyApp.appVersion}');
+    print('packageVersion >>>>>>>>> $packageVersion');
   }
   
   Future<void> initPlatformState() async {
@@ -271,9 +273,9 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
-    remoteconfig();
+    // remoteconfig();
     fetchData(); // 고정url 받으면 활성화
-    _launchUpdate();
+    // _launchUpdate();
     initPlatformState();
     super.initState();
   }
@@ -293,8 +295,7 @@ class _TabPageState extends State<TabPage> {
   void pageChanged(int index) {
     setState(() {
       _selectedIndex = index;
-      pageController.animateToPage(index,
-          duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);
       pageController.jumpToPage(_selectedIndex);
     });
   }
