@@ -1,11 +1,13 @@
 // --no-sound-null-safety
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:share_plus/share_plus.dart';
 import 'chart/chart_container.dart';
@@ -27,7 +29,22 @@ class Result extends StatefulWidget {
 
 class _Result extends State<Result> {
   String? _uid;
-  String shareUrl = 'https://oneidlab.page.link/prizm';
+  String url = 'https://oneidlab.page.link/prizm';
+  Future<void> remoteconfig() async{
+    final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
+
+    remoteConfig.setDefaults({'shareUrl' : url});
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+          fetchTimeout: const Duration(minutes: 1),
+          minimumFetchInterval: Duration.zero)
+    );
+    await remoteConfig.fetchAndActivate();
+
+    String shareUrl = remoteConfig.getString('shareUrl');
+
+    url = shareUrl;
+  }
 
   var maps;
   List programs = [];
@@ -174,8 +191,7 @@ class _Result extends State<Result> {
   Future<void> getLink() async {
     final dynamicLinkParams = DynamicLinkParameters(
       link: Uri.parse("https://oneidlab.page.link/"),
-      // uriPrefix: "https://oneidlab.page.link/prizm&apn=com.android.prizm",
-      uriPrefix: 'https://oneidlab.page.link/prizm/',
+      uriPrefix: 'https://oneidlab.page.link/prizm',
       androidParameters: const AndroidParameters(
         packageName: "com.oneidlab.prizm",
         minimumVersion: 28,
@@ -186,24 +202,11 @@ class _Result extends State<Result> {
       //   minimumVersion: "1.0.1",
       // ),
     );
-    // final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(
-    //     dynamicLinkParams);
-
-    // print('dynamicLinkParams >>> ${dynamicLinkParams.navigationInfoParameters}');
-    // print(
-    //     'packageName >>> ${dynamicLinkParams.androidParameters?.packageName}');
-    // print(
-    //     'navigationInfoParameters >>> ${dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled}');
-    // print(
-    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    // print(
-    //     'fallbackUrl >>> ${dynamicLinkParams.androidParameters?.fallbackUrl}');
-    // print('link >>> ${dynamicLinkParams.link}');
-    // print('dynamicLink >>> ${dynamicLinkParams.link.data}');
   }
 
   @override
   void initState() {
+    remoteconfig();
     logSetscreen();
     fetchData();
     getLink();
@@ -818,11 +821,11 @@ class _Result extends State<Result> {
 
     if (Platform.isIOS) {
       await Share.share(
-          '${shareUrl}ios',
+          '${url}ios',
           sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),
       );
     } else if (Platform.isAndroid) {
-      await Share.share('${shareUrl}', subject: 'Prizm'); // 짧은 동적링크
+      await Share.share('${url}', subject: 'Prizm'); // 짧은 동적링크
     }
     // box!.localToGlobal(Offset.zero) & box.size);
   }

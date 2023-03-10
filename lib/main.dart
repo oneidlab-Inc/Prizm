@@ -104,18 +104,35 @@ class _TabPageState extends State<TabPage> {
 
   var deviceData;
   var _deviceData;
-  
+
+  //Firebase Remote Config에 키값, default value 게시 후 작동 버전 확인 후 스토어로 보내기
   Future<void> remoteconfig() async {
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
-    remoteConfig.setDefaults({'appVersion':MyApp.appVersion});
-    remoteConfig.fetchAndActivate();
+    // var version = MyApp.appVersion;
+    remoteConfig.setDefaults({'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
+    await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(  // Fetch 될 시간 설정
+            fetchTimeout: const Duration(minutes: 1),
+            minimumFetchInterval: Duration.zero // 바로 Fetch
+        )
+    );
+    await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
+    String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
+/**
+ *
+ * appVersion = remoteConfig에서 변경가능한 값
+ * packageVersion = 현재 설치되어있는 패키지의 버전
+ *
+ **/
 
-    String appVersion = remoteConfig.getString('appVersion');
-    // MyApp.appVersion = appVersion;
-    print('appVersion >>>>>>>>> ${MyApp.appVersion}');
-    print('packageVersion >>>>>>>>> $packageVersion');
+    MyApp.appVersion = appVersion;
+    if (appVersion != packageVersion) {
+      showDefaultDialog();
+    }
+    print('appversion >>> ${MyApp.appVersion}');
+    print('packageVersion >>> $packageVersion');
   }
   
   Future<void> initPlatformState() async {
@@ -273,7 +290,7 @@ class _TabPageState extends State<TabPage> {
 
   @override
   void initState() {
-    // remoteconfig();
+    remoteconfig();
     fetchData(); // 고정url 받으면 활성화
     // _launchUpdate();
     initPlatformState();
