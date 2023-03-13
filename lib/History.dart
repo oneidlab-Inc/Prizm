@@ -81,7 +81,6 @@ class _History extends State<History> {
     }
 
     query = query.toLowerCase();
-    // print(query);
     List result = [];
     for (var p in song_info) {
       var title = p["TITLE"].toString().toLowerCase();
@@ -151,33 +150,26 @@ class _History extends State<History> {
     }
   }
 
-  /* ----------------------------------------------------- */
-
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     int len = song_info.length;
     final isExist = len == 0;
     SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
-
-    return WillPopScope(
+    return WillPopScope(  // willpop >> Android 뒤로가기 버튼 제어
         onWillPop: () async {
           return _onBackKey();
         },
         child: Scaffold(
             appBar: AppBar(
-              shape: Border(
-                  bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
-              title: Text(
-                '히스토리',
+              shape: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
+              title: Text('히스토리',
                 style: (isDarkMode
-                    ? const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)
-                    : const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
+                    ? const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                    : const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
+                ),
               ),
               centerTitle: true,
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -189,10 +181,7 @@ class _History extends State<History> {
                   icon: ImageIcon(Image.asset('assets/settings.png').image),
                   color: isDarkMode ? Colors.white : Colors.black,
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Settings()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
                   },
                 )
               ],
@@ -217,18 +206,24 @@ class _History extends State<History> {
                                 const Text('발견한 노래 ',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20)),
-                                Text('$len',
+                                        fontSize: 20
+                                    )
+                                ),
+                                Text(' $len',
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20)),
+                                        fontSize: 20
+                                    )
+                                ),
                                 const Text(' 곡',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20)),
+                                        fontSize: 20
+                                    )
+                                ),
                               ],
-                            )),
-                        // TextFormField(
+                            )
+                        ),
                         TextField(
                             controller: txtQuery,
                             inputFormatters: [
@@ -236,42 +231,34 @@ class _History extends State<History> {
                             ],
                             onChanged: search,
                             textInputAction: TextInputAction.search,
-                            // onFieldSubmitted: (value) {
-                            // print('text : ${txtQuery.text}');
-                            // },
                             decoration: InputDecoration(
                                 contentPadding:
                                     const EdgeInsets.symmetric(vertical: 20),
                                 labelText: '곡/가수/앨범명으로 검색해주세요',
                                 labelStyle: TextStyle(
-                                    color: isDarkMode
-                                        ? Colors.grey.withOpacity(0.8)
-                                        : Colors.black.withOpacity(0.2),
-                                    fontSize: 15),
+                                    fontSize: 15,
+                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2)
+                                ),
                                 enabledBorder: const OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                    borderSide:
-                                        BorderSide(color: Colors.greenAccent)),
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(color: Colors.greenAccent)),
                                 focusedBorder: const OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.greenAccent)),
-                                prefixIcon: const Icon(Icons.search,
-                                    color: Colors.greenAccent),
+                                    borderSide: BorderSide(color: Colors.greenAccent)),
+                                prefixIcon: const Icon(Icons.search, color: Colors.greenAccent),
                                 suffixIcon: txtQuery.text.isNotEmpty
                                     ? IconButton(
                                         icon: Icon(Icons.clear,
-                                            color: isDarkMode
-                                                ? Colors.grey.withOpacity(0.8)
-                                                : Colors.black
-                                                    .withOpacity(0.2)),
+                                            color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2)
+                                        ),
                                         onPressed: () async {
                                           txtQuery.text = '';
                                           search(txtQuery.text);
                                           await MyApp.analytics.logEvent(name: '히스토리 검색');
                                         },
                                       )
-                                    : null)),
+                                    : null
+                            )
+                        ),
                       ],
                     ),
                   ),
@@ -282,23 +269,23 @@ class _History extends State<History> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Center(
-                                child: Text(
-                                  '최근 검색 기록이 없습니다.',
+                                child: Text('최근 검색 기록이 없습니다.',
                                   style: TextStyle(
-                                      color: isDarkMode
-                                          ? Colors.white
-                                          : Colors.black,
+                                      color: isDarkMode ? Colors.white : Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 22),
+                                      fontSize: 22
+                                  ),
                                 ),
                               )
                             ],
                           ),
                         )
-                      : _listView(song_info, info)
+                      : _listView(song_info)
                 ],
               ),
-            )));
+            )
+        )
+    );
   }
 
   Future<bool> _onBackKey() async {
@@ -309,16 +296,14 @@ class _History extends State<History> {
         });
   }
 
-  Widget _listView(song_info, info) {
+  Widget _listView(song_info) {
     return Expanded(
         child: ListView.builder(
             itemCount: song_info == null ? 0 : song_info.length,
             itemBuilder: (context, index) {
               double c_width = MediaQuery.of(context).size.width;
-
               final info = song_info[index];
-              final isDarkMode =
-                  Theme.of(context).brightness == Brightness.dark;
+              final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               final isArtistNull = info['ARTIST'] == null;
               final isAlbumNull = info['ALBUM'] == null;
 
@@ -339,9 +324,7 @@ class _History extends State<History> {
                                   String Id = deviceId!;
                                   String title = info['TITLE'];
                                   String image = info['IMAGE'];
-                                  String artist = isArtistNull
-                                      ? 'Various Artists'
-                                      : info['ARTIST'];
+                                  String artist = isArtistNull ? 'Various Artists' : info['ARTIST'];
                                   String song_id = info['SONG_ID'];
                                   _songid = song_id;
                                   double c_width =
@@ -354,120 +337,83 @@ class _History extends State<History> {
                                     padding: const EdgeInsets.only(top: 14),
                                     decoration: BoxDecoration(
                                         color: isDarkMode
-                                            ? const Color.fromRGBO(
-                                                36, 36, 36, 1)
-                                            : const Color.fromRGBO(
-                                                250, 250, 250, 2),
+                                            ? const Color.fromRGBO(36, 36, 36, 1)
+                                            : const Color.fromRGBO(250, 250, 250, 2),
                                         borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10))),
+                                            topRight: Radius.circular(10)
+                                        )
+                                    ),
                                     child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Container(
                                             width: c_width,
                                             padding: const EdgeInsets.all(13),
                                             color: isDarkMode
-                                                ? const Color.fromRGBO(
-                                                    36, 36, 36, 1)
-                                                : const Color.fromRGBO(
-                                                    250, 250, 250, 2),
+                                                ? const Color.fromRGBO(36, 36, 36, 1)
+                                                : const Color.fromRGBO(250, 250, 250, 2),
                                             child: Row(
                                               children: [
                                                 Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10, bottom: 10),
+                                                    margin: EdgeInsets.only(left: 10, bottom: 10),
                                                     padding: EdgeInsets.all(1),
                                                     decoration: BoxDecoration(
                                                       color: isDarkMode
-                                                          ? const Color
-                                                                  .fromRGBO(
-                                                              189, 189, 189, 1)
-                                                          : Colors.black
-                                                              .withOpacity(0.3),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
+                                                          ? const Color.fromRGBO(189, 189, 189, 1)
+                                                          : Colors.black.withOpacity(0.3),
+                                                      borderRadius: BorderRadius.circular(8),
                                                     ),
                                                     child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        child:
-                                                            SizedBox.fromSize(
-                                                          child: Image.network(
-                                                            info['IMAGE'],
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        child: SizedBox.fromSize(
+                                                          child: Image.network(info['IMAGE'],
                                                             width: 90,
                                                             height: 90,
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
+                                                            errorBuilder: (context, error, stackTrace) {
                                                               return SizedBox(
                                                                 width: 90,
                                                                 height: 90,
-                                                                child: Image.asset(
-                                                                    'assets/no_image.png'),
+                                                                child: Image.asset('assets/no_image.png')
                                                               );
                                                             },
                                                           ),
-                                                        ))),
+                                                        )
+                                                    )
+                                                ),
                                                 Flexible(
                                                     child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                       SizedBox(
                                                         width: c_width * 0.55,
                                                         child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             Padding(
-                                                                padding: const EdgeInsets
-                                                                        .only(
-                                                                    left: 15),
+                                                                padding: const EdgeInsets.only(left: 15),
                                                                 child: RichText(
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
+                                                                    overflow: TextOverflow.ellipsis,
                                                                     maxLines: 2,
-                                                                    strutStyle: const StrutStyle(
-                                                                        fontSize:
-                                                                            18),
-                                                                    text: TextSpan(
-                                                                        text: info[
-                                                                            'TITLE'],
+                                                                    strutStyle: const StrutStyle(fontSize: 18),
+                                                                    text: TextSpan(text: info['TITLE'],
                                                                         style: TextStyle(
-                                                                            fontWeight: FontWeight
-                                                                                .bold,
-                                                                            fontSize:
-                                                                                18,
-                                                                            color: isDarkMode
-                                                                                ? Colors.white
-                                                                                : Colors.black)))),
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 18,
+                                                                            color: isDarkMode ? Colors.white : Colors.black)
+                                                                    )
+                                                                )
+                                                            ),
                                                             Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 20,
-                                                                      top: 10),
+                                                              padding: const EdgeInsets.only(left: 20, top: 10),
                                                               child: Text(
-                                                                  isArtistNull
-                                                                      ? 'Various Artists'
-                                                                      : info[
-                                                                          'ARTIST'],
+                                                                  isArtistNull ? 'Various Artists' : info['ARTIST'],
                                                                   style: TextStyle(
                                                                       color: isDarkMode
-                                                                          ? Colors.grey.withOpacity(
-                                                                              0.8)
-                                                                          : Colors.black.withOpacity(
-                                                                              0.4)),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis),
+                                                                          ? Colors.grey.withOpacity(0.8)
+                                                                          : Colors.black.withOpacity(0.4)
+                                                                  ),
+                                                                  overflow: TextOverflow.ellipsis),
                                                             ),
                                                           ],
                                                         ),
@@ -475,15 +421,8 @@ class _History extends State<History> {
                                                       SizedBox(
                                                         width: c_width * 0.05,
                                                         child: IconButton(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    bottom: 80),
-                                                            icon: ImageIcon(
-                                                                Image.asset(
-                                                                        'assets/x_icon.png')
-                                                                    .image,
-                                                                size: 15),
+                                                            padding: const EdgeInsets.only(bottom: 80),
+                                                            icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
                                                             color: isDarkMode
                                                                 ? Colors.white
                                                                 : Colors.grey,
