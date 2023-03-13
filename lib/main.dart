@@ -32,24 +32,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // print(Firebase.apps.toString());
 
-  /*---------------------------- firebase -------------------------------
-  Firebase 버전 업데이트 없이 코드변경  아직 미완성
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  remoteConfig.setDefaults({"version" : "person['ARTIST']"});
-  await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-         fetchTimeout: const Duration(seconds: 30),
-         minimumFetchInterval: const Duration(seconds: 30)
-      )
-  );
-
-  await remoteConfig.fetchAndActivate();
-
-  String title = remoteConfig.getString("version");
-  print('version > $title');
-  --------------------------------------------------------------------*/
   runApp(
     MyApp(),
   );
@@ -67,7 +50,6 @@ class MyApp extends StatelessWidget {
 
   MyApp({Key? key}) : super(key: key);
 
-  // static var Uri;
   static var appVersion;
   static var search;
   static var history;
