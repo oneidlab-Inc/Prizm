@@ -114,6 +114,9 @@ class _Terms extends State<Terms> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if(!mounted) {
+      return;
+    }
     switch (result) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:

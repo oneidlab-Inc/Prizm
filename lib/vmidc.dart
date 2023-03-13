@@ -12,11 +12,17 @@ import 'package:logger/logger.dart';
 import 'Notfound_bottom.dart';
 import 'wavbuf.dart';
 
-final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android
+// final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android
 // final DynamicLibrary nativeLib = DynamicLibrary.process(); //IOS
 
-int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna =
-      nativeLib.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
+final DynamicLibrary nativeLibAnd = DynamicLibrary.open('libnative.so');
+final DynamicLibrary nativeLibIos = DynamicLibrary.process();
+
+final platform = Platform.isAndroid == true;
+
+int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna = platform
+      ? nativeLibAnd.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction()
+      : nativeLibIos.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
 
 const srate = 22050;
 const pcmLen = 74656; //3.39sec
@@ -107,7 +113,7 @@ class VMIDC {
 
   /* ============== context 없이 화면 이동 하기위해 main.dart와 key로 연결 ============== */
   static final GlobalKey<NavigatorState> navigatorState = GlobalKey<NavigatorState>();
-  /* ============================================================================ */
+  /* =============================================================================== */
 
   Future<bool> stop() async {
 
@@ -162,7 +168,7 @@ class VMIDC {
     for (int i = 0; i < len; i++) msg[6 + i] = _dna[i];
     _sock.add(msg);
     print("sendQuery");
-    Timer(const Duration(seconds: 10), () {
+    Timer(const Duration(seconds: 10), () { // 검색 10 초 후 중지
       stop();
     });
   }

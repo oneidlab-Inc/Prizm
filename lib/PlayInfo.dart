@@ -48,11 +48,12 @@ class _PlayInfo extends State<PlayInfo> {
 
   fetchData() async {
 
+    if(!mounted) return;
+
     http.Response response = await http.get(
       Uri.parse('http://${MyApp.search}/json?id=${widget.song_id}')
     );
 
-    print(MyApp.search);
     statuscode = response.statusCode;
     try {
 
@@ -70,14 +71,10 @@ class _PlayInfo extends State<PlayInfo> {
     }
   }
 
-  final duplicateItems =
-  List<String>.generate(1000, (i) => "$Container(child:Text $i)");
-  var items = <String>[];
 
   @override
   void initState() {
     logSetscreen();
-    items.addAll(duplicateItems);
     fetchData();
     super.initState();
   }

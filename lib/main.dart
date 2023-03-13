@@ -108,15 +108,15 @@ class _TabPageState extends State<TabPage> {
   Future<void> remoteconfig() async {
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    var packageVersion = packageInfo.version;
+    var packageVersion = packageInfo.version;   // Project level 의 pubspec.yaml 상단 version : 변경
     remoteConfig.setDefaults({'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
     await remoteConfig.setConfigSettings(
         RemoteConfigSettings(  // Fetch 될 시간 설정
-            fetchTimeout: const Duration(minutes: 1),
-            minimumFetchInterval: Duration.zero // 바로 Fetch
+            fetchTimeout: const Duration(seconds: 30),
+            minimumFetchInterval: Duration.zero // Duration 없이 Fetch
         )
     );
-    await remoteConfig.fetchAndActivate(); // Fetch 되자마자 Activate
+    await remoteConfig.fetchAndActivate();  // Fetch
     String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
 
     /**
@@ -141,12 +141,13 @@ class _TabPageState extends State<TabPage> {
       deviceId = await PlatformDeviceId.getDeviceId;
     } on PlatformException {
       deviceId = '디바이스 정보 추출 실패';
+      rethrow;
     }
     if (!mounted) return;
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidDevice = await deviceInfoPlugin.androidInfo;
 
-      deviceData = androidDevice.displayMetrics.widthPx; //withPx 정보
+      deviceData = androidDevice.displayMetrics.widthPx; //화면 widthPx
     } else if (Platform.isIOS) {
       var iosInfo = await deviceInfoPlugin.iosInfo;
       deviceIdentifier = iosInfo.identifierForVendor!;
@@ -288,6 +289,9 @@ class _TabPageState extends State<TabPage> {
   }
 
   void pageChanged(int index) {
+    if(!mounted) {
+      return;
+    }
     setState(() {
       _selectedIndex = index;
       pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);

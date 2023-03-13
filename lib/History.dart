@@ -133,6 +133,9 @@ class _History extends State<History> {
   void filterSearchResults(String query) {
     List<String> SearchList = <String>[];
     SearchList.addAll(duplicateItems);
+    if(!mounted) {
+      return;
+    }
     if (query.isNotEmpty) {
       List<String> ListData = <String>[];
       SearchList.forEach((item) {
@@ -843,6 +846,9 @@ class _History extends State<History> {
                                   failToast();
                                   // print(response.statusCode);
                                   throw "failed to delete history";
+                                }
+                                if(!mounted){
+                                  return;
                                 }
                                 setState(() {
                                   Navigator.push(

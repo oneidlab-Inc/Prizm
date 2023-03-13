@@ -116,6 +116,9 @@ class _Private extends State<Private> {
     );
   }
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if(!mounted) {
+      return;
+    }
     switch (result) {
       case ConnectivityResult.mobile:
       case ConnectivityResult.wifi:

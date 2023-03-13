@@ -16,9 +16,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Result extends StatefulWidget {
-  late final String id;
+  final String id;
 
-  Result({
+  const Result({
     Key? key,
     required this.id,
   }) : super(key: key);
@@ -28,7 +28,6 @@ class Result extends StatefulWidget {
 }
 
 class _Result extends State<Result> {
-  String? _uid;
   String url = 'https://oneidlab.page.link/prizm';
   Future<void> remoteconfig() async{
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
@@ -70,10 +69,12 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
+    if(!mounted) {
+      return;
+    }
 
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
-    // var deviceIdentifier = 'unknown';
     try {
       if (Platform.isAndroid) {
         _uid = await PlatformDeviceId.getDeviceId;
@@ -108,19 +109,17 @@ class _Result extends State<Result> {
       http.Response response = await http.get(
           Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
     );
       String jsonData = response.body;
 
       programs = jsonDecode(jsonData.toString());
       setState(() {});
     } catch (e) {
-      // print('fail to get json');
-      print(e);
+      rethrow;
     }
 
     try {
-      List _contain = []; // 실데이타 파싱
+      List contain = []; // 실데이터 파싱
       sum = 0;
       for (int i = 0; i <= song_cnts.length - 1; i++) {
         intX = int.parse(song_cnts[i]['F_MONTH'].toString());
@@ -129,7 +128,7 @@ class _Result extends State<Result> {
         listY.add(intY);
         listX.sort();
         listY.sort();
-        _contain.add(song_cnts[i]['F_MONTH'].toString());
+        contain.add(song_cnts[i]['F_MONTH'].toString());
         for (var y = 0; y < listY.length; y++) {
           sum += listY[y];
         }
@@ -141,24 +140,23 @@ class _Result extends State<Result> {
       var _month;
       var _year;
 
-//차트 x 축 기준 만들기
-      for (var i = 1; i < 13; i++) {
+      for (var i = 1; i < 13; i++) {  //차트 x 축 기준
         _dateTime = DateTime(now.year, now.month - i, 1);
         _month = DateFormat('MM').format(_dateTime);
         _year = DateFormat('yyyy').format(_dateTime);
         _dateList.add(_year + _month);
       }
-      List _reverse = List.from(_dateList.reversed);
+      List reverse = List.from(_dateList.reversed);
 
 // 현재월
 // 차트 실데이터 파싱
-      for (int j = 0; j < _reverse.length; j++) {
+      for (int j = 0; j < reverse.length; j++) {
 //없는 월 제외
         double mon = double.parse(j.toString()) + 1;
 
         FlSpotDataAll.insert(j, FlSpot(mon, 0));
         for (int jj = 0; jj < song_cnts.length; jj++) {
-          if (song_cnts[jj]['F_MONTH'].toString() == _reverse[j]) {
+          if (song_cnts[jj]['F_MONTH'].toString() == reverse[j]) {
             cnt = double.parse(song_cnts[jj]['CTN']);
             FlSpotDataAll.removeAt(j);
             FlSpotDataAll.insert(j, FlSpot(mon, cnt));
@@ -167,8 +165,7 @@ class _Result extends State<Result> {
       }
       FlSpotDataAll.removeWhere((items) => items.props.contains(0.0));
     } catch (e) {
-      print('fail to make FlSpotData');
-      print(e);
+      rethrow;
     }
   }
 
@@ -204,7 +201,7 @@ class _Result extends State<Result> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isCNTS = song_cnts.length > 3;
-    final isExist = programs.length == 0;
+    final isExist = programs.isEmpty;
     final isArtistNull = maps['ARTIST'] == null;
     final isAlbumNull = maps['ALBUM'] == null;
     final isImage = maps['IMAGE'].toString().startsWith('assets') != true;

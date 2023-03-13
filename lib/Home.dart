@@ -258,7 +258,6 @@ class _Home extends State<Home> {
                               } else if (status == PermissionStatus.denied) {
                                 PermissionToast();
                                 requestMicPermission(context);
-                                // print('status >> $status');
                                 Permission.microphone.request();
                                 return;
                               }
@@ -269,6 +268,7 @@ class _Home extends State<Home> {
                               } else if (await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false) {
                                 _vmidc.start();
                                 await MyApp.analytics.logEvent(name: 'vmidc_start', parameters: null);
+                                if(mounted){
                                 setState(() {
                                   settingIcon = ImageIcon(
                                     Image.asset('assets/settings.png').image,
@@ -294,7 +294,7 @@ class _Home extends State<Home> {
                                   _background = const ColorFilter.mode(
                                       Colors.transparent, BlendMode.color);
                                 });
-
+                                }
                                 if (_vmidc.isRunning() == true) {
                                   _vmidc.stop();
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
@@ -437,6 +437,7 @@ class _Home extends State<Home> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if(mounted) {
     switch (result) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
@@ -445,6 +446,7 @@ class _Home extends State<Home> {
         break;
       default:
         setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.');
+      }
     }
   }
 
@@ -453,7 +455,7 @@ class _Home extends State<Home> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      print(e.toString());
+      rethrow;
     }
     if (!mounted) {
       return Future.value(null);
