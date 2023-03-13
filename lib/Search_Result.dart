@@ -979,17 +979,3 @@ class _Result extends State<Result> {
     return result;
   }
 }
-
-void avocado() {
-  var milk;
-  var avocado;
-  if(avocado == true) { //아보카도 있어?
-    milk == 6; //있어서 우유 6개
-  } else if(milk == true) { // 우유 사와
-    if(avocado == true) { // 아보카도 있어?
-      avocado == 6; // 있으니까 6개
-    } else {
-      avocado == 0;
-    }
-  }
-}
