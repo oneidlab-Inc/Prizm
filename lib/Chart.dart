@@ -12,6 +12,8 @@ import 'package:http/http.dart' as http;
 import 'main.dart';
 
 class Chart extends StatefulWidget {
+  const Chart({super.key});
+
   @override
   _Chart createState() => _Chart();
 }

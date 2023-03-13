@@ -15,6 +15,8 @@ import 'Settings.dart';
 import 'main.dart';
 
 class History extends StatefulWidget {
+  const History({super.key});
+
   @override
   _History createState() => _History();
 }
@@ -28,8 +30,6 @@ class _History extends State<History> {
 
   String? _deviceId;
   String? uid;
-
-  // var history = MyApp.Uri['history'];
 
   Future<void> initPlatformState() async {
     String? deviceId;
@@ -47,29 +47,26 @@ class _History extends State<History> {
     });
   }
 
-  static RegExp basicReg = (RegExp(
-      r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-]'));
+  static RegExp basicReg = (
+      RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-]')
+  );
   List song_info = [];
   List original = [];
   List info = [];
-  List song_id = [];
   String _songid = '';
 
   fetchData() async {
     _deviceId = await PlatformDeviceId.getDeviceId;
 
     try {
-      http.Response response =
-          await http.get(Uri.parse('http://${MyApp.history}/json?uid=$uid'));
-      // print(MyApp.history);
+      http.Response response = await http.get(Uri.parse('http://${MyApp.history}/json?uid=$uid'));
       String jsonData = response.body;
       song_info = jsonDecode(jsonData.toString());
       original = song_info;
       setState(() {});
     } catch (e) {
       NetworkToast();
-      // print('실패');
-      print(e);
+      rethrow;
     }
   }
 
@@ -87,7 +84,6 @@ class _History extends State<History> {
     // print(query);
     List result = [];
     for (var p in song_info) {
-      // print('검색결과  : ' + p['TITLE']);
       var title = p["TITLE"].toString().toLowerCase();
       var artist = p["ARTIST"].toString().toLowerCase();
       var album = p['ALBUM'].toString().toLowerCase();
@@ -101,7 +97,6 @@ class _History extends State<History> {
     }
 
     song_info = result;
-    // print('검색결과 : $result');
     setState(() {});
   }
 
