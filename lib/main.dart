@@ -110,13 +110,14 @@ class _TabPageState extends State<TabPage> {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;   // Project level 의 pubspec.yaml 상단 version : 변경
     remoteConfig.setDefaults({'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
-    await remoteConfig.setConfigSettings(
-        RemoteConfigSettings(  // Fetch 될 시간 설정
+    await remoteConfig.setConfigSettings(  // Fetch 될 시간 설정
+        RemoteConfigSettings(
             fetchTimeout: const Duration(seconds: 30),
             minimumFetchInterval: Duration.zero // Duration 없이 Fetch
         )
     );
     await remoteConfig.fetchAndActivate();  // Fetch
+
     String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
 
     /**

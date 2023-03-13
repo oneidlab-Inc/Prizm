@@ -26,28 +26,25 @@ class _Home extends State<Home> {
     await MyApp.analytics.setCurrentScreen(screenName: 'Home');
   }
 
-  // Future<void> recordCount() async {
-  //   await MyApp.analytics.logEvent(name: 'vmidc.start');
-  // }
-
   String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
-  // var brightness;
   final double _size = 220;
 
   final VMIDC _vmidc = VMIDC();
   final _ctrl = StreamController<List>();
   String _id = '';
 
-  late dynamic _background =
-      const ColorFilter.mode(Colors.transparent, BlendMode.clear);
+  late dynamic _background = const ColorFilter.mode(Colors.transparent, BlendMode.clear);
 
   late var settingIcon = ImageIcon(Image.asset('assets/settings.png').image);
-  late var x_icon = ImageIcon(Image.asset('assets/x_icon.png',).image);
-  // late var x_icon = Image.asset('assets/x_icon', width: 20);
+  late var x_icon = ImageIcon(Image.asset('assets/x_icon.png').image);
 
+
+  /*
+   * 하단 RichText 에서 삼항연산자로 활용하기위해 TextSpan 미리 정의
+   */
   late TextSpan _textSpan_light = const TextSpan(children: [
     TextSpan(
         text: '지금 이 곡을 찾으려면 ',
@@ -57,9 +54,12 @@ class _Home extends State<Home> {
         style: TextStyle(
             color: Color.fromRGBO(43, 226, 193, 1),
             fontSize: 17,
-            fontWeight: FontWeight.bold)),
+            fontWeight: FontWeight.bold
+        )
+    ),
     TextSpan(
-        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)),
+        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)
+    ),
   ]);
 
   late TextSpan _textSpan_dark = const TextSpan(children: [
@@ -76,49 +76,14 @@ class _Home extends State<Home> {
         text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.white)),
   ]);
 
-  /*late TextSpan _textSpan = MyApp.themeNotifier.value == ThemeMode.light
-      ? const TextSpan(
-      children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.black)),
-    TextSpan(
-        text: '프리즘 ',
-        style: TextStyle(
-            color: Color.fromRGBO(43, 226, 193, 1),
-            fontSize: 17,
-            fontWeight: FontWeight.bold)),
-    TextSpan(
-        text: '을 눌러주세요!',
-        style: TextStyle(fontSize: 17, color: Colors.black)),
-  ])
-      : const TextSpan(children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.white)),
-    TextSpan(
-        text: '프리즘 ',
-        style: TextStyle(
-            color: Color.fromRGBO(43, 226, 193, 1),
-            fontSize: 17,
-            fontWeight: FontWeight.bold)),
-    TextSpan(
-        text: '을 눌러주세요!',
-        style: TextStyle(fontSize: 17, color: Colors.white)),
-  ]);
-*/
-/*--------------------------------------------------------------*/
 
   @override
   void initState() {
     logSetscreen();
     Permission.microphone.request();
     initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    _vmidc
-        .init(ip: '222.122.131.220', port: 8551, sink: _ctrl.sink)
-        .then((ret) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _vmidc.init(ip: '222.122.131.220', port: 8551, sink: _ctrl.sink).then((ret) {   //ip, port 번호 변경시 여기만 변경
       if (!ret) {
         print('server error');
       } else {
@@ -129,7 +94,6 @@ class _Home extends State<Home> {
             _id = 'error';
           }
           await _vmidc.stop();
-          // print('_vmidc.isRuning() : ${_vmidc.isRunning()}');
           setState(() {});
         });
       }
@@ -145,16 +109,17 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(
-        //상단 상태바 제거
+    SystemChrome.setEnabledSystemUIMode( //상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
-    SystemChrome.setSystemUIOverlayStyle(// 상태바 색 설정
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
+    // 상태바 색 설정
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final leadingTransparent = settingIcon.color != const Color(0x00000000);
+    // final leadingTransparent = settingIcon.color != const Color(0x00000000);
     final isTransParents = settingIcon.color == const Color(0x00000000);
     final isPad = c_width > 550;
     final isFlip = c_height > 800;
@@ -175,14 +140,18 @@ class _Home extends State<Home> {
               height: 25,
             ),
             leading: IconButton(
-              icon: Image.asset('assets/x_icon.png', width: 20,
-                  color: isTransParents ? isDarkMode ?Colors.white : Colors.grey : Colors.transparent),
+              icon: Image.asset('assets/x_icon.png',
+                  width: 20,
+                  color: isTransParents  // Setting Icon 색에 따라 leading Icon 투명화
+                      ? isDarkMode
+                         ? Colors.white
+                         : Colors.grey
+                      : Colors.transparent
+              ),
               splashColor: Colors.transparent,
               onPressed: () {
                 _vmidc.stop();
-                isTransParents
-                    ? Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()))
-                    : const Text('');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
               },
             ),
             actions: [
@@ -194,7 +163,8 @@ class _Home extends State<Home> {
                 onPressed: () {
                   // print(settingIcon.color);
                   isTransParents
-                      ? const Text('')
+                      ? null
+                  // const Text('')
                       : Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings()));
                 },
               )
@@ -267,7 +237,7 @@ class _Home extends State<Home> {
                                 return;
                               } else if (await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false) {
                                 _vmidc.start();
-                                await MyApp.analytics.logEvent(name: 'vmidc_start', parameters: null);
+                                await MyApp.analytics.logEvent(name: 'vmidc_start');
                                 if(mounted){
                                 setState(() {
                                   settingIcon = ImageIcon(

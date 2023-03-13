@@ -119,12 +119,12 @@ class VMIDC {
 
     if (!_recorder.isRecording) return false;
 
-    if (_id != null && _score! >= 35) { //35점 기준으로 하였으나 추후 변경 가능성 높음
-      String id = _id!;
+    if (_id != null && _score! >= 35) {  //35점 기준으로 하였으나 상황보고 조정
+      // String id = _id!;
       HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
-      navigatorState.currentState?.push(//얻어온 context로 id값 가지고 push
-          MaterialPageRoute(builder: (context) => Result(id: id)));
-
+      navigatorState.currentState?.push(  //얻어온 context 로 id값 가지고 push
+          MaterialPageRoute(builder: (context) => Result(id: _id!)));
+    //  MaterialPageRoute(builder: (context) => Result(id: id)));
     } else {
       print('NOT FOUND');
       HapticFeedback.vibrate();

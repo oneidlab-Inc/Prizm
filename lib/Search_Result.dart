@@ -31,7 +31,6 @@ class _Result extends State<Result> {
   String url = 'https://oneidlab.page.link/prizm';
   Future<void> remoteconfig() async{
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
-
     remoteConfig.setDefaults({'shareUrl' : url});
     await remoteConfig.setConfigSettings(
       RemoteConfigSettings(
@@ -148,17 +147,16 @@ class _Result extends State<Result> {
       }
       List reverse = List.from(_dateList.reversed);
 
-// 현재월
-// 차트 실데이터 파싱
+      // 현재월
+      // 차트 실데이터 파싱
       for (int j = 0; j < reverse.length; j++) {
-//없는 월 제외
         double mon = double.parse(j.toString()) + 1;
-
         FlSpotDataAll.insert(j, FlSpot(mon, 0));
+
         for (int jj = 0; jj < song_cnts.length; jj++) {
           if (song_cnts[jj]['F_MONTH'].toString() == reverse[j]) {
             cnt = double.parse(song_cnts[jj]['CTN']);
-            FlSpotDataAll.removeAt(j);
+            FlSpotDataAll.removeAt(j); //없는 월 제외
             FlSpotDataAll.insert(j, FlSpot(mon, cnt));
           }
         }

@@ -273,9 +273,7 @@ class _History extends State<History> {
                                         onPressed: () async {
                                           txtQuery.text = '';
                                           search(txtQuery.text);
-                                          await MyApp.analytics.logEvent(
-                                              name: '히스토리 검색',
-                                              parameters: null);
+                                          await MyApp.analytics.logEvent(name: '히스토리 검색');
                                         },
                                       )
                                     : null)),

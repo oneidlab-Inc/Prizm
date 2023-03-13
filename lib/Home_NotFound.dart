@@ -16,7 +16,7 @@ class _NotFound extends State<NotFound> {
 
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '검색 실패');
-    await MyApp.analytics.logEvent(name: 'NotFound', parameters: null);
+    await MyApp.analytics.logEvent(name: 'NotFound');
   }
 
   final VMIDC _vmidc = VMIDC();
