@@ -174,9 +174,7 @@ class _TabPageState extends State<TabPage> {
                 height: c_height * 0.18,
                 width: c_width * 0.8,
                 margin: const EdgeInsets.only(top: 20, bottom: 20),
-                color: isDarkMode
-                    ? const Color.fromRGBO(66, 66, 66, 1)
-                    : Colors.white,
+                color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,

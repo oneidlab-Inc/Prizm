@@ -70,12 +70,10 @@ class _Result extends State<Result> {
   var avgY;
 
   void fetchData() async {
-    // var search = MyApp.Uri['search'];
-    // var program = MyApp.Uri['programs'];
 
     String? _uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
-    var deviceIdentifier = 'unknown';
+    // var deviceIdentifier = 'unknown';
     try {
       if (Platform.isAndroid) {
         _uid = await PlatformDeviceId.getDeviceId;
@@ -85,16 +83,13 @@ class _Result extends State<Result> {
       }
     } on PlatformException {
       _uid = 'Failed to get Id';
+      rethrow;
     }
-    // _uid = await PlatformDeviceId.getDeviceId;
-    // print('uid : $_uid');
 
 // json for title album artist
 
     try {
       http.Response response = await http.get(
-          // Uri.parse('${MyApp.Uri}get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
       Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$_uid'));
       String jsonData = response.body;
@@ -102,11 +97,9 @@ class _Result extends State<Result> {
 
       maps = map;
       song_cnts = maps['song_cnts'];
-
       setState(() {});
     } catch (e) {
-      // print('json 가져오기 실패');
-      print(e);
+      rethrow;
     }
 
 //json for program list
@@ -181,27 +174,6 @@ class _Result extends State<Result> {
 
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '검색결과');
-    await MyApp.analytics.logEvent(name: 'Title', parameters: maps['TITLE']);
-  }
-
-  final duplicateItems =
-      List<String>.generate(1000, (i) => "$Container(child:Text $i)");
-  var items = <String>[];
-
-  Future<void> getLink() async {
-    final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://oneidlab.page.link/"),
-      uriPrefix: 'https://oneidlab.page.link/prizm',
-      androidParameters: const AndroidParameters(
-        packageName: "com.oneidlab.prizm",
-        minimumVersion: 28,
-      ),
-      // iosParameters: const IOSParameters(
-      //   bundleId: "com.example.app.ios",
-      //   appStoreId: "123456789",
-      //   minimumVersion: "1.0.1",
-      // ),
-    );
   }
 
   @override
@@ -209,14 +181,11 @@ class _Result extends State<Result> {
     remoteconfig();
     logSetscreen();
     fetchData();
-    // getLink();
     super.initState();
   }
 
   @override
   void dispose() {
-    print('dispose');
-    line_chart(song_cnts);
     super.dispose();
   }
 
@@ -232,8 +201,8 @@ class _Result extends State<Result> {
         // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.top]);
-    double c_height = MediaQuery.of(context).size.height * 1.0;
-    double c_width = MediaQuery.of(context).size.width * 1.0;
+    double c_height = MediaQuery.of(context).size.height;
+    double c_width = MediaQuery.of(context).size.width;
     final isCNTS = song_cnts.length > 3;
     final isExist = programs.length == 0;
     final isArtistNull = maps['ARTIST'] == null;
@@ -244,9 +213,6 @@ class _Result extends State<Result> {
     final isUltra = c_height > 1000;
     final isPlus = 1000 < c_height && 1300 >= c_height && c_width > 500;
     final isNormal = c_height < 850;
-    // print('height = ${c_height.toInt()}');
-    // print('width = ${c_width.toInt()}');
-    // print('height / width = ${c_height / c_width} ');
     return WillPopScope(
       onWillPop: () async {
         return _onBackKey();
@@ -278,7 +244,7 @@ class _Result extends State<Result> {
                                       ),
                                     );
                                   },
-                                )) // << flip
+                                ))
                               : isPad
                                   ? SizedBox(
                                       child: Image.network(
@@ -384,51 +350,29 @@ class _Result extends State<Result> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
-                                    icon:
-                                        const Icon(Icons.arrow_back_ios_sharp),
+                                    icon: const Icon(Icons.arrow_back_ios_sharp),
                                     color: isImage
-                                        ? isDarkMode
-                                            ? Colors.white
-                                            : Colors.black
-                                        : isPad
-                                            ? isDarkMode
-                                                ? Colors.white
-                                                : Colors.black
-                                            : isDarkMode
-                                                ? Colors.black
-                                                : Colors.black,
+                                        ? isDarkMode ? Colors.white : Colors.black
+                                        : isPad ? isDarkMode ? Colors.white : Colors.black
+                                                : isDarkMode ? Colors.black : Colors.black, // 폴드, 패드, 탭에서 이용시 앨범사진 양 옆 공간이 남아서 블랙으로 고정
                                     onPressed: () {
                                       Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => TabPage()),
+                                        context, MaterialPageRoute(builder: (context) => TabPage()),
                                       );
                                     },
                                   ),
                                   IconButton(
-                                    icon: const Icon(
-                                      Icons.share_outlined,
-                                      size: 30,
-                                    ),
+                                    icon: const Icon(Icons.share_outlined, size: 30),
                                     color: isImage
-                                        ? isDarkMode
-                                            ? Colors.white
-                                            : Colors.black
+                                        ? isDarkMode ? Colors.white : Colors.black
                                         : isPad
-                                            ? isDarkMode
-                                                ? Colors.white
-                                                : Colors.black
-                                            : isDarkMode
-                                                ? Colors.black
-                                                : Colors.black,
+                                            ? isDarkMode ? Colors.white : Colors.black
+                                            : isDarkMode ? Colors.black : Colors.black,
                                     onPressed: () async {
-                                      await MyApp.analytics.logEvent(
-                                          name: 'ShareButton',
-                                          parameters: null);
+                                      await MyApp.analytics.logEvent(name: 'ShareButton');
                                       _onShare(context);
                                     },
                                   )
@@ -436,7 +380,6 @@ class _Result extends State<Result> {
                               ),
                               Container(
                                   margin: EdgeInsets.only(top: isPad ? 500 : 400),
-                                  // margin: EdgeInsets.only(top:400),
                                   width: c_width * 0.9,
                                   child: RichText(
                                     overflow: TextOverflow.ellipsis,
@@ -449,12 +392,12 @@ class _Result extends State<Result> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 30,
                                             overflow: TextOverflow.ellipsis,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : Colors.black),
+                                            color: isDarkMode ? Colors.white : Colors.black
+                                        ),
                                       )
                                     ]),
-                                  )),
+                                  )
+                              ),
                               Container(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Row(
@@ -463,40 +406,26 @@ class _Result extends State<Result> {
                                           child: RichText(
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
-                                        strutStyle:
-                                            const StrutStyle(fontSize: 17),
+                                        strutStyle: const StrutStyle(fontSize: 17),
                                         text: TextSpan(children: [
                                           TextSpan(
-                                            text: isArtistNull
-                                                ? 'Various Artist'
-                                                : maps['ARTIST'],
+                                            text: isArtistNull ? 'Various Artist' : maps['ARTIST'],
                                             style: TextStyle(
                                               fontSize: 17,
-                                              color: isDarkMode
-                                                  ? Colors.white
-                                                  : Colors.black,
+                                              color: isDarkMode ? Colors.white : Colors.black,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           TextSpan(
                                               text: ' · ',
                                               style: TextStyle(
-                                                  color: isDarkMode
-                                                      ? Colors.grey
-                                                      : Colors.black
-                                                          .withOpacity(0.4),
+                                                  color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4),
                                                   fontSize: 17)),
                                           TextSpan(
-                                            text: isAlbumNull
-                                                ? 'Various Album'
-                                                : maps['ALBUM'],
+                                            text: isAlbumNull ? 'Various Album' : maps['ALBUM'],
                                             style: TextStyle(
-                                                color: isDarkMode
-                                                    ? Colors.grey
-                                                    : Colors.black
-                                                        .withOpacity(0.4),
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 17),
+                                                color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4),
+                                                overflow: TextOverflow.ellipsis, fontSize: 17),
                                           )
                                         ]),
                                       ))
@@ -508,17 +437,13 @@ class _Result extends State<Result> {
                                   children: [
                                     Container(
                                       margin: const EdgeInsets.only(right: 20),
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 5),
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: const Color.fromRGBO(
-                                              51, 211, 180, 1)),
+                                          borderRadius: BorderRadius.circular(20),
+                                          color: const Color.fromRGBO(51, 211, 180, 1)),
                                       child: Text(
                                         '${maps['date']}',
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                        style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     Image.asset('assets/result_search.png',
@@ -527,8 +452,7 @@ class _Result extends State<Result> {
                                         style: const TextStyle(
                                             color: Colors.grey,
                                             overflow: TextOverflow.ellipsis)),
-                                    const Text('회',
-                                        style: TextStyle(color: Colors.grey))
+                                    const Text('회', style: TextStyle(color: Colors.grey))
                                   ],
                                 ),
                               ),
@@ -546,9 +470,8 @@ class _Result extends State<Result> {
                               color: isDarkMode ? Colors.black : Colors.white,
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                               child: const Text('최신 방송 재생정보',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20)),
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+                              ),
                             ),
                             SizedBox(
                                 height: 250,
@@ -557,30 +480,22 @@ class _Result extends State<Result> {
                                         ? Center(
                                             child: Text('최신 방송 재생정보가 없습니다.',
                                                 style: TextStyle(
-                                                    color: isDarkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
+                                                    color: isDarkMode ? Colors.white : Colors.black,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 20)))
-                                        : Row(
-                                            children: [_listView(programs)],
+                                        : Row(children: [_listView(programs)],
                                           ))),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                     margin: const EdgeInsets.only(bottom: 30),
-                                    child: const Text(
-                                      '프리즘차트',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
+                                    child: const Text('프리즘차트',
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                                     )),
                                 isCNTS
                                     ? ChartContainer(
-                                        color: isDarkMode
-                                            ? Colors.black
-                                            : Colors.white,
+                                        color: isDarkMode ? Colors.black : Colors.white,
                                         chart: line_chart(song_cnts),
                                         title: '',
                                       )
@@ -588,14 +503,13 @@ class _Result extends State<Result> {
                                         height: 200,
                                         child: Center(
                                             child: Text('차트 정보가 없습니다.',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20))))
+                                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
+                                            )
+                                        ))
                               ],
                             ),
                             Container(
-                              margin:
-                                  const EdgeInsets.only(left: 00, right: 10),
+                              margin: const EdgeInsets.only(right: 10),
                               decoration: BoxDecoration(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(42, 42, 42, 1)
@@ -604,72 +518,57 @@ class _Result extends State<Result> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.asset('assets/result_search.png',
-                                      width: 20),
+                                  Image.asset('assets/result_search.png', width: 20),
                                   Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    // padding: const EdgeInsets.only(right: 10),
+                                    margin: const EdgeInsets.only(left: 10, right: 10),
                                     child: Text('총 검색 : ',
                                         style: TextStyle(
                                             fontSize: 17,
-                                            color: isDarkMode
-                                                ? const Color.fromRGBO(
-                                                    151, 151, 151, 1)
-                                                : Colors.black)),
+                                            color: isDarkMode ? const Color.fromRGBO(151, 151, 151, 1) : Colors.black)
+                                    ),
                                   ),
                                   Text('${maps['count']}',
                                       style: const TextStyle(fontSize: 17)),
-                                  const Text('회',
-                                      style: TextStyle(fontSize: 17))
+                                  const Text('회', style: TextStyle(fontSize: 17))
                                 ],
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {
-                                _onBackKey();
-                              },
+                              onTap: () {_onBackKey();},
                               child: Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 100),
+                                padding: const EdgeInsets.symmetric(horizontal: 100),
                                 height: 70,
-                                margin:
-                                    const EdgeInsets.fromLTRB(0, 30, 10, 40),
+                                margin: const EdgeInsets.fromLTRB(0, 30, 10, 40),
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
-                                        color: isDarkMode
-                                            ? Colors.grey.withOpacity(0.3)
-                                            : Colors.black.withOpacity(0.1))),
+                                        color: isDarkMode ? Colors.grey.withOpacity(0.3) : Colors.black.withOpacity(0.1))
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: const Text(
-                                          '홈으로',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
+                                        padding: const EdgeInsets.only(right: 10),
+                                        child: const Text('홈으로',
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                         )),
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,
                                       size: 17,
                                       color: isDarkMode
-                                          ? const Color.fromRGBO(
-                                              125, 125, 125, 1)
-                                          : const Color.fromRGBO(
-                                              208, 208, 208, 1),
+                                          ? const Color.fromRGBO(125, 125, 125, 1)
+                                          : const Color.fromRGBO(208, 208, 208, 1),
                                     )
                                   ],
                                 ),
                               ),
                             )
                           ],
-                        ))
+                        )
+                    )
                   ],
-                )),
+                )
+            ),
           ),
         ),
       ),
@@ -684,11 +583,8 @@ class _Result extends State<Result> {
           itemCount: programs == null ? 0 : programs.length,
           itemBuilder: (context, index) {
             final program = programs[index];
-
             String programDate = program['F_DATE'];
-            String parseProgramDate = DateFormat('yyyy.MM.dd')
-                .format(DateTime.parse(programDate))
-                .toString();
+            String parseProgramDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(programDate)).toString();
 
             final isDarkMode = Theme.of(context).brightness == Brightness.dark;
             return Row(children: [
@@ -704,7 +600,6 @@ class _Result extends State<Result> {
                           width: 3,
                           color: isDarkMode
                               ? const Color.fromRGBO(189, 189, 189, 1)
-                              // : const Color.fromRGBO(228, 228, 228, 1),
                               : Colors.black.withOpacity(0.3),
                         ),
                         borderRadius: BorderRadius.circular(8),
@@ -713,15 +608,15 @@ class _Result extends State<Result> {
                         borderRadius: BorderRadius.circular(8),
                         child: SizedBox.fromSize(
                           child: Image.network(
-                            // program['F_IMAGE'],
                             program['F_LOGO'],
                             width: 140,
                             height: 140,
-                            errorBuilder: (context, stackTrace, error) {
+                            errorBuilder: (context, stackTrace, error) {  // program['F_LOGO'] 없을시 no_image return
                               return SizedBox(
                                   width: 140,
                                   height: 140,
-                                  child: Image.asset('assets/no_image.png'));
+                                  child: Image.asset('assets/no_image.png')
+                              );
                             },
                           ),
                         ),
@@ -736,7 +631,8 @@ class _Result extends State<Result> {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromRGBO(51, 211, 180, 1)),
+                                color: const Color.fromRGBO(51, 211, 180, 1)
+                            ),
                             child: Text(
                               program['F_TYPE'],
                               style: const TextStyle(
@@ -744,39 +640,22 @@ class _Result extends State<Result> {
                                   overflow: TextOverflow.ellipsis),
                             ),
                           ),
+                          
+                          /**
+                           * 방송국 명 Text로 찍지만 추후 프로그램 이미지 들어오면 F_LOGO로 바뀔가능성 있음
+                           * 로고로 바뀔시 위 program['F_LOGO'] 처럼 errorBuilder 사용하여 로고 없을시 CL_NM return 해줘야함
+                           */
                           Container(
                               margin: const EdgeInsets.only(left: 10),
-                              width: 65,
-                              height: 22,
+                              width: 65, height: 22,
                               child: Text(program['CL_NM'],
                                   style: TextStyle(
                                       fontSize: 16,
                                       overflow: TextOverflow.ellipsis,
                                       fontWeight: FontWeight.bold,
-                                      color: isDarkMode
-                                          ? Colors.white
-                                          : Colors.black))
-                              // child: Image.network(
-                              //   program['F_LOGO'],
-                              //   width: 50,
-                              //   height: 22,
-                              //   errorBuilder: (context, error, stackTrace) {
-                              //     return SizedBox(
-                              //         width: 65,
-                              //         height: 22,
-                              //         child: Text(program['CL_NM'],
-                              //             style: TextStyle(
-                              //                 fontSize: 16,
-                              //                 overflow: TextOverflow.ellipsis,
-                              //                 fontWeight: FontWeight.bold,
-                              //                 color: isDarkMode
-                              //                     ? Colors.white
-                              //                     : Colors.black)
-                              //         )
-                              //     );
-                              //   },
-                              // ),
+                                      color: isDarkMode ? Colors.white : Colors.black)
                               )
+                          )
                         ]),
                         Container(
                           margin: const EdgeInsets.fromLTRB(0, 3, 0, 10),
@@ -790,17 +669,18 @@ class _Result extends State<Result> {
                                     style: const TextStyle(
                                         overflow: TextOverflow.ellipsis,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 12)),
+                                        fontSize: 12)
+                                ),
                               ),
-                              Text(parseProgramDate,
-                                  style: TextStyle(
-                                      color: isDarkMode
-                                          ? Colors.grey.withOpacity(0.8)
-                                          : Colors.black.withOpacity(0.3))),
+                              Text(
+                                  parseProgramDate, // 프로그램 방송날짜
+                                  style: TextStyle(color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.3))
+                              ),
                             ],
                           ),
                         )
-                      ])
+                      ]
+                  )
                 ],
               )
             ]);
@@ -816,38 +696,40 @@ class _Result extends State<Result> {
         });
   }
 
+  /*
+   *  Firebase DynamicLink 에서 링크 변경시,
+   *  Remote Config 에 등록해놓은 shareUrl 변수 설정 후 게시하면 앱 버전 업데이트 없이 링크 변경 가능
+   */
   void _onShare(BuildContext context) async {
-    final box = context.findRenderObject() as RenderBox?;
+    // final box = context.findRenderObject() as RenderBox?; // iPad에서 사용
 
     if (Platform.isIOS) {
       await Share.share(
-          '${url}ios',
-          sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),
+        '${url}ios',
+          sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),  // iPad에서 박스위치, 크기 지정해줘야 Share 박스 나옴
       );
     } else if (Platform.isAndroid) {
-      await Share.share(url, subject: 'Prizm'); // 짧은 동적링크
+      await Share.share(url, subject: 'Prizm');
     }
-    // box!.localToGlobal(Offset.zero) & box.size);
+    // box!.localToGlobal(Offset.zero) & box.size;
   }
 
   late String text;
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  Widget bottomTitleWidgets(double value, TitleMeta meta) { // 차트 x축 title
     text = '';
 
-    try {
+    try { // 현재 월 기준 이전달부터 1년의 MM 을 계산해서 출력
       int i = 1;
       dateList = [];
       for (i; i < 13; i++) {
         dateTime = DateTime(now.year, now.month - i, 1);
         date = DateFormat('MM').format(dateTime);
         year = DateFormat('yy').format(now);
-// print(dateTime);
-
         dateList.add(date);
       }
     } catch (e) {
-      print('bottom title : $e');
+      rethrow;
     }
     reversedDate = [];
     reversedDate = List.from(dateList.reversed);
@@ -893,7 +775,7 @@ class _Result extends State<Result> {
     return SideTitleWidget(axisSide: meta.axisSide, child: Text(text));
   }
 
-  Widget line_chart(song_cnts) {
+  Widget line_chart(song_cnts) {  //차트 위젯
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     List<FlSpot> FlSpotData = [];
     FlSpotData.addAll(FlSpotDataAll);
@@ -906,7 +788,8 @@ class _Result extends State<Result> {
                 y: 0,
                 color: isDarkMode
                     ? Colors.grey.withOpacity(0.6)
-                    : Colors.grey.withOpacity(0.3))
+                    : Colors.grey.withOpacity(0.3)
+            )
           ],
         ),
         baselineY: 0,
@@ -917,15 +800,17 @@ class _Result extends State<Result> {
                   strokeWidth: 1,
                   color: isDarkMode
                       ? Colors.grey.withOpacity(0.6)
-                      : Colors.grey.withOpacity(0.3));
+                      : Colors.grey.withOpacity(0.3)
+              );
             },
             drawVerticalLine: false,
             drawHorizontalLine: true,
-            horizontalInterval: minCnt ? avgY / 8 : 30),
+            horizontalInterval: minCnt ? avgY / 8 : 30
+        ),
         minX: 1,
         minY: 0,
         maxX: 12,
-        maxY: double.parse((listY.last).toString()) + 100,
+        maxY: double.parse((listY.last).toString()) + 100,  // Y 최대값에 +100만큼 축 생성
         lineBarsData: [
           LineChartBarData(
               dotData: FlDotData(
@@ -946,21 +831,13 @@ class _Result extends State<Result> {
               isStrokeJoinRound: true,
               belowBarData: BarAreaData(
                 show: true,
-                gradient: isDarkMode
-                    ? const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                            Color.fromRGBO(51, 215, 180, 1),
-                            Colors.white10
-                          ])
-                    : const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                            Color.fromRGBO(51, 215, 180, 1),
-                            Colors.white24
-                          ]),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: isDarkMode
+                      ? [const Color.fromRGBO(51, 215, 180, 1), Colors.white10]
+                      : [const Color.fromRGBO(51, 215, 180, 1), Colors.white24]
+                ),
               ),
               spots: FlSpotData)
         ],
@@ -983,19 +860,5 @@ class _Result extends State<Result> {
         ),
         lineTouchData: LineTouchData(enabled: true)));
     return result;
-  }
-}
-
-void avocado() {
-  var milk;
-  var avocado;
-  if(avocado == true) { //아보카도 있어?
-    milk == 6; //있어서 우유 6개
-  } else if(milk == true) { // 우유 사와
-    if(avocado == true) { // 아보카도 있어?
-      avocado == 6; // 있으니까 6개
-    } else {
-      avocado == 0;
-    }
   }
 }
