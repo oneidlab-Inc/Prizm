@@ -256,7 +256,6 @@ class _TabPageState extends State<TabPage> {
       String jsonData = response.body;
       Map<String, dynamic> url = jsonDecode(jsonData.toString());
       setState(() {});
-      // MyApp.Uri = url;
       MyApp.search = url['search'];
       MyApp.history = url['history'];
       MyApp.programs = url['programs'];
