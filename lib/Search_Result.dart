@@ -209,7 +209,7 @@ class _Result extends State<Result> {
     remoteconfig();
     logSetscreen();
     fetchData();
-    getLink();
+    // getLink();
     super.initState();
   }
 
@@ -825,7 +825,7 @@ class _Result extends State<Result> {
           sharePositionOrigin: Rect.fromLTRB(0, 0, MediaQuery.of(context).size.width, MediaQuery.of(context).size.height * 0.5),
       );
     } else if (Platform.isAndroid) {
-      await Share.share('${url}', subject: 'Prizm'); // 짧은 동적링크
+      await Share.share(url, subject: 'Prizm'); // 짧은 동적링크
     }
     // box!.localToGlobal(Offset.zero) & box.size);
   }
@@ -976,8 +976,11 @@ class _Result extends State<Result> {
                     showTitles: true,
                     reservedSize: 30,
                     interval: 1,
-                    getTitlesWidget: bottomTitleWidgets)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))),
+                    getTitlesWidget: bottomTitleWidgets
+                )
+            ),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))
+        ),
         lineTouchData: LineTouchData(enabled: true)));
     return result;
   }
