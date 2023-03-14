@@ -32,12 +32,6 @@ class _Settings extends State<Settings> {
     await MyApp.analytics.setCurrentScreen(screenName: '설정');
   }
 
-  final controller = TextEditingController();
-  final colorsController = ScrollController();
-
-  TextAlign textAlign = TextAlign.justify;
-  FontWeight fontWeight = FontWeight.bold;
-
   Color selectedColor = Colors.greenAccent;
 
   Style _style = Style.light;
@@ -247,7 +241,8 @@ class _Settings extends State<Settings> {
                                       child: Text('다크',
                                           style: TextStyle(
                                               fontSize: 13,
-                                              color: isDarkMode ? Colors.white : Colors.black)),
+                                              color: isDarkMode ? Colors.white : Colors.black)
+                                      ),
                                     ),
                                     groupValue: _style,
                                     value: Style.dark,
@@ -396,6 +391,7 @@ class _Settings extends State<Settings> {
                                                         setState(() {
                                                           Navigator.pop(context);
                                                         });
+                                                        rethrow;
                                                       }
                                                     },
                                                     child: const Text('삭제',
@@ -444,15 +440,15 @@ class _Settings extends State<Settings> {
                         Text('현재버전   v   ${MyApp.appVersion}',
                             style: TextStyle(
                                 fontSize: 17,
-                                color:
-                                    isDarkMode ? Colors.white : Colors.black)),
+                                color: isDarkMode ? Colors.white : Colors.black
+                            )
+                        ),
                         Container(
                           height: 40,
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           margin: const EdgeInsets.only(right: 20),
                           decoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1.5, color: Colors.greenAccent),
+                              border: Border.all(width: 1.5, color: Colors.greenAccent),
                               borderRadius: const BorderRadius.all(Radius.circular(20))
                           ),
                           child: TextButton(

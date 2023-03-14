@@ -67,7 +67,7 @@ class _PlayInfo extends State<PlayInfo> {
 
     } catch (e) {
       // print('json 통신 실패');
-      print(e);
+      rethrow;
     }
   }
 
