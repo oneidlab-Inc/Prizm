@@ -413,7 +413,8 @@ class _History extends State<History> {
                                                                           ? Colors.grey.withOpacity(0.8)
                                                                           : Colors.black.withOpacity(0.4)
                                                                   ),
-                                                                  overflow: TextOverflow.ellipsis),
+                                                                  overflow: TextOverflow.ellipsis
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
@@ -423,12 +424,9 @@ class _History extends State<History> {
                                                         child: IconButton(
                                                             padding: const EdgeInsets.only(bottom: 80),
                                                             icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
-                                                            color: isDarkMode
-                                                                ? Colors.white
-                                                                : Colors.grey,
+                                                            color: isDarkMode ? Colors.white : Colors.grey,
                                                             onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
+                                                              Navigator.pop(context);
                                                             }),
                                                       )
                                                     ])),
@@ -436,9 +434,7 @@ class _History extends State<History> {
                                             ),
                                           ),
                                           Container(
-                                            color: isDarkMode
-                                                ? Colors.black
-                                                : Colors.white,
+                                            color: isDarkMode ? Colors.black : Colors.white,
                                             height: 156,
                                             padding: const EdgeInsets.all(20),
                                             child: Column(
@@ -450,10 +446,8 @@ class _History extends State<History> {
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   PlayInfo(
-                                                                      deviceId:
-                                                                          Id,
-                                                                      title:
-                                                                          title,
+                                                                      deviceId: Id,
+                                                                      title: title,
                                                                       image:
                                                                           image,
                                                                       artist:
@@ -486,63 +480,48 @@ class _History extends State<History> {
                                                                     196,
                                                                     1),
                                                                 onPressed: () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
+                                                                  Navigator.push(context, MaterialPageRoute(
                                                                           builder: (context) => PlayInfo(
                                                                               deviceId: Id,
                                                                               title: title,
                                                                               image: image,
                                                                               artist: artist,
-                                                                              song_id: song_id)));
+                                                                              song_id: song_id
+                                                                          )
+                                                                      )
+                                                                  );
                                                                 },
                                                               ),
                                                               Text(
                                                                   '프리즘 방송 재생정보',
                                                                   style: TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w300,
-                                                                      color: isDarkMode
-                                                                          ? Colors
-                                                                              .white
-                                                                          : Colors
-                                                                              .black))
-                                                            ],
-                                                          )),
-                                                    ])),
+                                                                      fontSize: 20,
+                                                                      fontWeight: FontWeight.w300,
+                                                                      color: isDarkMode ? Colors.white : Colors.black
+                                                                  )
+                                                              )
+                                                            ]
+                                                          )
+                                                      )
+                                                    ])
+                                                ),
                                                 GestureDetector(
                                                     onTap: () {
                                                       showDialogPop();
                                                     },
                                                     child: Container(
-                                                      color: isDarkMode
-                                                          ? Colors.black
-                                                          : Colors.white,
+                                                      color: isDarkMode ? Colors.black : Colors.white,
                                                       padding:
-                                                          const EdgeInsets.only(
-                                                              top: 20),
+                                                          const EdgeInsets.only(top: 20),
                                                       child: Row(
                                                         children: [
                                                           IconButton(
                                                               padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          30),
+                                                                  const EdgeInsets.only(right: 30),
                                                               icon: ImageIcon(
-                                                                  Image.asset(
-                                                                          'assets/trash.png')
-                                                                      .image,
+                                                                  Image.asset('assets/trash.png').image,
                                                                   size: 40),
-                                                              color: const Color
-                                                                      .fromRGBO(
-                                                                  64,
-                                                                  220,
-                                                                  196,
-                                                                  1),
+                                                              color: const Color.fromRGBO(64, 220, 196, 1),
                                                               onPressed: () {
                                                                 showDialogPop();
                                                               }),
@@ -550,24 +529,22 @@ class _History extends State<History> {
                                                             '히스토리에서 삭제',
                                                             style: TextStyle(
                                                                 fontSize: 20,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                color: isDarkMode
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .black),
+                                                                fontWeight: FontWeight.w300,
+                                                                color: isDarkMode ? Colors.white : Colors.black
+                                                            ),
                                                           )
                                                         ],
                                                       ),
-                                                    ))
+                                                    )
+                                                )
                                               ],
                                             ),
                                           )
-                                        ]),
+                                        ]
+                                    ),
                                   );
-                                }));
+                                })
+                        );
                       });
                 },
                 child: Container(
@@ -621,43 +598,40 @@ class _History extends State<History> {
                                   ),
                                   SizedBox(
                                       child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                     child: isArtistNull
                                         ? Text('Various Artists',
                                             style: TextStyle(
                                                 color: isDarkMode
-                                                    ? Colors.grey
-                                                        .withOpacity(0.8)
-                                                    : Colors.black
-                                                        .withOpacity(0.4)))
+                                                    ? Colors.grey.withOpacity(0.8)
+                                                    : Colors.black.withOpacity(0.4)
+                                            ))
                                         : Text(info['ARTIST'],
                                             style: TextStyle(
                                                 color: isDarkMode
-                                                    ? Colors.grey
-                                                        .withOpacity(0.8)
-                                                    : Colors.black
-                                                        .withOpacity(0.4)),
-                                            overflow: TextOverflow.ellipsis),
+                                                    ? Colors.grey.withOpacity(0.8)
+                                                    : Colors.black.withOpacity(0.4),
+                                            ),
+                                            overflow: TextOverflow.ellipsis
+                                    ),
                                   )),
                                   isAlbumNull
-                                      ? Text(
-                                          'Various Album',
+                                      ? Text('Various Album',
                                           style: TextStyle(
                                               color: isDarkMode
                                                   ? Colors.grey.withOpacity(0.8)
-                                                  : Colors.black
-                                                      .withOpacity(0.4),
-                                              overflow: TextOverflow.ellipsis),
+                                                  : Colors.black.withOpacity(0.4),
+                                              overflow: TextOverflow.ellipsis
+                                          ),
                                         )
                                       : Text(
                                           info['ALBUM'],
                                           style: TextStyle(
                                               color: isDarkMode
                                                   ? Colors.grey.withOpacity(0.8)
-                                                  : Colors.black
-                                                      .withOpacity(0.4),
-                                              overflow: TextOverflow.ellipsis),
+                                                  : Colors.black.withOpacity(0.4),
+                                              overflow: TextOverflow.ellipsis
+                                          ),
                                         ),
                                   Text(
                                     info['SCH_DATE'],
@@ -673,8 +647,12 @@ class _History extends State<History> {
                             Container(
                                 margin: EdgeInsets.only(right: 5),
                                 width: c_width * 0.09,
-                                child: const Icon(Icons.more_vert_sharp,
-                                    color: Colors.grey, size: 30))
+                                child: const Icon(
+                                    Icons.more_vert_sharp,
+                                    color: Colors.grey,
+                                    size: 30
+                                )
+                            )
                           ],
                         ),
                       ),
@@ -682,7 +660,8 @@ class _History extends State<History> {
                   ),
                 ),
               );
-            }));
+            })
+    );
   }
 
   void showDialogPop() {
@@ -691,20 +670,16 @@ class _History extends State<History> {
     double c_height = MediaQuery.of(context).size.height;
     showDialog(
       context: context,
-      barrierDismissible: false,
-      //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
+      barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
       builder: (BuildContext context) {
         return Dialog(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+              borderRadius: BorderRadius.circular(10)),
             child: Container(
               width: c_width * 0.8,
               height: c_height * 0.18,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
-              color: isDarkMode
-                  ? const Color.fromRGBO(66, 66, 66, 1)
-                  : Colors.white,
+              color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -723,7 +698,10 @@ class _History extends State<History> {
                               top: BorderSide(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(94, 94, 94, 1)
-                                      : Colors.black.withOpacity(0.1)))),
+                                      : Colors.black.withOpacity(0.1)
+                              )
+                          )
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -732,23 +710,21 @@ class _History extends State<History> {
                             height: c_height * 0.08,
                             child: Container(
                                 decoration: BoxDecoration(
-                                    color: isDarkMode
-                                        ? const Color.fromRGBO(66, 66, 66, 1)
-                                        : Colors.white,
+                                    color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                     border: Border(
                                         right: BorderSide(
                                             color: isDarkMode
-                                                ? const Color.fromRGBO(
-                                                    94, 94, 94, 1)
-                                                : Colors.black
-                                                    .withOpacity(0.1)))),
+                                                ? const Color.fromRGBO(94, 94, 94, 1)
+                                                : Colors.black.withOpacity(0.1)
+                                        )
+                                    )
+                                ),
                                 margin: const EdgeInsets.only(left: 20),
                                 child: TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text(
-                                    '취소',
+                                  child: Text('취소',
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: isDarkMode
@@ -756,23 +732,18 @@ class _History extends State<History> {
                                           : Colors.black.withOpacity(0.3),
                                     ),
                                   ),
-                                )),
+                                )
+                            ),
                           ),
                           Container(
                             width: c_width * 0.345,
                             height: c_height * 0.08,
                             margin: const EdgeInsets.only(right: 20),
-                            color: isDarkMode
-                                ? const Color.fromRGBO(66, 66, 66, 1)
-                                : Colors.white,
+                            color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                             child: TextButton(
                               onPressed: () async {
-                                Response response = await http.get(
-                                    // Uri.parse('${MyApp.Uri}get_song_history/json?uid=$uid&id=$_songid&proc=del')
-                                    Uri.parse(
-                                        'http://${MyApp.history}/json?uid=$uid&id=$_songid&proc=del'));
+                                Response response = await http.get(Uri.parse('http://${MyApp.history}/json?uid=$uid&id=$_songid&proc=del'));
                                 if (response.statusCode == 200) {
-                                  // print(response.statusCode);
                                   showToast();
                                 } else {
                                   failToast();
@@ -783,14 +754,10 @@ class _History extends State<History> {
                                   return;
                                 }
                                 setState(() {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Bottom()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Bottom()));
                                 });
                               },
-                              child: const Text(
-                                '삭제',
+                              child: const Text('삭제',
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Color.fromRGBO(64, 220, 196, 1)),
@@ -798,10 +765,12 @@ class _History extends State<History> {
                             ),
                           ),
                         ],
-                      ))
+                      )
+                  )
                 ],
               ),
-            ));
+            )
+        );
       },
     );
   }
@@ -812,7 +781,8 @@ void showToast() {
       msg: '검색내역 삭제 완료',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
 }
 
 void failToast() {
@@ -820,5 +790,6 @@ void failToast() {
       msg: '검색내역 삭제 실패',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
 }
