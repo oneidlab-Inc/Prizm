@@ -62,7 +62,6 @@ class _PlayInfo extends State<PlayInfo> {
       info = map['tv'];
       info_radio = map['radio'];
       original = info;
-      print(widget.song_id);
       setState(() {});
 
     } catch (e) {
@@ -163,8 +162,10 @@ class _PlayInfo extends State<PlayInfo> {
                                               child: Image.asset(
                                                   'assets/no_image.png'));
                                         },
-                                      )),
-                                )),
+                                      )
+                                  ),
+                                )
+                            ),
                             Container(
                                 width: c_width * 0.6,
                                 padding: const EdgeInsets.only(top: 25),
@@ -175,7 +176,9 @@ class _PlayInfo extends State<PlayInfo> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             overflow: TextOverflow.ellipsis,
-                                            color: isDarkMode ? Colors.white : Colors.black)),
+                                            color: isDarkMode ? Colors.white : Colors.black
+                                        )
+                                    ),
                                     Container(
                                       margin: const EdgeInsets.only(top: 5),
                                       child: Text(widget.artist,
@@ -183,7 +186,9 @@ class _PlayInfo extends State<PlayInfo> {
                                               color: isDarkMode
                                                   ? const Color.fromRGBO(123, 123, 123, 1)
                                                   : const Color.fromRGBO(151, 151, 151, 1),
-                                              overflow: TextOverflow.ellipsis)),
+                                              overflow: TextOverflow.ellipsis
+                                          )
+                                      ),
                                     )
                                   ],
                                 )
@@ -202,8 +207,7 @@ class _PlayInfo extends State<PlayInfo> {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.only(top: 30, bottom: 10),
-                                        child: Text(
-                                          '최신 TV 방송내역',
+                                        child: Text('최신 TV 방송내역',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 22,
@@ -217,14 +221,15 @@ class _PlayInfo extends State<PlayInfo> {
                                               Container(
                                                   child: isExistTV
                                                       ? Center(
-                                                    child: Text(
-                                                        '최신 TV 방송내역이 없습니다.',
+                                                    child: Text('최신 TV 방송내역이 없습니다.',
                                                         style: TextStyle(
                                                             color: isDarkMode ? Colors.white : Colors.black,
                                                             fontWeight:
                                                             FontWeight.bold,
-                                                            fontSize: 20)),
-                                                  ) : _tv_list(info, widget)
+                                                            fontSize: 20
+                                                        )
+                                                    ),
+                                                  ) : _tv_list(info)
                                               )
                                             ],
                                           ))
@@ -254,13 +259,17 @@ class _PlayInfo extends State<PlayInfo> {
                                                     style: TextStyle(
                                                         color: isDarkMode ? Colors.white : Colors.black,
                                                         fontWeight: FontWeight.bold,
-                                                        fontSize: 20)),
-                                              ) : _radio_list(info_radio, widget),
+                                                        fontSize: 20
+                                                    )
+                                                ),
+                                              ) : _radio_list(info_radio),
                                             )
                                           ],
-                                        ))
+                                        )
+                                    )
                                   ],
-                                )),
+                                )
+                            ),
                           ],
                         ),
                       )
@@ -271,7 +280,7 @@ class _PlayInfo extends State<PlayInfo> {
     );
   }
 
-  Widget _radio_list(info_radio, widget) {
+  Widget _radio_list(info_radio) {
     return Expanded(
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -342,7 +351,9 @@ class _PlayInfo extends State<PlayInfo> {
                                   overflow: TextOverflow.ellipsis,
                                   fontWeight: FontWeight.bold,
                                   color: isDarkMode ? Colors.white : Colors.black,
-                                  fontSize: 16)),
+                                  fontSize: 16
+                              )
+                          ),
                         )
                       ]),
                       Container(
@@ -358,12 +369,15 @@ class _PlayInfo extends State<PlayInfo> {
                                       overflow: TextOverflow.ellipsis,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
-                                      color: isDarkMode ? Colors.white : Colors.black)),
+                                      color: isDarkMode ? Colors.white : Colors.black
+                                  )
+                              ),
                             ),
-                            // Text(info_radio[index]['RADIO_DATE'],
-                                Text(parseRadioDate,
+                                Text(
+                                    parseRadioDate,
                                 style: TextStyle(
-                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.3))
+                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.3)
+                                )
                             )
                           ],
                         ),
@@ -378,16 +392,14 @@ class _PlayInfo extends State<PlayInfo> {
   }
 }
 
-Widget _tv_list(info, widget) {
+Widget _tv_list(info) {
   return Expanded(
     child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: info == null ? 0 : info.length,
         itemBuilder: (context, index) {
-
           String tvDate = info[index]['TV_DATE'];
           String parseTvDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(tvDate)).toString();
-          // print('radioDate >> $parseRadioDate');
 
           final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           return Row(children: [
@@ -403,7 +415,8 @@ Widget _tv_list(info, widget) {
                         width: 3,
                         color: isDarkMode
                             ? const Color.fromRGBO(189, 189, 189, 1)
-                            : Colors.black.withOpacity(0.3)),
+                            : Colors.black.withOpacity(0.3)
+                    ),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: ClipRRect(
@@ -435,10 +448,12 @@ Widget _tv_list(info, widget) {
                             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromRGBO(51, 211, 180, 1)),
+                                color: const Color.fromRGBO(51, 211, 180, 1)
+                            ),
                             child: Text(
                                 info[index]['TV_TYPE'],
-                                style: const TextStyle(color: Colors.white)),
+                                style: const TextStyle(color: Colors.white)
+                            ),
                           ),
                           SizedBox(
                             width: 65,
@@ -448,10 +463,11 @@ Widget _tv_list(info, widget) {
                                     overflow: TextOverflow.ellipsis,
                                     fontWeight: FontWeight.bold,
                                     color: isDarkMode ? Colors.white : Colors.black,
-                                    fontSize: 16)),
+                                    fontSize: 16
+                                )
+                            ),
                           ),
-                        ]
-                    ),
+                        ]),
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 3, 0, 10),
                       width: 140,
@@ -465,14 +481,15 @@ Widget _tv_list(info, widget) {
                                     overflow: TextOverflow.ellipsis,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
-                                    color: isDarkMode ? Colors.white : Colors.black)
+                                    color: isDarkMode ? Colors.white : Colors.black
+                                )
                             ),
                           ),
-                          Text(parseTvDate,
+                          Text(
+                              parseTvDate,
                               style: TextStyle(
-                                  color: isDarkMode
-                                      ? Colors.grey.withOpacity(0.8)
-                                      : Colors.black.withOpacity(0.3))
+                                  color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.3)
+                              )
                           )
                         ],
                       ),

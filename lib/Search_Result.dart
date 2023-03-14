@@ -1,13 +1,11 @@
 // --no-sound-null-safety
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:share_plus/share_plus.dart';
 import 'chart/chart_container.dart';
@@ -28,7 +26,7 @@ class Result extends StatefulWidget {
 }
 
 class _Result extends State<Result> {
-  String url = 'https://oneidlab.page.link/prizm';
+  String url = 'https://oneidlab.page.link/prizm';  // url Default 값
   Future<void> remoteconfig() async{
     final FirebaseRemoteConfig remoteConfig = await FirebaseRemoteConfig.instance;
     remoteConfig.setDefaults({'shareUrl' : url});
@@ -38,9 +36,7 @@ class _Result extends State<Result> {
           minimumFetchInterval: Duration.zero)
     );
     await remoteConfig.fetchAndActivate();
-
     String shareUrl = remoteConfig.getString('shareUrl');
-
     url = shareUrl;
   }
 
@@ -71,18 +67,17 @@ class _Result extends State<Result> {
     if(!mounted) {
       return;
     }
-
-    String? _uid;
+    String? uid;
     var deviceInfoPlugin = DeviceInfoPlugin();
     try {
       if (Platform.isAndroid) {
-        _uid = await PlatformDeviceId.getDeviceId;
+        uid = await PlatformDeviceId.getDeviceId;
       } else if (Platform.isIOS) {
         var iosInfo = await deviceInfoPlugin.iosInfo;
-        _uid = iosInfo.identifierForVendor!;
+        uid = iosInfo.identifierForVendor!;
       }
     } on PlatformException {
-      _uid = 'Failed to get Id';
+      uid = 'Failed to get Id';
       rethrow;
     }
 
@@ -91,7 +86,7 @@ class _Result extends State<Result> {
     try {
       http.Response response = await http.get(
           // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
-      Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$_uid'));
+      Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
 
@@ -103,7 +98,6 @@ class _Result extends State<Result> {
     }
 
 //json for program list
-
     try {
       http.Response response = await http.get(
           Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
@@ -134,18 +128,18 @@ class _Result extends State<Result> {
       }
       avgY = sum / listY.length;
 
-      List _dateList = [];
-      var _dateTime;
-      var _month;
-      var _year;
+      List dateList = [];
+      var dateTime;
+      var month;
+      var year;
 
       for (var i = 1; i < 13; i++) {  //차트 x 축 기준
-        _dateTime = DateTime(now.year, now.month - i, 1);
-        _month = DateFormat('MM').format(_dateTime);
-        _year = DateFormat('yyyy').format(_dateTime);
-        _dateList.add(_year + _month);
+        dateTime = DateTime(now.year, now.month - i, 1);
+        month = DateFormat('MM').format(dateTime);
+        year = DateFormat('yyyy').format(dateTime);
+        dateList.add(year + month);
       }
-      List reverse = List.from(_dateList.reversed);
+      List reverse = List.from(dateList.reversed);
 
       // 현재월
       // 차트 실데이터 파싱
@@ -188,14 +182,8 @@ class _Result extends State<Result> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
-    SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isCNTS = song_cnts.length > 3;
@@ -239,7 +227,8 @@ class _Result extends State<Result> {
                                       ),
                                     );
                                   },
-                                ))
+                                )
+                              )
                               : isPad
                                   ? SizedBox(
                                       child: Image.network(
@@ -257,7 +246,8 @@ class _Result extends State<Result> {
                                           ),
                                         );
                                       },
-                                    )) //  << fold
+                                    )
+                                  )
                                   : isPlus
                                       ? SizedBox(
                                           child: Image.network(
@@ -275,7 +265,8 @@ class _Result extends State<Result> {
                                               ),
                                             );
                                           },
-                                        ))
+                                        )
+                                      )
                                       : isUltra
                                           ? SizedBox(
                                               child: Image.network(
@@ -292,7 +283,8 @@ class _Result extends State<Result> {
                                                   ),
                                                 );
                                               },
-                                            ))
+                                            )
+                                          )
                                           : isNormal
                                               ? SizedBox(
                                                   child: Image.network(
@@ -309,14 +301,14 @@ class _Result extends State<Result> {
                                                       ),
                                                     );
                                                   },
-                                                ))
+                                                )
+                                              )
                                               : SizedBox(
                                                   child: Image.network(
                                                   '${maps['IMAGE']}',
                                                   height: c_height * 0.5,
                                                   fit: BoxFit.fill,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
+                                                  errorBuilder: (context, error, stackTrace) {
                                                     return SizedBox(
                                                       child: Image.asset(
                                                         'assets/no_image.png',
@@ -325,7 +317,8 @@ class _Result extends State<Result> {
                                                       ),
                                                     );
                                                   },
-                                                )),
+                                                )
+                          ),
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -354,9 +347,7 @@ class _Result extends State<Result> {
                                         : isPad ? isDarkMode ? Colors.white : Colors.black
                                                 : isDarkMode ? Colors.black : Colors.black, // 폴드, 패드, 탭에서 이용시 앨범사진 양 옆 공간이 남아서 블랙으로 고정
                                     onPressed: () {
-                                      Navigator.push(
-                                        context, MaterialPageRoute(builder: (context) => TabPage()),
-                                      );
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const TabPage()));
                                     },
                                   ),
                                   IconButton(
@@ -415,16 +406,19 @@ class _Result extends State<Result> {
                                               text: ' · ',
                                               style: TextStyle(
                                                   color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4),
-                                                  fontSize: 17)),
+                                                  fontSize: 17
+                                              )
+                                          ),
                                           TextSpan(
                                             text: isAlbumNull ? 'Various Album' : maps['ALBUM'],
                                             style: TextStyle(
                                                 color: isDarkMode ? Colors.grey : Colors.black.withOpacity(0.4),
-                                                overflow: TextOverflow.ellipsis, fontSize: 17),
+                                                overflow: TextOverflow.ellipsis, fontSize: 17
+                                            ),
                                           )
                                         ]),
-                                      ))
-                                    ],
+                                      )
+                                    )],
                                   )),
                               Container(
                                 margin: const EdgeInsets.fromLTRB(0, 10, 0, 50),
@@ -435,18 +429,22 @@ class _Result extends State<Result> {
                                       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(20),
-                                          color: const Color.fromRGBO(51, 211, 180, 1)),
+                                          color: const Color.fromRGBO(51, 211, 180, 1)
+                                      ),
                                       child: Text(
                                         '${maps['date']}',
                                         style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     Image.asset('assets/result_search.png',
-                                        width: 15, color: Colors.grey),
+                                        width: 15, color: Colors.grey
+                                    ),
                                     Text(' ${maps['count']}',
                                         style: const TextStyle(
                                             color: Colors.grey,
-                                            overflow: TextOverflow.ellipsis)),
+                                            overflow: TextOverflow.ellipsis
+                                        )
+                                    ),
                                     const Text('회', style: TextStyle(color: Colors.grey))
                                   ],
                                 ),
@@ -477,9 +475,13 @@ class _Result extends State<Result> {
                                                 style: TextStyle(
                                                     color: isDarkMode ? Colors.white : Colors.black,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 20)))
-                                        : Row(children: [_listView(programs)],
-                                          ))),
+                                                    fontSize: 20
+                                                )
+                                            )
+                                        )
+                                        : _listView(programs)
+                                )
+                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -487,7 +489,8 @@ class _Result extends State<Result> {
                                     margin: const EdgeInsets.only(bottom: 30),
                                     child: const Text('프리즘차트',
                                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                                    )),
+                                    )
+                                ),
                                 isCNTS
                                     ? ChartContainer(
                                         color: isDarkMode ? Colors.black : Colors.white,
@@ -500,7 +503,8 @@ class _Result extends State<Result> {
                                             child: Text('차트 정보가 없습니다.',
                                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)
                                             )
-                                        ))
+                                        )
+                                )
                               ],
                             ),
                             Container(
@@ -508,7 +512,8 @@ class _Result extends State<Result> {
                               decoration: BoxDecoration(
                                   color: isDarkMode
                                       ? const Color.fromRGBO(42, 42, 42, 1)
-                                      : const Color.fromRGBO(250, 250, 250, 1)),
+                                      : const Color.fromRGBO(250, 250, 250, 1)
+                              ),
                               height: 100,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -519,17 +524,19 @@ class _Result extends State<Result> {
                                     child: Text('총 검색 : ',
                                         style: TextStyle(
                                             fontSize: 17,
-                                            color: isDarkMode ? const Color.fromRGBO(151, 151, 151, 1) : Colors.black)
+                                            color: isDarkMode ? const Color.fromRGBO(151, 151, 151, 1) : Colors.black
+                                        )
                                     ),
                                   ),
-                                  Text('${maps['count']}',
-                                      style: const TextStyle(fontSize: 17)),
+                                  Text('${maps['count']}', style: const TextStyle(fontSize: 17)),
                                   const Text('회', style: TextStyle(fontSize: 17))
                                 ],
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {_onBackKey();},
+                              onTap: () {
+                                _onBackKey();
+                                },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 100),
                                 height: 70,
@@ -537,7 +544,8 @@ class _Result extends State<Result> {
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
-                                        color: isDarkMode ? Colors.grey.withOpacity(0.3) : Colors.black.withOpacity(0.1))
+                                        color: isDarkMode ? Colors.grey.withOpacity(0.3) : Colors.black.withOpacity(0.1)
+                                    )
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -546,7 +554,8 @@ class _Result extends State<Result> {
                                         padding: const EdgeInsets.only(right: 10),
                                         child: const Text('홈으로',
                                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                        )),
+                                        )
+                                    ),
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,
                                       size: 17,
