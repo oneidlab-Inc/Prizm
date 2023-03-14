@@ -26,32 +26,33 @@ class _NotFound extends State<NotFound> {
 
   final Column _textColumn_light = Column(children: [
     const Text('검색 결과 없음',
-        style: TextStyle(
-            fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
+        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)
+    ),
     Text('노래를 인식할 수 없습니다.',
-        style: TextStyle(fontSize: 17, color: Colors.grey.withOpacity(0.6))),
+        style: TextStyle(fontSize: 17, color: Colors.grey.withOpacity(0.6))
+    ),
   ]);
 
   final Column _textColumn_dark = Column(children: const [
     Text('검색 결과 없음',
         style: TextStyle(
-            fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white)),
-    Text('노래를 인식할 수 없습니다.', style: TextStyle(fontSize: 17, color: Colors.grey)),
+            fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white)
+    ),
+    Text('노래를 인식할 수 없습니다.', style: TextStyle(fontSize: 17, color: Colors.grey)
+    ),
   ]);
 
   @override
   void initState() {
     logSetscreen();
     initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     _vmidc.recCtrl.sink.close();
     super.initState();
   }
 
   @override
   void dispose() {
-    // _connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -61,7 +62,6 @@ class _NotFound extends State<NotFound> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     if (_connectionStatus.endsWith('none') == true) {
-      // print('network error');
       NetworkToast();
     }
     return WillPopScope(
@@ -87,9 +87,7 @@ class _NotFound extends State<NotFound> {
                     color: isDarkMode ? Colors.white : Colors.grey,
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TabPage())
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
                   }),
             ),
             backgroundColor: isDarkMode
@@ -111,9 +109,9 @@ class _NotFound extends State<NotFound> {
                         Center(
                             child: Container(
                                 padding: const EdgeInsets.only(bottom: 20),
-                                child: isDarkMode
-                                    ? _textColumn_dark
-                                    : _textColumn_light)),
+                                child: isDarkMode ? _textColumn_dark : _textColumn_light
+                            )
+                        ),
                         IconButton(
                           icon: isDarkMode
                               ? Image.asset('assets/_prizm_dark.png')
@@ -122,13 +120,11 @@ class _NotFound extends State<NotFound> {
                           iconSize: 220,
                           onPressed: () {
                             _vmidc.stop();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TabPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
                           },
                         )
-                      ])))
+                      ]))
+                  )
                 ])
             )
         )
@@ -136,6 +132,9 @@ class _NotFound extends State<NotFound> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if(!mounted) {
+      return;
+    }
     switch (result) {
       case ConnectivityResult.mobile:
       case ConnectivityResult.wifi:
@@ -152,7 +151,7 @@ class _NotFound extends State<NotFound> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      print(e.toString());
+      rethrow;
     }
     if (!mounted) {
       return Future.value(null);

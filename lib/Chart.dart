@@ -56,8 +56,7 @@ class _Chart extends State<Chart> {
       setState(() {});
     } catch (e) {
       NetworkToast();
-      print('json 로딩 실패');
-      print(e);
+      rethrow;
     }
   }
 
@@ -77,15 +76,8 @@ class _Chart extends State<Chart> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(
-        // 상단 상태바 제거
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
-    // SystemChrome.setEnabledSystemUIMode(    // 하단 상태바 제거
-    //     SystemUiMode.manual,
-    //     overlays: [
-    //       SystemUiOverlay.top
-    //     ]
-    // );
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     int len = charts.length;
     final isExist = len == 0;

@@ -44,7 +44,6 @@ class _Settings extends State<Settings> {
 
   String? uid;
   String? _deviceId;
-  var currentVersion;
   var theme;
 
   @override
@@ -65,32 +64,25 @@ class _Settings extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     double c_width = MediaQuery.of(context).size.width;
     double c_height = MediaQuery.of(context).size.height;
     return
         WillPopScope(
           onWillPop: _onBackKey,
-          child:
-        Scaffold(
+          child: Scaffold(
             appBar: AppBar(
-              shape: Border(
-                  bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
-              title: Text(
-                '설정',
-                style: (
-                    isDarkMode
-                        ? const TextStyle(color: Colors.white)
-                        : const TextStyle(color: Colors.black)
+              shape: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.3))),
+              title: Text('설정',
+                style: (isDarkMode ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.black)
                 ),
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 color: Colors.grey,
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const TabPage()));
                 },
               ),
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -113,12 +105,12 @@ class _Settings extends State<Settings> {
                           color: Colors.greenAccent,
                           size: 25,
                         ),
-                        Text(
-                          ' 고객센터',
+                        Text(' 고객센터',
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black),
+                              color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
+                          ),
                         ),
                       ],
                     ),
@@ -147,12 +139,7 @@ class _Settings extends State<Settings> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Private()
-                          )
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Private()));
                     },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,
@@ -188,12 +175,12 @@ class _Settings extends State<Settings> {
                         color: Colors.greenAccent,
                         size: 25,
                       ),
-                      Text(
-                        ' 앱 설정 및 정보',
+                      Text(' 앱 설정 및 정보',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black),
+                            color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
+                        ),
                       ),
                     ],
                   ),
@@ -483,15 +470,20 @@ class _Settings extends State<Settings> {
     );
   }
 
+
+  /*
+   *   Remote Config 에서 변경한 앱 버전과 설치되어있는 packageVersion 이 다른경우
+   *   Store Url 을 이용해 스토어로 이동
+   */
   _launchUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
     var currentVersion = MyApp.appVersion == packageVersion;
 
     Uri _url = Uri.parse('');
-    if (Platform.isAndroid) { //플레이 스토어 주소 입력
+    if (Platform.isAndroid) {
       _url = Uri.parse(currentVersion ? '' : /* Play Store Url */'');
-    } else if (Platform.isIOS) { //앱스토어 주소 입력
+    } else if (Platform.isIOS) {
       _url = Uri.parse(currentVersion ? '' : /* App Store Url*/ '');
     }
     if (await launchUrl(_url)) {
@@ -507,7 +499,7 @@ class _Settings extends State<Settings> {
     return await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return TabPage();
+          return const TabPage();
         });
   }
 }
