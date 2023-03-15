@@ -202,8 +202,9 @@ class _Home extends State<Home> {
                           margin: const EdgeInsets.only(bottom: 20),
                           child: RichText(
                               text: isDarkMode ? _textSpan_dark : _textSpan_light
-                          ),
-                        )),
+                            ),
+                          )
+                        ),
                         IconButton(
                             // icon: _icon,
                             icon: isDarkMode ? Image.asset('assets/_prizm_dark.png') : Image.asset('assets/_prizm.png'),
@@ -399,6 +400,7 @@ class _Home extends State<Home> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 RichText(
                   text: const TextSpan(
