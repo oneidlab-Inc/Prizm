@@ -439,9 +439,6 @@ class _Home extends State<Home> {
                     ]
                   )
                 ),
-               // const Text('Prizm 사용을 위해 마이크 권한을 허용해주세요',
-               //   style: TextStyle(color: Colors.black)
-               // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
