@@ -213,10 +213,9 @@ class _Home extends State<Home> {
                               var status = await Permission.microphone.status;
                               if (status == PermissionStatus.permanentlyDenied) {
                                 PermissionToast();
-                                requestMicPermission(context);
+                                Permission.microphone.request();
                                 return;
                               } else if (status == PermissionStatus.denied) {
-                                // PermissionToast();
                                 requestMicPermission(context);
                                 Permission.microphone.request();
                                 return;
