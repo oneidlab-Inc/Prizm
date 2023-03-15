@@ -23,6 +23,15 @@ import 'History.dart';
 import 'Home.dart';
 import 'Search_Result.dart';
 
+
+/*
+ * 앱 버전 변경시 pubspec.yaml 상단의 version 과
+ * android level 의 local.properties
+ * app level 의 build.gradle 의 versionName, versionCode 변경
+ * build.gradle 의 versionName 과 pubspec.yaml 의 version 은 같아야하고
+ * versionCode 는 int 형식으로 하나씩 올려감
+ */
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {

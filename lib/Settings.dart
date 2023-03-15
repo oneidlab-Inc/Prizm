@@ -99,13 +99,16 @@ class _Settings extends State<Settings> {
                           color: Colors.greenAccent,
                           size: 25,
                         ),
-                        Text(' 고객센터',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
+                        Container(
+                          margin: const EdgeInsets.only(left: 15),
+                          child: Text(' 고객센터',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
+                            ),
                           ),
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -157,7 +160,11 @@ class _Settings extends State<Settings> {
                   ),
                 Container(
                   height: 70,
-                  decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.3)))),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.grey.withOpacity(0.3))
+                      )
+                  ),
                 ),
                 Container(
                   height: 70,
@@ -169,13 +176,16 @@ class _Settings extends State<Settings> {
                         color: Colors.greenAccent,
                         size: 25,
                       ),
-                      Text(' 앱 설정 및 정보',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
+                      Container(
+                        margin: const EdgeInsets.only(left: 20),
+                        child: Text('앱 설정 및 정보',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -241,7 +251,8 @@ class _Settings extends State<Settings> {
                                       child: Text('다크',
                                           style: TextStyle(
                                               fontSize: 13,
-                                              color: isDarkMode ? Colors.white : Colors.black)
+                                              color: isDarkMode ? Colors.white : Colors.black
+                                          )
                                       ),
                                     ),
                                     groupValue: _style,
@@ -340,20 +351,18 @@ class _Settings extends State<Settings> {
                                                       color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                                       border: Border(
                                                           right: BorderSide(
-                                                              color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1))
+                                                              color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1)
+                                                          )
                                                       )
                                                   ),
                                                   child: TextButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                       },
-                                                      child: Text(
-                                                        '취소',
+                                                      child: Text('취소',
                                                         style: TextStyle(
                                                             fontSize: 20,
-                                                            color: isDarkMode
-                                                                ? Colors.white.withOpacity(0.8)
-                                                                : const Color.fromRGBO(147, 147, 147, 1)
+                                                            color: isDarkMode ? Colors.white.withOpacity(0.8) : const Color.fromRGBO(147, 147, 147, 1)
                                                         )
                                                       )
                                                   )
@@ -419,12 +428,7 @@ class _Settings extends State<Settings> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('검색내역 삭제',
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  color: isDarkMode ? Colors.white : Colors.black
-                              )
-                          ),
+                          Text('검색내역 삭제', style: TextStyle(fontSize: 17, color: isDarkMode ? Colors.white : Colors.black)),
                           Align(child: Image.asset('assets/move.png', width: 10))
                         ],
                       ),
@@ -452,12 +456,12 @@ class _Settings extends State<Settings> {
                               borderRadius: const BorderRadius.all(Radius.circular(20))
                           ),
                           child: TextButton(
-                              onPressed: () => {updateToast(), _launchUpdate()},
+                              onPressed: () => {updateToast(), _launchUpdate()},  // 최신상태 or 업데이트 한다는 Toast 출력
                               child: const Text('업데이트', style: TextStyle(color: Colors.greenAccent))
                           ),
                         )
-                      ],
-                    )),
+                      ])
+                    ),
                   )
                 ],
               ),
@@ -474,6 +478,8 @@ class _Settings extends State<Settings> {
   _launchUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
+
+    // appVersion 은 remoteConfig 에서 설정한 값이기 때문에 가능하다면 게시 후 플레이스토어 버전이랑 비교하도록 변경
     var currentVersion = MyApp.appVersion == packageVersion;
 
     Uri _url = Uri.parse('');

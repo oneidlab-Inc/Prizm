@@ -646,7 +646,7 @@ class _Result extends State<Result> {
                           ),
                           
                           /**
-                           * 방송국 명 Text로 찍지만 추후 프로그램 이미지 들어오면 F_LOGO로 바뀔가능성 있음
+                           * 방송국 명 Text 로 찍지만 추후 프로그램 이미지 들어오면 F_LOGO 로 바뀔가능성 있음
                            * 로고로 바뀔시 위 program['F_LOGO'] 처럼 errorBuilder 사용하여 로고 없을시 CL_NM return 해줘야함
                            */
                           Container(

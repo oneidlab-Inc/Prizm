@@ -29,9 +29,9 @@ class ChartContainer extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: Container(
-                  // padding: const EdgeInsets.only(top: 10),
                   child: chart,
-                ))
+                )
+            )
           ],
         ),
       ),
