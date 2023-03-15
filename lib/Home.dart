@@ -211,12 +211,12 @@ class _Home extends State<Home> {
                             iconSize: _size,
                             onPressed: () async {
                               var status = await Permission.microphone.status;
-                              if (status == PermissionStatus.permanentlyDenied) { // 권한 와전히 거절
+                              if (status == PermissionStatus.permanentlyDenied) {
                                 PermissionToast();
                                 requestMicPermission(context);
                                 return;
                               } else if (status == PermissionStatus.denied) {
-                                PermissionToast();
+                                // PermissionToast();
                                 requestMicPermission(context);
                                 Permission.microphone.request();
                                 return;
@@ -231,9 +231,7 @@ class _Home extends State<Home> {
                                   return;
                                 }
                                 setState(() {
-                                  settingIcon = ImageIcon(Image.asset('assets/settings.png').image,
-                                    color: Colors.transparent
-                                  );
+                                  settingIcon = ImageIcon(Image.asset('assets/settings.png').image, color: Colors.transparent);
                                   isDarkMode
                                       ? _textSpan_dark = const TextSpan(
                                           text: '노래 분석중',
@@ -255,15 +253,19 @@ class _Home extends State<Home> {
                                 });
                                 if (_vmidc.isRunning() == true) {
                                   _vmidc.stop();
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const TabPage()));
                                 }
                               }
                             }),
-                      ]))
+                          ]
+                        )
+                     )
                   ),
                 ],
-              )),
-        ));
+              )
+          ),
+        )
+    );
   }
 
   Future<bool> _onBackKey() async {
@@ -378,22 +380,6 @@ class _Home extends State<Home> {
     return true;
   }
 
-  // _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
-  //   return AlertDialog(
-  //     content: const Text('Prizm 사용을 위해 마이크 권한을 허용해주세요'),
-  //     actions: [
-  //       TextButton(
-  //         onPressed: () {
-  //           openAppSettings();
-  //         },
-  //         child: const Text(
-  //           '설정하기',
-  //           style: TextStyle(color: Colors.blue),
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
 
   _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
     return AlertDialog(
@@ -404,7 +390,6 @@ class _Home extends State<Home> {
         builder: (context) {
           var width = MediaQuery.of(context).size.width;
           var height = MediaQuery.of(context).size.height;
-
           return Container(
             width: width*0.7,
             height: height*0.15,
@@ -463,7 +448,9 @@ class _Home extends State<Home> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    if(mounted) {
+    if(!mounted) {
+      return;
+    }
     switch (result) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
@@ -472,7 +459,6 @@ class _Home extends State<Home> {
         break;
       default:
         setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.');
-      }
     }
   }
 
@@ -495,7 +481,8 @@ void NetworkToast() {
       msg: '네트워크 연결을 확인 해주세요.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
 }
 
 void PermissionToast() {
@@ -503,5 +490,6 @@ void PermissionToast() {
       msg: '마이크 권한을 허용해주세요.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER);
+      gravity: ToastGravity.CENTER
+  );
 }
