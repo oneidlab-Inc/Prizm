@@ -282,9 +282,7 @@ class _Home extends State<Home> {
               width: 400,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
               height: 150,
-              color: isDarkMode
-                  ? const Color.fromRGBO(66, 66, 66, 1)
-                  : Colors.white,
+              color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,7 +302,10 @@ class _Home extends State<Home> {
                             top: BorderSide(
                                 color: isDarkMode
                                     ? const Color.fromRGBO(94, 94, 94, 1)
-                                    : Colors.black.withOpacity(0.1)))),
+                                    : Colors.black.withOpacity(0.1)
+                            )
+                        )
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -322,7 +323,10 @@ class _Home extends State<Home> {
                                               ? const Color.fromRGBO(
                                                   94, 94, 94, 1)
                                               : Colors.black
-                                                  .withOpacity(0.1)))),
+                                                  .withOpacity(0.1)
+                                      )
+                                  )
+                              ),
                               margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
                                   onPressed: () {
@@ -332,13 +336,13 @@ class _Home extends State<Home> {
                                     '종료',
                                     style: TextStyle(
                                         fontSize: 20, color: Colors.red),
-                                  ))),
+                                  )
+                              )
+                          ),
                         ),
                         Container(
                             margin: const EdgeInsets.only(right: 20),
-                            color: isDarkMode
-                                ? const Color.fromRGBO(66, 66, 66, 1)
-                                : Colors.white,
+                            color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                             width: 180,
                             height: 78,
                             child: TextButton(
