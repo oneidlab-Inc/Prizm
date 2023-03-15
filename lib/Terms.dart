@@ -19,8 +19,6 @@ class _Terms extends State<Terms> {
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '이용약관');
   }
-  
-  final Completer<WebViewController> _controller = Completer<WebViewController>();
 
   WebViewController? _webViewController;
 
@@ -35,8 +33,6 @@ class _Terms extends State<Terms> {
     initConnectivity();
     _connectivitSubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    // ios 추후에 추가 (다른 라이브러리 필요할듯?? IOSWebview가 없음;
-
     super.initState();
   }
 
@@ -76,17 +72,15 @@ class _Terms extends State<Terms> {
                 Expanded(
                     child: WebView(
                   backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-                  initialUrl: 'http://www.przm.kr/js/terms.html',
+                  // initialUrl: 'http://www.przm.kr/js/terms.html',
+                  initialUrl: 'http://${MyApp.terms}',
                   javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (WebViewController webViewController) {},
-                  onProgress: (int progress) {
-                    print("WebView is loading (progress : $progress %)");
-                  },
                   onPageStarted: (String url) {
                     if (_connectionStatus.endsWith('none') == true) {
                       NetworkToast();
                     } else {
-                      _webViewController?.loadUrl('http://www.przm.kr/js/terms.html');
+                      _webViewController?.loadUrl('http://${MyApp.terms}');
+                      print('terms URL >>>>  http://${MyApp.terms}');
                     }
                   },
                 )),

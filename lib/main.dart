@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
   static var programs;
   static var ranks;
   static var privacy;
+  static var terms;
 
   @override
   Widget build(BuildContext context) {
@@ -252,6 +253,7 @@ class _TabPageState extends State<TabPage> {
       MyApp.programs = url['programs'];
       MyApp.ranks = url['ranks'];
       MyApp.privacy = url['privacy'];
+      MyApp.terms = url['terms'];
     } catch (e) {
       rethrow;
     }
@@ -442,7 +444,7 @@ void updateToast() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   var packageVersion = packageInfo.version;
   var currentVersion = MyApp.appVersion == packageVersion;
-  Fluttertoast.showToast( // Remote Config 에서 설정한 버전값과 다를경우 스토어로 이동 Toast 출력 
+  Fluttertoast.showToast( // Remote Config 에서 설정한 버전값과 다를경우 스토어로 이동 Toast 출력
       msg: currentVersion ? '최신버전입니다.' : '업데이트를 위해 스토어로 이동합니다.',
       backgroundColor: Colors.grey,
       toastLength: Toast.LENGTH_LONG,

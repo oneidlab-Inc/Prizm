@@ -30,30 +30,25 @@ class _Private extends State<Private> {
 
   @override
   void initState() {
-    // print(MyApp.privacy);
     logSetscreen();
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     super.initState();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    // ios 추후에 추가
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.bottom
-        ]
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: AppBar(
           title: const Text("개인정보 처리방침",
               style: TextStyle(
                   color: Colors.black,
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.bold
+              )
+          ),
           leading: IconButton(
             icon: ImageIcon(
                 Image.asset('assets/x_icon.png').image, color: Colors.black,
@@ -75,22 +70,12 @@ class _Private extends State<Private> {
                 child: WebView(
                   backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                   initialUrl: 'http://${MyApp.privacy}',
-                  // initialUrl: 'http://www.przm.kr/js/privacy_app.html',
                   javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (WebViewController webViewController) {
-                    _controller.complete(webViewController);
-                  },
-                  onProgress: (int progress) {
-                    // print("WebView is loading (progress : $progress%)");
-                  },
                   onPageStarted: (String url) {
                     if(_connectionStatus.endsWith('none') == true) {
                       NetworkToast();
                     }else {
-                      // _webViewController?.loadUrl('http://www.prizm.kr/js/privacy.html');
                       _webViewController?.loadUrl('http://${MyApp.privacy}');
-                      // _webViewController?.loadUrl('http://www.przm.kr/js/privacy_app.html');
-                      // print('loadUrl >>  http://${MyApp.privacy}');
                     }
                   },
                 )
@@ -103,7 +88,8 @@ class _Private extends State<Private> {
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
+                        topRight: Radius.circular(20)
+                    ),
                     color: Color.fromRGBO(51, 211, 180, 1)
                 ),
                 alignment: Alignment.center,
