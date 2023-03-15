@@ -211,7 +211,7 @@ class _Home extends State<Home> {
                             iconSize: _size,
                             onPressed: () async {
                               var status = await Permission.microphone.status;
-                              if (status == PermissionStatus.permanentlyDenied) {
+                              if (status == PermissionStatus.permanentlyDenied) { // 권한 와전히 거절
                                 PermissionToast();
                                 requestMicPermission(context);
                                 return;
@@ -366,8 +366,8 @@ class _Home extends State<Home> {
 
   Future<bool> requestMicPermission(BuildContext context) async {
     PermissionStatus status = await Permission.microphone.request();
-    // print('permission manage >> $status');
-    if (!status.isGranted) {
+    if (!status.isGranted) {  // 마이크 승인상태가 아닐시
+      // _showDialog(context);
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -378,20 +378,90 @@ class _Home extends State<Home> {
     return true;
   }
 
-  _showDialog(BuildContext context) {
+  // _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
+  //   return AlertDialog(
+  //     content: const Text('Prizm 사용을 위해 마이크 권한을 허용해주세요'),
+  //     actions: [
+  //       TextButton(
+  //         onPressed: () {
+  //           openAppSettings();
+  //         },
+  //         child: const Text(
+  //           '설정하기',
+  //           style: TextStyle(color: Colors.blue),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
+
+  _showDialog(BuildContext context) { // 휴대폰 권한설정으로 이동
     return AlertDialog(
-      content: const Text('마이크 권한을 확인해주세요'),
-      actions: [
-        TextButton(
-          onPressed: () {
-            openAppSettings();
-          },
-          child: const Text(
-            '설정하기',
-            style: TextStyle(color: Colors.blue),
-          ),
-        )
-      ],
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))
+      ),
+      content: Builder(
+        builder: (context) {
+          var width = MediaQuery.of(context).size.width;
+          var height = MediaQuery.of(context).size.height;
+
+          return Container(
+            width: width*0.7,
+            height: height*0.15,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Prizm 사용을 위해 마이크 권한을 ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17
+                        )
+                      ),
+                      TextSpan(
+                        text: ' 허용',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20
+                        )
+                      ),
+                      TextSpan(
+                        text: ' 해주세요',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17
+                        )
+                      )
+                    ]
+                  )
+                ),
+               // const Text('Prizm 사용을 위해 마이크 권한을 허용해주세요',
+               //   style: TextStyle(color: Colors.black)
+               // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      child: TextButton(
+                        onPressed: () {
+                          openAppSettings();
+                        },
+                        child: const Text('권한 설정',
+                         style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

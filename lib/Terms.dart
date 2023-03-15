@@ -72,7 +72,6 @@ class _Terms extends State<Terms> {
                 Expanded(
                     child: WebView(
                   backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-                  // initialUrl: 'http://www.przm.kr/js/terms.html',
                   initialUrl: 'http://${MyApp.terms}',
                   javascriptMode: JavascriptMode.unrestricted,
                   onPageStarted: (String url) {

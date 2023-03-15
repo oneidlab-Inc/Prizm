@@ -12,8 +12,8 @@ import 'package:logger/logger.dart';
 import 'Notfound_bottom.dart';
 import 'wavbuf.dart';
 
-// final DynamicLibrary nativeLib = DynamicLibrary.open('libnative.so'); //Android
-// final DynamicLibrary nativeLib = DynamicLibrary.process(); //IOS
+
+// vmidc, wavbuf Class stop부분의 조건, 타이머 외에 자세한건 유정수부장님께
 
 final DynamicLibrary nativeLibAnd = DynamicLibrary.open('libnative.so');
 final DynamicLibrary nativeLibIos = DynamicLibrary.process();
@@ -21,8 +21,8 @@ final DynamicLibrary nativeLibIos = DynamicLibrary.process();
 final platform = Platform.isAndroid == true;
 
 int Function(Pointer<Int16>, int, Pointer<Uint8>) pcm_to_dna = platform
-      ? nativeLibAnd.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction()
-      : nativeLibIos.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction();
+      ? nativeLibAnd.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction() // Android
+      : nativeLibIos.lookup<NativeFunction<Int32 Function(Pointer<Int16>, Int32, Pointer<Uint8>)>>("pcm_to_dna").asFunction(); // iOS
 
 const srate = 22050;
 const pcmLen = 74656; //3.39sec
@@ -30,8 +30,7 @@ const pcmHop = 22050 * 2; //2sec
 
 class VMIDC {
 
-  final FlutterSoundRecorder _recorder =
-  FlutterSoundRecorder(logLevel: Level.error);
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder(logLevel: Level.error);
   var recCtrl = StreamController<Food>();
   late StreamSubscription _audioStream;
   late StreamSink<List> toStream;
@@ -124,7 +123,6 @@ class VMIDC {
       HapticFeedback.vibrate(); //검색 완료시 진동 현재 Android만
       navigatorState.currentState?.push(  //얻어온 context 로 id값 가지고 push
           MaterialPageRoute(builder: (context) => Result(id: _id!)));
-    //  MaterialPageRoute(builder: (context) => Result(id: id)));
     } else {
       print('NOT FOUND');
       HapticFeedback.vibrate();
@@ -168,6 +166,7 @@ class VMIDC {
     for (int i = 0; i < len; i++) msg[6 + i] = _dna[i];
     _sock.add(msg);
     print("sendQuery");
+
     Timer(const Duration(seconds: 10), () { // 검색 10 초 후 중지
       stop();
     });
