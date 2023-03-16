@@ -207,7 +207,6 @@ class _Settings extends State<Settings> {
                               child: Theme(
                                   data: Theme.of(context).copyWith(
                                       unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
-                                      disabledColor: Colors.blue
                                   ),
                                   child: RadioListTile <Style>(
                                       contentPadding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -240,8 +239,7 @@ class _Settings extends State<Settings> {
                           child: SizedBox(
                               child: Theme(
                                   data: Theme.of(context).copyWith(
-                                      unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),  // 
-                                      disabledColor: Colors.blue
+                                      unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),  // 선택 안된 radio 색
                                   ),
                                   child: RadioListTile<Style>(
                                     contentPadding: const EdgeInsets.only(left: 20),
@@ -275,7 +273,6 @@ class _Settings extends State<Settings> {
                               child: Theme(
                                   data: Theme.of(context).copyWith(
                                       unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
-                                      disabledColor: Colors.blue
                                   ),
                                   child: RadioListTile<Style>(
                                       contentPadding: const EdgeInsets.only(left: 20),
