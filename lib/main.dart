@@ -131,6 +131,7 @@ class _TabPageState extends State<TabPage> {
      *  Default Value에 변경하고 싶은 값을 입력
      *
      *  값 변경 후 꼭 '게시' 를 눌러야 적용됨
+     *  필수업데이트가 필요할때 배포한 버전을 값에 넣고 게시
      */
 
     MyApp.appVersion = appVersion;

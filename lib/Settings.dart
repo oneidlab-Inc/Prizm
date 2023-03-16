@@ -32,7 +32,6 @@ class _Settings extends State<Settings> {
     await MyApp.analytics.setCurrentScreen(screenName: '설정');
   }
 
-  Color selectedColor = Colors.greenAccent;
 
   Style _style = Style.light;
 
@@ -201,7 +200,7 @@ class _Settings extends State<Settings> {
                   height: 70,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[   // Radio 시스템에 Default 사용자가 바꾸면 앱 종료시까지 바뀐 값 유지
+                      children: <Widget>[   // Radio Value system 이 Default 사용자가 바꾸면 앱 종료시까지만 바뀐 값 유지
                         Expanded(
                           child: SizedBox(
                               child: Theme(
@@ -246,10 +245,7 @@ class _Settings extends State<Settings> {
                                     title: Align(
                                       alignment: const Alignment(-1, -0.1),
                                       child: Text('다크',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: isDarkMode ? Colors.white : Colors.black
-                                          )
+                                          style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black)
                                       ),
                                     ),
                                     groupValue: _style,
@@ -325,7 +321,7 @@ class _Settings extends State<Settings> {
                                         height: c_height * 0.115,
                                         child: const Center(
                                             child: Text('검색내역을 삭제하시겠습니까?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
-                                        ),
+                                        )
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
@@ -378,6 +374,10 @@ class _Settings extends State<Settings> {
                                                       _deviceId = await PlatformDeviceId.getDeviceId;
                                                       uid = _deviceId!;
                                                       try {
+                                                        /**
+                                                         * history 가져오는 json과 같지만 뒤에 proc=del 로 삭제처리
+                                                         * url 관련 문제가 있거나 문의사항 있을때는 임정만 차장님께 문의
+                                                         */
                                                         Response response = await http.get(Uri.parse('http://${MyApp.history}?uid=$uid&proc=del'));
                                                         if (response.statusCode == 200) {
                                                           showToast();
@@ -469,12 +469,14 @@ class _Settings extends State<Settings> {
   /*
    *   Remote Config 에서 변경한 앱 버전과 설치되어있는 packageVersion 이 다른경우
    *   Store Url 을 이용해 스토어로 이동
+   *   현재 상태에선 버전이 다른경우 Setting 화면으로 못넘어 오겠지만
+   *   Store 배포 버전정보를 가져와 비교하는 코드 추후 작성 요망.
+   *   Firebase RemoteConfig 에 변수 추가 후 appVersion 을 바꿔서 작성하면 될듯.
    */
   _launchUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;
 
-    // appVersion 은 remoteConfig 에서 설정한 값이기 때문에 가능하다면 게시 후 플레이스토어 버전이랑 비교하도록 변경
     var currentVersion = MyApp.appVersion == packageVersion;
 
     Uri _url = Uri.parse('');
