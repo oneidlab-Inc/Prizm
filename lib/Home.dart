@@ -64,16 +64,11 @@ class _Home extends State<Home> {
             fontWeight: FontWeight.bold
         )
     ),
-    TextSpan(
-        text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)
-    ),
+    TextSpan(text: '을 눌러주세요!', style: TextStyle(fontSize: 17, color: Colors.black)),
   ]);
 
   late TextSpan _textSpan_dark = const TextSpan(children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.white)
-    ),
+    TextSpan(text: '지금 이 곡을 찾으려면 ', style: TextStyle(fontSize: 17, color: Colors.white)),
     TextSpan(
         text: '프리즘 ',
         style: TextStyle(
@@ -136,22 +131,15 @@ class _Home extends State<Home> {
         },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: isDarkMode
-                ? const Color.fromRGBO(47, 47, 47, 1)
-                : const Color.fromRGBO(244, 245, 247, 1),
+            backgroundColor: isDarkMode ? const Color.fromRGBO(47, 47, 47, 1) : const Color.fromRGBO(244, 245, 247, 1),
             centerTitle: true,
             toolbarHeight: 90,
             elevation: 0.0,
-            title: Image.asset(
-              isDarkMode ? 'assets/logo_dark.png' : 'assets/logo_light.png',
-              height: 25,
-            ),
+            title: Image.asset(isDarkMode ? 'assets/logo_dark.png' : 'assets/logo_light.png', height: 25),
             leading: IconButton(
               icon: Image.asset('assets/x_icon.png',
                   width: 20,
-                  color: isTransParents
-                      ? isDarkMode ? Colors.white : Colors.grey
-                      : Colors.transparent
+                  color: isTransParents ? isDarkMode ? Colors.white : Colors.grey : Colors.transparent
               ),
               splashColor: Colors.transparent,
               onPressed: () {
@@ -175,9 +163,7 @@ class _Home extends State<Home> {
           ),
           body: Container(
               width: double.infinity, //
-              color: isDarkMode
-                  ? const Color.fromRGBO(47, 47, 47, 1)
-                  : const Color.fromRGBO(244, 245, 247, 1),
+              color: isDarkMode ? const Color.fromRGBO(47, 47, 47, 1) : const Color.fromRGBO(244, 245, 247, 1),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -199,69 +185,71 @@ class _Home extends State<Home> {
                                   alignment: isFlip ? const Alignment(0, 1) : const Alignment(0, 1),
                                   colorFilter: _background
                               )
-                      ),
-                      child: Center(
-                          child: Column(children: <Widget>[
-                        Center(
-                            child: Container(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          child: RichText(
-                              text: isDarkMode ? _textSpan_dark : _textSpan_light
-                            ),
-                          )
                         ),
-                        IconButton(
-                            // icon: _icon,
-                            icon: isDarkMode ? Image.asset('assets/_prizm_dark.png') : Image.asset('assets/_prizm.png'),
-                            padding: const EdgeInsets.only(bottom: 30),
-                            iconSize: _size,
-                            onPressed: () async {
-                              var status = await Permission.microphone.status;
-                              if (status == PermissionStatus.permanentlyDenied) {
-                                PermissionToast();
-                                Permission.microphone.request();
-                                return;
-                              } else if (status == PermissionStatus.denied) {
-                                requestMicPermission(context);
-                                Permission.microphone.request();
-                                return;
-                              }
-                              if (_connectionStatus.endsWith('none') == true) {
-                                NetworkToast();
-                                return;
-                              } else if (await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false) {
-                                _vmidc.start();
-                                await MyApp.analytics.logEvent(name: 'vmidc_start');
-                                if(!mounted){
-                                  return;
-                                }
-                                setState(() {
-                                  settingIcon = ImageIcon(Image.asset('assets/settings.png').image, color: Colors.transparent);
-                                  isDarkMode
-                                      ? _textSpan_dark = const TextSpan(
-                                          text: '노래 분석중',
-                                          style: TextStyle(
-                                              color: Color.fromRGBO(43, 226, 193, 1),
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        )
-                                      : _textSpan_light = const TextSpan(
-                                          text: '노래 분석중',
-                                          style: TextStyle(
-                                              color: Color.fromRGBO(43, 226, 193, 1),
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        );
-                                  _background = const ColorFilter.mode(Colors.transparent, BlendMode.color);
-                                });
-                                if (_vmidc.isRunning() == true) {
-                                  _vmidc.stop();
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => const TabPage()));
-                                }
-                              }
-                            }),
+                      child: Center(
+                          child: Column(
+                              children: <Widget>[
+                                Center(
+                                    child: Container(
+                                  margin: const EdgeInsets.only(bottom: 20),
+                                  child: RichText(
+                                      text: isDarkMode ? _textSpan_dark : _textSpan_light
+                                    ),
+                                  )
+                                ),
+                                IconButton(
+                                  icon: isDarkMode ? Image.asset('assets/_prizm_dark.png') : Image.asset('assets/_prizm.png'),
+                                  padding: const EdgeInsets.only(bottom: 30),
+                                  iconSize: _size,
+                                  onPressed: () async {
+                                    var status = await Permission.microphone.status;
+                                    if (status == PermissionStatus.permanentlyDenied) {
+                                      PermissionToast();
+                                      Permission.microphone.request();
+                                      return;
+                                    } else if (status == PermissionStatus.denied) {
+                                      requestMicPermission(context);
+                                      Permission.microphone.request();
+                                      return;
+                                    }
+
+                                    if (_connectionStatus.endsWith('none') == true) {
+                                      NetworkToast();
+                                      return;
+                                    } else if (await Permission.microphone.status.isGranted && _connectionStatus.endsWith('none') == false) {
+                                      _vmidc.start();
+                                      await MyApp.analytics.logEvent(name: 'vmidc_start');
+                                      if(!mounted){
+                                        return;
+                                      }
+                                      setState(() {
+                                        settingIcon = ImageIcon(Image.asset('assets/settings.png').image, color: Colors.transparent);
+                                        isDarkMode
+                                            ? _textSpan_dark = const TextSpan(
+                                                text: '노래 분석중',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(43, 226, 193, 1),
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              )
+                                            : _textSpan_light = const TextSpan(
+                                                text: '노래 분석중',
+                                                style: TextStyle(
+                                                    color: Color.fromRGBO(43, 226, 193, 1),
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.bold
+                                                ),
+                                              );
+                                        _background = const ColorFilter.mode(Colors.transparent, BlendMode.color);
+                                      });
+                                      if (_vmidc.isRunning() == true) {
+                                        _vmidc.stop();
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const TabPage()));
+                                      }
+                                    }
+                                  }
+                               ),
                           ]
                         )
                      )
@@ -319,16 +307,12 @@ class _Home extends State<Home> {
                           height: 78,
                           child: Container(
                               decoration: BoxDecoration(
-                                  color: isDarkMode
-                                      ? const Color.fromRGBO(66, 66, 66, 1)
-                                      : Colors.white,
+                                  color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                   border: Border(
                                       right: BorderSide(
                                           color: isDarkMode
-                                              ? const Color.fromRGBO(
-                                                  94, 94, 94, 1)
-                                              : Colors.black
-                                                  .withOpacity(0.1)
+                                              ? const Color.fromRGBO(94, 94, 94, 1)
+                                              : Colors.black.withOpacity(0.1)
                                       )
                                   )
                               ),
@@ -354,16 +338,14 @@ class _Home extends State<Home> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text(
-                                '취소',
+                              child: Text('취소',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: isDarkMode
-                                      ? Colors.white.withOpacity(0.8)
-                                      : Colors.black.withOpacity(0.3),
+                                  color: isDarkMode ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.3),
                                 ),
                               ),
-                            )),
+                            )
+                        ),
                       ],
                     ),
                   )
@@ -377,7 +359,6 @@ class _Home extends State<Home> {
   Future<bool> requestMicPermission(BuildContext context) async {
     PermissionStatus status = await Permission.microphone.request();
     if (!status.isGranted) {  // 마이크 승인상태가 아닐시
-      // _showDialog(context);
       showDialog(
           context: context,
           builder: (BuildContext context) {
