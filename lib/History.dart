@@ -14,6 +14,10 @@ import 'PlayInfo.dart';
 import 'Settings.dart';
 import 'main.dart';
 
+/*
+ * 모든 리스트들은 Widget 으로 밖에서 생성하여 따로 관리
+ * 변경에 용이하고 관리가 간편함
+ */
 class History extends StatefulWidget {
   const History({super.key});
 
@@ -47,7 +51,7 @@ class _History extends State<History> {
     });
   }
 
-  static RegExp basicReg = (
+  static RegExp basicReg = (  // 초성검색은 아직 미완성 외부 라이브러리에서 더 찾아서 완성해야할듯.
       RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-]')
   );
   List song_info = [];
@@ -71,7 +75,7 @@ class _History extends State<History> {
   }
 
   void search(String query) {
-    if (query.isEmpty) {
+    if (query.isEmpty) {  // 검색창이 비었을시 전체 history 데이터
       song_info = original;
       setState(() {});
       return;
@@ -86,7 +90,7 @@ class _History extends State<History> {
       var title = p["TITLE"].toString().toLowerCase();
       var artist = p["ARTIST"].toString().toLowerCase();
       var album = p['ALBUM'].toString().toLowerCase();
-      if (title.contains(query)) {
+      if (title.contains(query)) {  // else if 로 처리해야 중복된 데이터 표시 x
         result.add(p);
       } else if (artist.contains(query)) {
         result.add(p);
@@ -230,10 +234,9 @@ class _History extends State<History> {
                               FilteringTextInputFormatter.allow(basicReg)
                             ],
                             onChanged: search,
-                            textInputAction: TextInputAction.search,
+                            textInputAction: TextInputAction.search, // 키보드에 검색 아이콘 추가
                             decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 20),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 20),
                                 labelText: '곡/가수/앨범명으로 검색해주세요',
                                 labelStyle: TextStyle(
                                     fontSize: 15,
@@ -247,13 +250,12 @@ class _History extends State<History> {
                                 prefixIcon: const Icon(Icons.search, color: Colors.greenAccent),
                                 suffixIcon: txtQuery.text.isNotEmpty
                                     ? IconButton(
-                                        icon: Icon(Icons.clear,
+                                        icon: Icon(Icons.clear, // TextField 입력시 우측끝에 X 아이콘 생성
                                             color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2)
                                         ),
                                         onPressed: () async {
                                           txtQuery.text = '';
                                           search(txtQuery.text);
-                                          await MyApp.analytics.logEvent(name: '히스토리 검색');
                                         },
                                       )
                                     : null
@@ -299,7 +301,7 @@ class _History extends State<History> {
   Widget _listView(song_info) {
     return Expanded(
         child: ListView.builder(
-            itemCount: song_info == null ? 0 : song_info.length,
+            itemCount: song_info == null ? 0 : song_info.length,  // 출력할 리스트의 갯수 null 이 아닐경우 데이터의 길이만큼 출력
             itemBuilder: (context, index) {
               double c_width = MediaQuery.of(context).size.width;
               final info = song_info[index];
@@ -313,7 +315,6 @@ class _History extends State<History> {
                       backgroundColor: Colors.transparent,
                       context: context,
                       builder: (BuildContext context) {
-                        var info = song_info[index];
                         final deviceId = _deviceId;
                         return SizedBox(
                             width: c_width,
@@ -754,13 +755,20 @@ class _History extends State<History> {
                                   return;
                                 }
                                 setState(() {
+                                  /**
+                                   * main 의 ConvexBottomBar 와 같은 화면이지만 selectedIndex 만 0번인 화면
+                                   * 삭제 후 push 를 하지 않으면 화면 refresh 가 되지 않고
+                                   * History 로 push 를 하면 BottomBar 가 표시되지 않음
+                                   * 삭제 후 삭제 된 새로운 리스트를 가져오기 위해 Bottom 으로 push
+                                   */
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => Bottom()));
                                 });
                               },
                               child: const Text('삭제',
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: Color.fromRGBO(64, 220, 196, 1)),
+                                    color: Color.fromRGBO(64, 220, 196, 1)
+                                ),
                               ),
                             ),
                           ),

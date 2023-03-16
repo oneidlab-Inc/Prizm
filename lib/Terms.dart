@@ -128,6 +128,7 @@ class _Terms extends State<Terms> {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
       NetworkToast();
+      print(e);
       rethrow;
     }
     if (!mounted) {

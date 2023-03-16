@@ -457,6 +457,7 @@ class _Home extends State<Home> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
+      print(e);
       rethrow;
     }
     if (!mounted) {

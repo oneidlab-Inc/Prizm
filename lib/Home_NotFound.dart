@@ -151,6 +151,7 @@ class _NotFound extends State<NotFound> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
+      print(e);
       rethrow;
     }
     if (!mounted) {
