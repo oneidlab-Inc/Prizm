@@ -113,7 +113,7 @@ class _TabPageState extends State<TabPage> {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var packageVersion = packageInfo.version;   // Project level 의 pubspec.yaml 상단 version 값
     remoteConfig.setDefaults({'appVersion': packageVersion}); //변수명 String으로 넣고 Default 값 설정
-    await remoteConfig.setConfigSettings(  // Fetch 될 시간 설정
+    await remoteConfig.setConfigSettings(  // Fetch 될 시간 설정 '필수' 설정 안하면 fetch 하지 않음
         RemoteConfigSettings(
             fetchTimeout: const Duration(seconds: 30),
             minimumFetchInterval: Duration.zero // Duration 없이 Fetch
@@ -122,16 +122,18 @@ class _TabPageState extends State<TabPage> {
     await remoteConfig.fetchAndActivate();  // Fetch
 
     String appVersion = remoteConfig.getString('appVersion'); // 변수명 가져오기
-
+    
     /**
-     *  appVersion = remoteConfig에서 변경가능한 값
+     *  appVersion = remoteConfig 에서 변경가능한 값
      *  packageVersion = 현재 설치되어있는 패키지의 버전
      *
-     *  Firebase의 RemoteConfig 에서 인앱 기본값 사용을 해제하고
-     *  Default Value에 변경하고 싶은 값을 입력
+     *  Firebase 의 RemoteConfig 에서 인앱 기본값 사용을 해제하고
+     *  Default Value 에 변경하고 싶은 값을 입력
      *
      *  값 변경 후 꼭 '게시' 를 눌러야 적용됨
      *  필수업데이트가 필요할때 배포한 버전을 값에 넣고 게시
+     *  
+     *  평소에는 인앱 기본값 으로 설정해놔야 걸리지 않고 넘어감
      */
 
     MyApp.appVersion = appVersion;

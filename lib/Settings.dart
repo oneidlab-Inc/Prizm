@@ -471,7 +471,7 @@ class _Settings extends State<Settings> {
    *   Store Url 을 이용해 스토어로 이동
    *   현재 상태에선 버전이 다른경우 Setting 화면으로 못넘어 오겠지만
    *   Store 배포 버전정보를 가져와 비교하는 코드 추후 작성 요망.
-   *   Firebase RemoteConfig 에 변수 추가 후 appVersion 을 바꿔서 작성하면 될듯.
+   *   Firebase RemoteConfig 에 매개변수 추가 후  MyApp.appVersion 을 바꿔서 작성하면 될듯.
    */
   _launchUpdate() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
