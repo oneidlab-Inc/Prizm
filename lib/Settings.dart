@@ -382,20 +382,19 @@ class _Settings extends State<Settings> {
                                                       _deviceId = await PlatformDeviceId.getDeviceId;
                                                       uid = _deviceId!;
                                                       try {
-                                                        Response response =
-                                                        await http.get(
-                                                          Uri.parse('http://${MyApp.history}?uid=$uid&proc=del')
-                                                        );
+                                                        Response response = await http.get(Uri.parse('http://${MyApp.history}?uid=$uid&proc=del'));
                                                         if (response.statusCode == 200) {
                                                           showToast();
                                                         } else {
                                                           failToast();
+                                                          NetworkToast();
                                                           throw "검색내역 삭제 실패";
                                                         }
                                                         setState(() {
                                                           Navigator.pop(context);
                                                         });
                                                       } catch (e) {
+                                                        failToast();
                                                         NetworkToast();
                                                         setState(() {
                                                           Navigator.pop(context);
