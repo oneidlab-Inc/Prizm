@@ -184,13 +184,16 @@ class _Result extends State<Result> {
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
-    double c_height = MediaQuery.of(context).size.height;
-    double c_width = MediaQuery.of(context).size.width;
-    final isCNTS = song_cnts.length > 3;
-    final isExist = programs.isEmpty;
-    final isArtistNull = maps['ARTIST'] == null;
-    final isAlbumNull = maps['ALBUM'] == null;
-    final isImage = maps['IMAGE'].toString().startsWith('assets') != true;
+    double c_height = MediaQuery.of(context).size.height; // 화면상의 전체 높이
+    double c_width = MediaQuery.of(context).size.width; // 화면상의 전치 너비
+    final isCNTS = song_cnts.length > 3;  // 차트에 검색수를 가지고 있는 달이 3달 이상일경우
+    final isExist = programs.isEmpty;   // 프로그램 방송 정보가 없을경우
+    final isArtistNull = maps['ARTIST'] == null;  // Artist 의 정보가 없을경우
+    final isAlbumNull = maps['ALBUM'] == null; // Album 의 정보가 없을경우
+    final isImage = maps['IMAGE'].toString().startsWith('assets') != true;  // Image 가 있을경우 > assets로 시작하는 경우, assets/no_image.png 이기 때문
+
+
+    //  ▼ 대중적인 기기 비율에 맞춰 계산해놓은것 나중에 방법 있으면 바꾸길 추천
     final isPad = c_width > 800;
     final isFlip = c_height / c_width > 2.3;
     final isUltra = c_height > 1000;
@@ -657,7 +660,8 @@ class _Result extends State<Result> {
                                       fontSize: 16,
                                       overflow: TextOverflow.ellipsis,
                                       fontWeight: FontWeight.bold,
-                                      color: isDarkMode ? Colors.white : Colors.black)
+                                      color: isDarkMode ? Colors.white : Colors.black
+                                  )
                               )
                           )
                         ]),
@@ -790,9 +794,7 @@ class _Result extends State<Result> {
           horizontalLines: [
             HorizontalLine(
                 y: 0,
-                color: isDarkMode
-                    ? Colors.grey.withOpacity(0.6)
-                    : Colors.grey.withOpacity(0.3)
+                color: isDarkMode ? Colors.grey.withOpacity(0.6) : Colors.grey.withOpacity(0.3)
             )
           ],
         ),
@@ -802,9 +804,7 @@ class _Result extends State<Result> {
             getDrawingHorizontalLine: (value) {
               return FlLine(
                   strokeWidth: 1,
-                  color: isDarkMode
-                      ? Colors.grey.withOpacity(0.6)
-                      : Colors.grey.withOpacity(0.3)
+                  color: isDarkMode ? Colors.grey.withOpacity(0.6) : Colors.grey.withOpacity(0.3)
               );
             },
             drawVerticalLine: false,
@@ -823,9 +823,9 @@ class _Result extends State<Result> {
                     FlDotCirclePainter(
                         radius: 3.0,
                         color: const Color.fromRGBO(51, 211, 180, 1),
-                        strokeColor:
-                            isDarkMode ? Colors.white : Colors.grey.shade200,
-                        strokeWidth: 5.0),
+                        strokeColor: isDarkMode ? Colors.white : Colors.grey.shade200,
+                        strokeWidth: 5.0
+                    ),
               ),
               color: const Color.fromRGBO(51, 211, 180, 1),
               isCurved: true,
@@ -843,7 +843,8 @@ class _Result extends State<Result> {
                       : [const Color.fromRGBO(51, 215, 180, 1), Colors.white24]
                 ),
               ),
-              spots: FlSpotData)
+              spots: FlSpotData
+          )
         ],
         titlesData: FlTitlesData(
             topTitles: AxisTitles(
@@ -862,7 +863,9 @@ class _Result extends State<Result> {
             ),
             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false))
         ),
-        lineTouchData: LineTouchData(enabled: true)));
+         lineTouchData: LineTouchData(enabled: true)
+      )
+    );
     return result;
   }
 }

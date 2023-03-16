@@ -15,6 +15,12 @@ import 'Notfound_bottom.dart';
 import 'Settings.dart';
 import 'main.dart';
 
+
+/*
+ * 뒤로가기 등 여러가지 Dialog 를 Debug Mode 에서 실행시
+ * px overflow 에러가 날수 있지만 apk 추출하여 확인하면 정상적으로 출력됨 (iOS는 run --release)
+ * 여러가지 overflow 에러는 꼭 release 버전에서 확인 해보고 수정필요요
+*/
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -41,7 +47,6 @@ class _Home extends State<Home> {
   late dynamic _background = const ColorFilter.mode(Colors.transparent, BlendMode.clear);
 
   late var settingIcon = ImageIcon(Image.asset('assets/settings.png').image);
-  late var x_icon = ImageIcon(Image.asset('assets/x_icon.png').image);
 
 
   /*
@@ -122,7 +127,7 @@ class _Home extends State<Home> {
     double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isTransParents = settingIcon.color == const Color(0x00000000);
+    final isTransParents = settingIcon.color == const Color(0x00000000);  // Setting Icon 색에 따라 leading Icon 투명화
     final isPad = c_width > 550;
     final isFlip = c_height > 800;
     return WillPopScope(
@@ -144,14 +149,14 @@ class _Home extends State<Home> {
             leading: IconButton(
               icon: Image.asset('assets/x_icon.png',
                   width: 20,
-                  color: isTransParents  // Setting Icon 색에 따라 leading Icon 투명화
+                  color: isTransParents
                       ? isDarkMode ? Colors.white : Colors.grey
                       : Colors.transparent
               ),
               splashColor: Colors.transparent,
               onPressed: () {
                 _vmidc.stop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => TabPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const TabPage()));
               },
             ),
             actions: [
@@ -162,14 +167,14 @@ class _Home extends State<Home> {
                 color: isDarkMode ? Colors.white : Colors.black,
                 onPressed: () {
                   isTransParents
-                      ? null
+                      ? null    // Setting Icon 이 투명일때 클릭해도 화면이동 x
                       : Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings()));
                 },
               )
             ],
           ),
           body: Container(
-              width: double.infinity,
+              width: double.infinity, //
               color: isDarkMode
                   ? const Color.fromRGBO(47, 47, 47, 1)
                   : const Color.fromRGBO(244, 245, 247, 1),
@@ -272,8 +277,7 @@ class _Home extends State<Home> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return await showDialog(
       context: context,
-      barrierDismissible: false,
-      //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
+      barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
       builder: (BuildContext context) {
         return Dialog(
             shape: RoundedRectangleBorder(
