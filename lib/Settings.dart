@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 
-enum Style { light, dark, system }  // 스타일 Radio 3개 값 system Default
+enum Style { light, dark, system }  // 스타일 Radio 3개 값 Default 값은 system
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -38,7 +38,6 @@ class _Settings extends State<Settings> {
 
   String? uid;
   String? _deviceId;
-  var theme;
 
   @override
   void initState() {
@@ -97,7 +96,7 @@ class _Settings extends State<Settings> {
                         ImageIcon(
                           Image.asset('assets/customer_center.png').image,
                           color: Colors.greenAccent,
-                          size: 25,
+                          size: 25
                         ),
                         Container(
                           margin: const EdgeInsets.only(left: 15),
@@ -145,15 +144,15 @@ class _Settings extends State<Settings> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '개인정보 처리방침',
+                          Text('개인정보 처리방침',
                             style: TextStyle(
                               fontSize: 17,
-                              color: isDarkMode ? Colors.white : Colors.black,
+                              color: isDarkMode ? Colors.white : Colors.black
                             ),
                           ),
                           Align(
-                            child: Image.asset('assets/move.png', width: 10))
+                            child: Image.asset('assets/move.png', width: 10)
+                          )
                         ],
                       ),
                     ),
@@ -183,19 +182,19 @@ class _Settings extends State<Settings> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black
-                          ),
-                        ),
+                          )
+                        )
                       )
-                    ],
-                  ),
+                    ]
+                  )
                 ),
                 Container(
                     margin: const EdgeInsets.fromLTRB(30, 20, 10, 0),
                     child: Text('화면스타일',
                       style: TextStyle(
                         fontSize: 17,
-                        color: isDarkMode ? Colors.white : Colors.black,
-                      ),
+                        color: isDarkMode ? Colors.white : Colors.black
+                      )
                     )
                 ),
                 SizedBox(
@@ -219,9 +218,9 @@ class _Settings extends State<Settings> {
                                                 fontSize: 13,
                                                 color: isDarkMode ? Colors.white : Colors.black
                                             )
-                                        ),
+                                        )
                                       ),
-                                      groupValue: _style,
+                                      groupValue: _style, // 상단 설정한 Enum group
                                       value: Style.light,
                                       onChanged: (Style? value) {
                                         if(!mounted) {
@@ -235,13 +234,13 @@ class _Settings extends State<Settings> {
                                       activeColor: const Color.fromRGBO(64, 220, 196, 1)
                                   )
                               )
-                          ),
+                          )
                         ),
                         Expanded(
                           child: SizedBox(
                               child: Theme(
                                   data: Theme.of(context).copyWith(
-                                      unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
+                                      unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),  // 
                                       disabledColor: Colors.blue
                                   ),
                                   child: RadioListTile<Style>(

@@ -126,8 +126,7 @@ class VMIDC {
     } else {
       print('NOT FOUND');
       HapticFeedback.vibrate();
-      navigatorState.currentState
-          ?.push(MaterialPageRoute(builder: (context) => Notfound_Bottom()));
+      navigatorState.currentState?.push(MaterialPageRoute(builder: (context) => Notfound_Bottom()));
     }
     print('vmid.stop()');
     await _recorder.stopRecorder();
