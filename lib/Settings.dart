@@ -479,17 +479,17 @@ class _Settings extends State<Settings> {
 
     var currentVersion = MyApp.appVersion == packageVersion;
 
-    Uri _url = Uri.parse('');
+    Uri url = Uri.parse('');
     if (Platform.isAndroid) {
-      _url = Uri.parse(currentVersion ? '' : /* Play Store Url */'');
+      url = Uri.parse(currentVersion ? '' : /* Play Store Url */'');
     } else if (Platform.isIOS) {
-      _url = Uri.parse(currentVersion ? '' : /* App Store Url*/ '');
+      url = Uri.parse(currentVersion ? '' : /* App Store Url*/ '');
     }
-    if (await launchUrl(_url)) {
-      await canLaunchUrl(_url);
+    if (await launchUrl(url)) {
+      await canLaunchUrl(url);
     } else {
       NetworkToast();
-      throw '$_url 연결 실패';
+      throw '$url 연결 실패';
     }
     // await launchUrl(_url);
   }

@@ -125,7 +125,7 @@ class _TabPageState extends State<TabPage> {
     
     /**
      *  appVersion = remoteConfig 에서 변경가능한 값
-     *  packageVersion = 현재 설치되어있는 패키지의 버전
+     *  packageVersion = 현재 기기에 설치되어있는 패키지의 버전
      *
      *  Firebase 의 RemoteConfig 에서 인앱 기본값 사용을 해제하고
      *  Default Value 에 변경하고 싶은 값을 입력
