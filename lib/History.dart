@@ -714,9 +714,7 @@ class _History extends State<History> {
                                     color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                                     border: Border(
                                         right: BorderSide(
-                                            color: isDarkMode
-                                                ? const Color.fromRGBO(94, 94, 94, 1)
-                                                : Colors.black.withOpacity(0.1)
+                                            color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1)
                                         )
                                     )
                                 ),
@@ -743,6 +741,10 @@ class _History extends State<History> {
                             color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
                             child: TextButton(
                               onPressed: () async {
+                                /**
+                                 * url 뒤에 uid 값과 songId 값을 보내 해당 곡만 삭제처리
+                                 * proc=del 을 같이 보내야 삭제 없을시 history 내역 json
+                                 */
                                 Response response = await http.get(Uri.parse('http://${MyApp.history}/json?uid=$uid&id=$_songid&proc=del'));
                                 if (response.statusCode == 200) {
                                   showToast();
@@ -757,7 +759,7 @@ class _History extends State<History> {
                                 setState(() {
                                   /**
                                    * main 의 ConvexBottomBar 와 같은 화면이지만 selectedIndex 만 0번인 화면
-                                   * 삭제 후 push 를 하지 않으면 화면 refresh 가 되지 않고
+                                   * 삭제 후 push 를 하지 않으면 history 리스트 refresh 가 되지 않고
                                    * History 로 push 를 하면 BottomBar 가 표시되지 않음
                                    * 삭제 후 삭제 된 새로운 리스트를 가져오기 위해 Bottom 으로 push
                                    */
