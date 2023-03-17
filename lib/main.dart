@@ -25,6 +25,12 @@ import 'Search_Result.dart';
 
 
 /*
+ * 문제가 있을시 터미널 혹은 cmd 에 Flutter doctor -v
+ * flutter clean > flutter pub get
+ * apk 추출시 flutter build apk --release --target-platform=android-arm64
+ * 빌드한 apk 파일은 C:\Prizm\build\app\outputs\apk\release 에 위치
+ * ios 는 윈도우 환경에서 빌드 불가 vmware 맥 이용
+ *
  * 앱 버전 변경시 pubspec.yaml 상단의 version 과
  * android level 의 local.properties
  * app level 의 build.gradle 의 versionName, versionCode 변경
