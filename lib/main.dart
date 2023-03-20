@@ -256,7 +256,7 @@ class _TabPageState extends State<TabPage> {
 /*-----------------------------------------------------------------------------------------*/
 
   final List _pages = [const History(), const Home(), const Chart()];
-  // final List _pages = [Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
+  // final List _pages = [const Result(id: '',), Home(), Chart()];   // emulator에서 result화면 수정시 History 대신 Result 넣고 수정
 
   List url = [];
 
@@ -319,8 +319,8 @@ class _TabPageState extends State<TabPage> {
         overlays: [SystemUiOverlay.bottom]);
     return WillPopScope(
         onWillPop: () {
-          if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) { //디바이스 widthPx / 3 의 값이 page offset 값과 같을때
-            return _onBackKey();
+          if (_selectedIndex == 1 && pageController.offset == _deviceData / 3) {
+            return _onBackKey();//디바이스 widthPx / 3 의 값이 page offset 값과 같고 index 1번일떄 종료 dialog
           } else {
             return _backToHome();
           }

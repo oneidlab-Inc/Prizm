@@ -85,7 +85,7 @@ class _Result extends State<Result> {
 
     try {
       http.Response response = await http.get(
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=KE0012745001004&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
+          // Uri.parse('http://dev.przm.kr/przm_api/get_song_search/json?id=WA0632182001001&uid=11B9E7C3-4BF1-465B-B522-6158756CC737'));
       Uri.parse('http://${MyApp.search}/json?id=${widget.id}&uid=$uid'));
       String jsonData = response.body;
       Map<String, dynamic> map = jsonDecode(jsonData);
@@ -101,7 +101,7 @@ class _Result extends State<Result> {
     try {
       http.Response response = await http.get(
           Uri.parse('http://${MyApp.programs}/json?id=${widget.id}')
-          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=KE0012745001004')
+          // Uri.parse('http://dev.przm.kr/przm_api/get_song_programs/json?id=WA0632182001001')
     );
       String jsonData = response.body;
 
@@ -139,23 +139,23 @@ class _Result extends State<Result> {
         year = DateFormat('yyyy').format(dateTime);
         dateList.add(year + month);
       }
-      List reverse = List.from(dateList.reversed);
+      List reverse = List.from(dateList.reversed);  // 1년 전 부터 현재월 -1 까지 출력이기 때문에 순서 뒤집기
 
       // 현재월
       // 차트 실데이터 파싱
       for (int j = 0; j < reverse.length; j++) {
-        double mon = double.parse(j.toString()) + 1;
+        double mon = double.parse(j.toString()) + 1;  // FLSpot 에 double 로 들어가야 하기 때문에 double 로 parse
         FlSpotDataAll.insert(j, FlSpot(mon, 0));
 
         for (int jj = 0; jj < song_cnts.length; jj++) {
           if (song_cnts[jj]['F_MONTH'].toString() == reverse[j]) {
             cnt = double.parse(song_cnts[jj]['CTN']);
             FlSpotDataAll.removeAt(j); //없는 월 제외
-            FlSpotDataAll.insert(j, FlSpot(mon, cnt));
+            FlSpotDataAll.insert(j, FlSpot(mon, cnt));  // 데이터 대입
           }
         }
       }
-      FlSpotDataAll.removeWhere((items) => items.props.contains(0.0));  // 없는 데이터 제외
+      FlSpotDataAll.removeWhere((items) => items.props.contains(0.0));  // 조회수가 0 인 월 제외
     } catch (e) {
       rethrow;
     }
@@ -186,11 +186,11 @@ class _Result extends State<Result> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height; // 화면상의 전체 높이
     double c_width = MediaQuery.of(context).size.width; // 화면상의 전치 너비
-    final isCNTS = song_cnts.length > 3;  // 차트에 검색수를 가지고 있는 달이 3달 이상일경우
+    final CNTS = song_cnts.length > 3;  // 차트에 조회수를 가지고 있는 달이 3달 이상일경우
     final isExist = programs.isEmpty;   // 프로그램 방송 정보가 없을경우
     final isArtistNull = maps['ARTIST'] == null;  // Artist 의 정보가 없을경우
     final isAlbumNull = maps['ALBUM'] == null; // Album 의 정보가 없을경우
-    final isImage = maps['IMAGE'].toString().startsWith('assets') != true;  // Image 가 있을경우 > assets로 시작하는 경우, assets/no_image.png 이기 때문
+    final isImage = maps['IMAGE'].toString().startsWith('assets') == false; // false 일 경우 이미지가 있는것, true 일 경우 assets/no_image.png
 
 
     //  ▼ 대중적인 기기 비율에 맞춰 계산해놓은것 나중에 방법 있으면 바꾸길 추천
@@ -494,11 +494,10 @@ class _Result extends State<Result> {
                                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                                     )
                                 ),
-                                isCNTS
-                                    ? ChartContainer(
+                                CNTS
+                                    ? ChartContainer( //  lib/chart/chart_container.dart
                                         color: isDarkMode ? Colors.black : Colors.white,
                                         chart: line_chart(song_cnts),
-                                        title: '',
                                       )
                                     : const SizedBox(
                                         height: 200,
@@ -733,8 +732,8 @@ class _Result extends State<Result> {
       for (i; i < 13; i++) {
         dateTime = DateTime(now.year, now.month - i, 1);
         date = DateFormat('MM').format(dateTime);
-        year = DateFormat('yy').format(now);
-        dateList.add(date);
+        // year = DateFormat('yy').format(now);
+        dateList.add(date); // MM 만 뽑아 dateList 에 넣기
       }
     } catch (e) {
       rethrow;
@@ -742,7 +741,7 @@ class _Result extends State<Result> {
     reversedDate = [];
     reversedDate = List.from(dateList.reversed);
 
-    switch (value.toInt()) {
+    switch (value.toInt()) {  // double 로 넣은 mon 을 int 로 바꿔 인덱스로 x축 대입
       case 1:
         text = reversedDate[0];
         break;
@@ -807,7 +806,7 @@ class _Result extends State<Result> {
                   color: isDarkMode ? Colors.grey.withOpacity(0.6) : Colors.grey.withOpacity(0.3)
               );
             },
-            drawVerticalLine: false,
+            drawVerticalLine: false, // Y축 라인 false
             drawHorizontalLine: true,
             horizontalInterval: minCnt ? avgY / 8 : 30
         ),
