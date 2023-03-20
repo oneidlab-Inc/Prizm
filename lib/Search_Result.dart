@@ -126,7 +126,7 @@ class _Result extends State<Result> {
           sum += listY[y];
         }
       }
-      avgY = sum / listY.length;
+      avgY = sum / listY.length;  // 하단에 Y 축 조정을 위해 사용
 
       List dateList = [];
       var dateTime;
@@ -155,7 +155,7 @@ class _Result extends State<Result> {
           }
         }
       }
-      FlSpotDataAll.removeWhere((items) => items.props.contains(0.0));
+      FlSpotDataAll.removeWhere((items) => items.props.contains(0.0));  // 없는 데이터 제외
     } catch (e) {
       rethrow;
     }

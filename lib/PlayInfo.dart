@@ -41,7 +41,6 @@ class _PlayInfo extends State<PlayInfo> {
   _HighlightTextType type = _HighlightTextType.text;
 
   List info = [];
-  List original = [];
   List info_radio = [];
 
   late int statuscode;
@@ -61,7 +60,6 @@ class _PlayInfo extends State<PlayInfo> {
       Map<String, dynamic> map = jsonDecode(jsonData);
       info = map['tv'];
       info_radio = map['radio'];
-      original = info;
       setState(() {});
 
     } catch (e) {
@@ -86,12 +84,7 @@ class _PlayInfo extends State<PlayInfo> {
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setEnabledSystemUIMode(    // 상단 상태바 제거
-        SystemUiMode.manual,
-        overlays: [
-          SystemUiOverlay.bottom
-        ]
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     final isExistTV = info.isEmpty;
     final isExistRadio = info_radio.isEmpty;
 
@@ -130,9 +123,7 @@ class _PlayInfo extends State<PlayInfo> {
                     children: [
                       Container(
                         width: c_width,
-                        color: isDarkMode
-                            ? const Color.fromRGBO(36, 36, 36, 1)
-                            : const Color.fromRGBO(250, 250, 250, 1),
+                        color: isDarkMode ? const Color.fromRGBO(36, 36, 36, 1) : const Color.fromRGBO(250, 250, 250, 1),
                         height: 100,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +151,8 @@ class _PlayInfo extends State<PlayInfo> {
                                               width: 70,
                                               height: 70,
                                               child: Image.asset(
-                                                  'assets/no_image.png'));
+                                                  'assets/no_image.png')
+                                          );
                                         },
                                       )
                                   ),
@@ -232,7 +224,8 @@ class _PlayInfo extends State<PlayInfo> {
                                                   ) : _tv_list(info)
                                               )
                                             ],
-                                          ))
+                                          )
+                                      )
                                     ]
                                 )
                             ),
@@ -244,9 +237,8 @@ class _PlayInfo extends State<PlayInfo> {
                                     Container(
                                       padding: const EdgeInsets.only(top: 10, bottom: 10),
                                       child: const Text('최신 RADIO 방송내역',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 22)),
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)
+                                      ),
                                     ),
                                     Expanded(
                                         child: Row(
@@ -289,7 +281,6 @@ class _PlayInfo extends State<PlayInfo> {
 
             String radioDate = info_radio[index]['RADIO_DATE'];
             String parseRadioDate = DateFormat('yyyy.MM.dd').format(DateTime.parse(radioDate)).toString();
-
             final isDarkMode = Theme.of(context).brightness == Brightness.dark;
             return Row(children: [
               Column(

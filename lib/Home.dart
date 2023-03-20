@@ -1,11 +1,7 @@
-//identifierForVendotr << ios    androidId << android
-
 import 'dart:async';
 import 'dart:io';
-import 'package:Prizm/History_Bottom.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:Prizm/vmidc.dart';
-
+import 'vmidc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,7 +13,11 @@ import 'main.dart';
 /*
  * 뒤로가기 등 여러가지 Dialog 를 Debug Mode 에서 실행시
  * px overflow 에러가 날수 있지만 apk 추출하여 확인하면 정상적으로 출력됨 (iOS는 run --release)
- * 여러가지 overflow 에러는 꼭 release 버전에서 확인 해보고 수정필요요
+ * 여러가지 overflow 에러는 꼭 release 버전에서 확인 해보고 수정필요
+ *
+ * Emulator 에서는 마이크 녹음 기능이 없기때문에 vmidc start 버튼을 누르면 에러 발생
+ * Emulator 에서 검색 버튼 누른 후 화면 확인 등 체크 할땐 vmidc.start() 주석 후 확인 권장
+ *
 */
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -51,9 +51,7 @@ class _Home extends State<Home> {
    * 하단 RichText 에서 삼항연산자로 활용하기위해 TextSpan 미리 정의
    */
   late TextSpan _textSpan_light = const TextSpan(children: [
-    TextSpan(
-        text: '지금 이 곡을 찾으려면 ',
-        style: TextStyle(fontSize: 17, color: Colors.black)),
+    TextSpan(text: '지금 이 곡을 찾으려면 ', style: TextStyle(fontSize: 17, color: Colors.black)),
     TextSpan(
         text: '프리즘 ',
         style: TextStyle(
@@ -111,10 +109,7 @@ class _Home extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
     double c_height = MediaQuery.of(context).size.height;
@@ -155,9 +150,9 @@ class _Home extends State<Home> {
                   isTransParents
                       ? null    // Setting Icon 이 투명일때 클릭해도 화면이동 x
                       : Navigator.push(context, MaterialPageRoute(builder: (context) => const Settings()));
-                },
+                }
               )
-            ],
+            ]
           ),
           body: Container(
               width: double.infinity, //

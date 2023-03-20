@@ -11,6 +11,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'main.dart';
 
+/*
+ *  차트 리스트 불러오는 속도가 느린데 쿼리문 문제인듯하니 임차장님께 개선요청 (이미 느린거 알고는 계심)
+ */
+
 class Chart extends StatefulWidget {
   const Chart({super.key});
 
@@ -43,16 +47,12 @@ class _Chart extends State<Chart> {
   }
 
   List charts = [];
-  List original = [];
 
   void fetchData() async {
     try {
-      http.Response response = await http.get(
-          // Uri.parse('${MyApp.Uri}get_song_ranks')
-          Uri.parse('http://${MyApp.ranks}'));
+      http.Response response = await http.get(Uri.parse('http://${MyApp.ranks}'));
       String jsonData = response.body;
       charts = jsonDecode(jsonData.toString());
-      original = charts;
       setState(() {});
     } catch (e) {
       NetworkToast();
