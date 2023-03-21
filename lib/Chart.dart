@@ -267,36 +267,30 @@ class _Chart extends State<Chart> {
                                                             chart['image'],
                                                             width: 90,
                                                             height: 90,
-                                                            errorBuilder:
-                                                                (context, error,
-                                                                    stackTrace) {
+                                                            errorBuilder: (context, error, stackTrace) {
                                                               return SizedBox(
                                                                 width: 90,
                                                                 height: 90,
-                                                                child: Image.asset(
-                                                                    'assets/no_image.png'),
+                                                                child: Image.asset('assets/no_image.png'),
                                                               );
                                                             },
                                                           ),
-                                                        ))),
+                                                        )
+                                                    )
+                                                ),
                                                 Flexible(
                                                     child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                       SizedBox(
                                                         width: c_width * 0.6,
-                                                        // padding: const EdgeInsets.only(left: 40),
                                                         child: Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
                                                             Padding(
-                                                              // padding: const EdgeInsets.only(bottom: 15),
-                                                              padding:
-                                                                  const EdgeInsets.only(left: 15),
+                                                              padding: const EdgeInsets.only(left: 15),
                                                               child: RichText(
                                                                 overflow: TextOverflow.ellipsis,
                                                                 maxLines: 2,
@@ -314,8 +308,7 @@ class _Chart extends State<Chart> {
                                                               ),
                                                             ),
                                                             Padding(
-                                                              padding:
-                                                                  const EdgeInsets.only(left: 15, top: 10),
+                                                              padding: const EdgeInsets.only(left: 15, top: 10),
                                                               child: Text(
                                                                 isArtistNull ? 'Various Artists' : chart['artist'],
                                                                 style: TextStyle(
@@ -331,8 +324,7 @@ class _Chart extends State<Chart> {
                                                       SizedBox(
                                                         width: c_width * 0.05,
                                                         child: IconButton(
-                                                            padding:
-                                                                const EdgeInsets.only(bottom: 80),
+                                                            padding: const EdgeInsets.only(bottom: 80),
                                                             icon: ImageIcon(Image.asset('assets/x_icon.png').image, size: 15),
                                                             color: isDarkMode ? Colors.white : Colors.grey,
                                                             onPressed: () {
@@ -347,11 +339,8 @@ class _Chart extends State<Chart> {
                                           ),
                                           Container(
                                             height: 90,
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 20, 20, 0),
-                                            color: isDarkMode
-                                                ? Colors.black
-                                                : Colors.white,
+                                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                            color: isDarkMode ? Colors.black : Colors.white,
                                             child: Column(
                                               children: [
                                                 GestureDetector(
@@ -359,29 +348,19 @@ class _Chart extends State<Chart> {
                                                       Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder: (context) => PlayInfo(
-                                                                      deviceId: Id,
-                                                                      title: title,
-                                                                      image: image,
-                                                                      artist: artist,
-                                                                      song_id: song_id)));
+                                                              builder: (context) =>
+                                                                  PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id)
+                                                          )
+                                                      );
                                                     },
                                                     child: Container(
-                                                      color: isDarkMode
-                                                          ? Colors.black
-                                                          : Colors.white,
+                                                      color: isDarkMode ? Colors.black : Colors.white,
                                                       child: Row(
                                                         children: [
                                                           IconButton(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right: 20),
+                                                            padding: const EdgeInsets.only(right: 20),
                                                             icon: ImageIcon(
-                                                                Image.asset(
-                                                                        'assets/list.png')
-                                                                    .image,
-                                                                size: 30),
+                                                                Image.asset('assets/list.png').image, size: 30),
                                                             color: const Color.fromRGBO(64, 220, 196, 1),
                                                             onPressed: () {
                                                               Navigator.push(
