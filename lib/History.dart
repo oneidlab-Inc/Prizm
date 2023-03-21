@@ -298,7 +298,7 @@ class _History extends State<History> {
               ),
           Center(
             child: Text(
-              '검색내역을 불러오고 있습니다.',
+              '검색 내역을 불러오고 있습니다.',
               style: TextStyle(
                   color: isDarkMode ? Colors.white : Colors.black,
                   fontWeight: FontWeight.bold,

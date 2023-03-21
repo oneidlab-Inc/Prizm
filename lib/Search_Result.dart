@@ -482,7 +482,7 @@ class _Result extends State<Result> {
                                                 )
                                             )
                                         )
-                                        : _listView(programs)
+                                        : Row(children: [_listView(programs)])  // Row로 감싸지 않으면 에러
                                 )
                             ),
                             Column(
@@ -495,7 +495,7 @@ class _Result extends State<Result> {
                                     )
                                 ),
                                 CNTS
-                                    ? ChartContainer( //  lib/chart/chart_container.dart
+                                    ? ChartContainer(   //  lib/chart/chart_container.dart
                                         color: isDarkMode ? Colors.black : Colors.white,
                                         chart: line_chart(song_cnts),
                                       )

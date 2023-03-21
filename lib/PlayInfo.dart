@@ -267,7 +267,7 @@ class _PlayInfo extends State<PlayInfo> {
       return Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 100, bottom: 30),
+            margin: const EdgeInsets.only(top: 70, bottom: 30),
             child: Center(
               child: Image.asset('assets/loading.gif',
                 width: 40,
