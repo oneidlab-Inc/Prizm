@@ -34,10 +34,9 @@ class _History extends State<History> {
 
   String? _deviceId;
   String? uid;
-  late Timer timer;
-  // Timer timer = Timer(Duration(seconds: 3), () {
-  //
-  // });
+  late Timer timer = Timer(Duration(seconds: 2), () { // 2초동안 데이터 받아오고 없으면 검색기록 없다는 메세지로 넘김
+    setState(() {});
+  });
 
   Future<void> initPlatformState() async {
     String? deviceId;
@@ -162,8 +161,6 @@ class _History extends State<History> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     int len = song_info.length;
-
-    final nothing = timer.isActive;
     final isExist = len == 0;
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
@@ -270,55 +267,7 @@ class _History extends State<History> {
                       ],
                     ),
                   ),
-                  isExist ? nothing
-                      ? Container(
-                    margin: EdgeInsets.only(top: 100),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 100),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 30),
-                                child: Center(
-                                  child: Image.asset('assets/loading.gif',
-                                    width: 40,
-                                    // color: isDarkMode ? Colors.white : Colors.black
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: Text(
-                                  '검색내역을 불러오고있습니다.',
-                                  style: TextStyle(
-                                    // color: isDarkMode ? Colors.white : Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                  // loading(timer)
-                      : Container(
-                      margin: EdgeInsets.only(top: 100),
-                      child:
-                      Center(
-                        child: Text('최근 검색 기록이 없습니다.',
-                          style: TextStyle(
-                              color: isDarkMode ? Colors.white : Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22
-                          ),
-                        ),
-                      )
-                  )
-                      : _listView(song_info)
+                  isExist ? loading() : _listView(song_info)
                 ],
               ),
             )
@@ -334,11 +283,10 @@ class _History extends State<History> {
         });
   }
 
-  Widget loading(timer) {
-    // nothing();
-    return Container(
-      margin: EdgeInsets.only(top: 100),
-      child: Column(
+  loading() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    if(timer.isActive) {  // Timer 가 활성화 상태일때  gif 호출
+      return Column(
         children: [
           Container(
             margin: const EdgeInsets.only(top: 100),
@@ -350,7 +298,7 @@ class _History extends State<History> {
                   child: Center(
                     child: Image.asset('assets/loading.gif',
                       width: 40,
-                      // color: isDarkMode ? Colors.white : Colors.black
+                      color: isDarkMode ? Colors.white : Colors.black
                     ),
                   ),
                 ),
@@ -358,28 +306,32 @@ class _History extends State<History> {
                   child: Text(
                     '검색내역을 불러오고있습니다.',
                     style: TextStyle(
-                      // color: isDarkMode ? Colors.white : Colors.black,
+                      color: isDarkMode ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 22),
+                        fontSize: 22
+                    ),
                   ),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-  Future<void> nothing() async {
-      Center(
-        child: Text('최근 검색 기록이 없습니다.',
-          style: TextStyle(
-            // color: isDarkMode ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 22
-          ),
-        ),
       );
+    } else {
+      return Container(
+          margin: EdgeInsets.only(top: 100),
+          child:
+          Center(
+            child: Text('최근 검색 기록이 없습니다.',
+              style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22
+              ),
+            ),
+          )
+      );
+    }
   }
 
   Widget _listView(song_info) {
