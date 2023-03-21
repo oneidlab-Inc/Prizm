@@ -166,7 +166,7 @@ class _History extends State<History> {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
-    return WillPopScope(  // willpop >> Android 뒤로가기 버튼 제어
+    return WillPopScope(  // WillPop >> Android 뒤로가기 버튼 제어
         onWillPop: () async {
           return _onBackKey();
         },
@@ -234,17 +234,15 @@ class _History extends State<History> {
                         ),
                         TextField(
                             controller: txtQuery,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(basicReg)
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.allow(basicReg)],
                             onChanged: search,
                             textInputAction: TextInputAction.search, // 키보드에 검색 아이콘 추가
                             decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(vertical: 20),
                                 labelText: '곡/가수/앨범명으로 검색해주세요',
                                 labelStyle: TextStyle(
-                                    fontSize: 15,
-                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2)
+                                    color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.2),
+                                    fontSize: 15
                                 ),
                                 enabledBorder: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -290,39 +288,30 @@ class _History extends State<History> {
       return Column(  // 리스트가 있다면 listview 로 알아서 넘어감
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 100),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 30),
-                  child: Center(
-                    child: Image.asset('assets/loading.gif',
-                      width: 40,
-                      color: isDarkMode ? Colors.white : Colors.black
-                    ),
+                margin: const EdgeInsets.only(bottom: 30, top: 100),
+                child: Center(
+                  child: Image.asset('assets/loading.gif',
+                    width: 40,
+                    color: isDarkMode ? Colors.white : Colors.black
                   ),
                 ),
-                Center(
-                  child: Text(
-                    '검색내역을 불러오고있습니다.',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22
-                    ),
-                  ),
-                ),
-              ],
+              ),
+          Center(
+            child: Text(
+              '검색내역을 불러오고 있습니다.',
+              style: TextStyle(
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22
+              ),
             ),
           ),
         ],
       );
-    } else {  // 위에 설정한 2초 뒤 리스트가 없다면 else 컨테이너 표출
+    } else {  // 위에 설정한 2초 뒤 리스트가 없다면 else 컨테이너 return
       return Container(
-          margin: EdgeInsets.only(top: 100),
-          child:
-          Center(
+          margin: EdgeInsets.only(top: 170),
+          child: Center(
             child: Text('최근 검색 기록이 없습니다.',
               style: TextStyle(
                   color: isDarkMode ? Colors.white : Colors.black,
@@ -439,9 +428,7 @@ class _History extends State<History> {
                                                               child: Text(
                                                                   isArtistNull ? 'Various Artists' : info['ARTIST'],
                                                                   style: TextStyle(
-                                                                      color: isDarkMode
-                                                                          ? Colors.grey.withOpacity(0.8)
-                                                                          : Colors.black.withOpacity(0.4)
+                                                                      color: isDarkMode ? Colors.grey.withOpacity(0.8) : Colors.black.withOpacity(0.4)
                                                                   ),
                                                                   overflow: TextOverflow.ellipsis
                                                               ),
@@ -459,7 +446,8 @@ class _History extends State<History> {
                                                               Navigator.pop(context);
                                                             }),
                                                       )
-                                                    ])),
+                                                    ])
+                                                ),
                                               ],
                                             ),
                                           ),

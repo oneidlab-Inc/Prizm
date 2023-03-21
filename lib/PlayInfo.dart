@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,11 @@ class PlayInfo extends StatefulWidget {
 }
 
 class _PlayInfo extends State<PlayInfo> {
+
+  late Timer timer = Timer(const Duration(seconds: 6), () { // 2초동안 데이터 받아오고 없으면 검색기록 없다는 메세지로 넘김
+    if(!mounted) return;
+    setState(() {});
+  });
 
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '프리즘 방송 재생정보');
@@ -212,16 +218,7 @@ class _PlayInfo extends State<PlayInfo> {
                                             children: [
                                               Container(
                                                   child: isExistTV
-                                                      ? Center(
-                                                    child: Text('최신 TV 방송내역이 없습니다.',
-                                                        style: TextStyle(
-                                                            color: isDarkMode ? Colors.white : Colors.black,
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                            fontSize: 20
-                                                        )
-                                                    ),
-                                                  ) : _tv_list(info)
+                                                      ? loading() : _tv_list(info)
                                               )
                                             ],
                                           )
@@ -246,15 +243,7 @@ class _PlayInfo extends State<PlayInfo> {
                                           children: [
                                             Container(
                                               child: isExistRadio
-                                                  ? Center(
-                                                child: Text('최신 RADIO 방송내역이 없습니다.',
-                                                    style: TextStyle(
-                                                        color: isDarkMode ? Colors.white : Colors.black,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 20
-                                                    )
-                                                ),
-                                              ) : _radio_list(info_radio),
+                                                  ? loading() : _radio_list(info_radio),
                                             )
                                           ],
                                         )
@@ -272,6 +261,46 @@ class _PlayInfo extends State<PlayInfo> {
     );
   }
 
+  loading() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    if(timer.isActive) {
+      return Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 100, bottom: 30),
+            child: Center(
+              child: Image.asset('assets/loading.gif',
+                width: 40,
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              '방송 정보를 불러오고 있습니다.',
+              style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22
+              ),
+            ),
+          )
+        ],
+      );
+    } else {
+      return SizedBox(
+        child: Center(
+          child: Text('최신 방송 정보가 없습니다.',
+          style: TextStyle(
+              color: isDarkMode ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 22
+            )
+          ),
+        ),
+      );
+    }
+  }
   Widget _radio_list(info_radio) {
     return Expanded(
       child: ListView.builder(

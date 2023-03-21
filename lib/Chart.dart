@@ -164,7 +164,7 @@ class _Chart extends State<Chart> {
                               ),
                               Center(
                                 child: Text(
-                                  '차트정보를 불러오고있습니다.',
+                                  '차트정보를 불러오고 있습니다.',
                                   style: TextStyle(
                                       color: isDarkMode
                                           ? Colors.white
@@ -344,11 +344,9 @@ class _Chart extends State<Chart> {
                                             child: Column(
                                               children: [
                                                 GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
+                                                    onTap: () { // Text 클릭시 이동
+                                                      Navigator.push(context, MaterialPageRoute(
+                                                          builder: (context) =>
                                                                   PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id)
                                                           )
                                                       );
@@ -362,16 +360,12 @@ class _Chart extends State<Chart> {
                                                             icon: ImageIcon(
                                                                 Image.asset('assets/list.png').image, size: 30),
                                                             color: const Color.fromRGBO(64, 220, 196, 1),
-                                                            onPressed: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) => PlayInfo(
-                                                                          deviceId: Id,
-                                                                          title: title,
-                                                                          image: image,
-                                                                          artist: artist,
-                                                                          song_id: song_id)));
+                                                            onPressed: () { // list icon 클릭시 이동
+                                                              Navigator.push(context, MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          PlayInfo(deviceId: Id, title: title, image: image, artist: artist, song_id: song_id)
+                                                                  )
+                                                              );
                                                             },
                                                           ),
                                                           Text(
