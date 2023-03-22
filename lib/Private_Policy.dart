@@ -35,7 +35,6 @@ class _Private extends State<Private> {
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -69,8 +68,7 @@ class _Private extends State<Private> {
         body: Column(
           children: [
             Expanded(
-                child:
- WebView(
+                child: WebView(
                      backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                      initialUrl: 'https://${MyApp.privacy}',
                      javascriptMode: JavascriptMode.unrestricted,
@@ -89,11 +87,11 @@ class _Private extends State<Private> {
               },
               child: Container(
                 decoration: const BoxDecoration(
+                    color: Color.fromRGBO(51, 211, 180, 1),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20)
                     ),
-                    color: Color.fromRGBO(51, 211, 180, 1)
                 ),
                 alignment: Alignment.center,
                 height: 70,

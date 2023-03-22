@@ -32,24 +32,19 @@ class _Terms extends State<Terms> {
     logSetscreen();
     initConnectivity();
     _connectivitSubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [
-        SystemUiOverlay.top
-      ]
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
 
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: AppBar(
           title: const Text("이용약관",
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
+          ),
           leading: IconButton(
             icon: ImageIcon(
               Image.asset('assets/x_icon.png').image,
@@ -88,11 +83,11 @@ class _Terms extends State<Terms> {
                     },
                     child: Container(
                       decoration: const BoxDecoration(
+                        color: Color.fromRGBO(51, 211, 180, 1),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
                             topLeft: Radius.circular(10),
                         ),
-                        color: Color.fromRGBO(51, 211, 180, 1),
                       ),
                       alignment: Alignment.center,
                       height: 70,
