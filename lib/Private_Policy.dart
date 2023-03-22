@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:Prizm/Home.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,7 @@ class _Private extends State<Private> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("개인정보 처리방침",
@@ -67,18 +69,19 @@ class _Private extends State<Private> {
         body: Column(
           children: [
             Expanded(
-                child: WebView(
-                  backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
-                  initialUrl: 'http://${MyApp.privacy}',
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onPageStarted: (String url) {
-                    if(_connectionStatus.endsWith('none') == true) {
-                      NetworkToast();
-                    }else {
-                      _webViewController?.loadUrl('http://${MyApp.privacy}');
-                    }
-                  },
-                )
+                child:
+ WebView(
+                     backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
+                     initialUrl: 'https://${MyApp.privacy}',
+                     javascriptMode: JavascriptMode.unrestricted,
+                     onPageStarted: (String url) {
+                       if(_connectionStatus.endsWith('none') == true) {
+                         NetworkToast();
+                       }else {
+                         _webViewController?.loadUrl('https://${MyApp.privacy}');
+                       }
+                     },
+                   )
             ),
             GestureDetector(
               onTap: () {
@@ -101,6 +104,7 @@ class _Private extends State<Private> {
         )
     );
   }
+
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     if(!mounted) {
       return;

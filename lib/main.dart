@@ -149,11 +149,11 @@ class _TabPageState extends State<TabPage> {
   }
   
   Future<void> initPlatformState() async {
-    String? deviceId; //기기 uid
+    String? deviceId;  //기기 uid
     try {
       deviceId = await PlatformDeviceId.getDeviceId;
     } on PlatformException {
-      deviceId = '디바이스 정보 추출 실패';
+      deviceId = 'fail to get deviceId';
       rethrow;
     }
     if (!mounted) return;
@@ -203,9 +203,7 @@ class _TabPageState extends State<TabPage> {
                       decoration: BoxDecoration(
                           border: Border(
                               top: BorderSide(
-                                  color: isDarkMode
-                                      ? const Color.fromRGBO(94, 94, 94, 1)
-                                      : Colors.black.withOpacity(0.1)
+                                  color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1)
                               )
                           )
                       ),
@@ -290,7 +288,7 @@ class _TabPageState extends State<TabPage> {
     initialPage: 1,
   );
 
-/*--------------------------------------------------------------------*/
+
   Widget buildPageView() {
     return PageView(
       controller: pageController,

@@ -79,7 +79,6 @@ class _Terms extends State<Terms> {
                       NetworkToast();
                     } else {
                       _webViewController?.loadUrl('http://${MyApp.terms}');
-                      print('terms URL >>>>  http://${MyApp.terms}');
                     }
                   },
                 )),
