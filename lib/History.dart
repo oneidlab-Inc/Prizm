@@ -57,6 +57,7 @@ class _History extends State<History> {
   }
 
   static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*\-]'));
+  // static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|~!@#$%^&*()_+=:`,./><?{}*\-]'));
   List song_info = [];
   List original = [];
   List info = [];
@@ -90,11 +91,19 @@ class _History extends State<History> {
     query = query.toLowerCase();
     List result = [];
     for (var p in song_info) {
-      var title = p["TITLE"].toString().toLowerCase();
-      var artist = p["ARTIST"].toString().toLowerCase();
-      var album = p['ALBUM'].toString().toLowerCase();
-      // if (title.contains(query)) {  // 원래버전 초성검색 x 
-      if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) { // 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
+
+      // var title = p["TITLE"].toString().toLowerCase();
+      var title = p['TITLE'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();
+      var artist = p["ARTIST"].toString().replaceAll(RegExp('\\s'),'').toLowerCase();
+      var album = p['ALBUM'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();
+
+
+      /**
+       * 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
+       * 검색 중 공백 제거 완료
+       */
+      
+      if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
       } else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
