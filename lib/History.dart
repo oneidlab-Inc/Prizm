@@ -107,6 +107,17 @@ class _History extends State<History> {
        * 공백이 있을때와 없을때를 둘다 잡기 위해 toString 만 한 것과 replaceAll 둘다 변수로 선언
        */
       
+      
+      if (p['ARTIST'] == null) {
+        artist = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').toLowerCase();
+        artist1 = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').toLowerCase();
+      }
+      if(p['ALBUM'] == null) {
+        album = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').toLowerCase();
+        album1 = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').toLowerCase();
+      }
+      
+      
       if(title1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
       } else if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
