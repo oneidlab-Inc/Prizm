@@ -92,22 +92,32 @@ class _History extends State<History> {
     for (var p in song_info) {
 
       // var title = p["TITLE"].toString().toLowerCase();
+      var title1 = p['TITLE'].toString().toLowerCase();
       var title = p['TITLE'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();
       var artist = p["ARTIST"].toString().replaceAll(RegExp('\\s'),'').toLowerCase();
+      var artist1 = p['ARTIST'].toString().toLowerCase();
       var album = p['ALBUM'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();
+      var album1 = p['ALBUM'].toString().toLowerCase();
 
 
       /**
        * 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
        * 검색 중 공백 제거 완료
+       *
+       * 공백이 있을때와 없을때를 둘다 잡기 위해 toString 만 한 것과 replaceAll 둘다 변수로 선언
        */
       
-      if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
-        print(p);
+      if(title1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+        result.add(p);
+      } else if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
       } else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
+      } else if(artist1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+        result.add(p);
       } else if (album.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+        result.add(p);
+      } else if (album1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
       }
     }
