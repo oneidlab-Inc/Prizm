@@ -36,6 +36,8 @@ import 'Search_Result.dart';
  * app level 의 build.gradle 의 versionName, versionCode 변경
  * build.gradle 의 versionName 과 pubspec.yaml 의 version 은 같아야하고
  * versionCode 는 int 형식으로 하나씩 올려감
+ * 
+ * 확인해보니 디버그모드때의 deviceId와 apk의 deviceId는 다름
  */
 
 final navigatorKey = GlobalKey<NavigatorState>();
