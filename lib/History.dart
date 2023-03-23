@@ -109,11 +109,11 @@ class _History extends State<History> {
       
       
       if (p['ARTIST'] == null) {
-        artist = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').toLowerCase();
+        artist = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').replaceAll(RegExp('\\s'), '').toLowerCase();
         artist1 = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').toLowerCase();
       }
       if(p['ALBUM'] == null) {
-        album = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').toLowerCase();
+        album = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').replaceAll(RegExp('\\s'), '').toLowerCase();
         album1 = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').toLowerCase();
       }
       
