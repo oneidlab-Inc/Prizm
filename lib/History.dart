@@ -86,7 +86,6 @@ class _History extends State<History> {
       song_info = original;
       setState(() {});
     }
-    getRegExp(query, RegExpOptions(initialSearch: true) );
 
     query = query.toLowerCase();
     List result = [];
