@@ -104,7 +104,7 @@ class _Terms extends State<Terms> {
     if(!mounted) {
       return;
     }
-    switch (result) {
+    switch (await result) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
       case ConnectivityResult.none:

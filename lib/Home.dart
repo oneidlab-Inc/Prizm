@@ -432,14 +432,14 @@ class _Home extends State<Home> {
     if(!mounted) {
       return;
     }
-    switch (result) {
+    switch (await result) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
       case ConnectivityResult.none:
         setState(() => _connectionStatus = result.toString());
         break;
       default:
-        setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요.');
+        setState(() => _connectionStatus = '네트워크 연결을 확인 해주세요 DEFAULT');
     }
   }
 

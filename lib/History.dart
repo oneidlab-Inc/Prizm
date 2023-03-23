@@ -90,6 +90,7 @@ class _History extends State<History> {
 
     query = query.toLowerCase();
     List result = [];
+    print(query);
     for (var p in song_info) {
       var title = p["TITLE"].toString().toLowerCase();
       var artist = p["ARTIST"].toString().toLowerCase();

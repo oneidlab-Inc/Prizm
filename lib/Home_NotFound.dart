@@ -135,7 +135,7 @@ class _NotFound extends State<NotFound> {
     if(!mounted) {
       return;
     }
-    switch (result) {
+    switch (await result) {
       case ConnectivityResult.mobile:
       case ConnectivityResult.wifi:
       case ConnectivityResult.none:

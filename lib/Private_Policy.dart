@@ -107,7 +107,7 @@ class _Private extends State<Private> {
     if(!mounted) {
       return;
     }
-    switch (result) {
+    switch (await result) {
       case ConnectivityResult.mobile:
       case ConnectivityResult.wifi:
       case ConnectivityResult.none:
