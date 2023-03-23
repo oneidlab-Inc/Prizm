@@ -13,6 +13,7 @@ import 'Home.dart';
 import 'PlayInfo.dart';
 import 'Settings.dart';
 import 'main.dart';
+import 'package:korea_regexp/korea_regexp.dart';
 
 /*
  * 모든 리스트들은 Widget 으로 밖에서 생성하여 따로 관리
@@ -55,9 +56,7 @@ class _History extends State<History> {
     });
   }
 
-  static RegExp basicReg = (  // 초성검색은 아직 미완성 외부 라이브러리에서 더 찾아서 완성해야할듯.
-      RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-★☆;"]')
-  );
+  static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-;"]'));
   List song_info = [];
   List original = [];
   List info = [];
@@ -87,20 +86,21 @@ class _History extends State<History> {
       song_info = original;
       setState(() {});
     }
+    getRegExp(query, RegExpOptions(initialSearch: true) );
 
     query = query.toLowerCase();
     List result = [];
-    print(query);
     for (var p in song_info) {
       var title = p["TITLE"].toString().toLowerCase();
       var artist = p["ARTIST"].toString().toLowerCase();
       var album = p['ALBUM'].toString().toLowerCase();
-      if (title.contains(query)) {  // else if 로 처리해야 중복된 데이터 표시 x
-        result.add(p);
-      } else if (artist.contains(query)) {
-        result.add(p);
-      } else if (album.contains(query)) {
-        result.add(p);
+      // if (title.contains(query)) {  // 원래버전 초성검색 x 
+        if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) { // 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
+          result.add(p);
+        }else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+          result.add(p);
+        }else if (album.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+          result.add(p);
       }
     }
 
@@ -113,7 +113,6 @@ class _History extends State<History> {
   var items = <String>[];
 
   _printLatestValue() {
-    // print('마지막 입력값 : ${txtQuery.text}');
     List<String> SearchList = <String>[];
     SearchList.addAll(duplicateItems);
   }
