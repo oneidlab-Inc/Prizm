@@ -57,7 +57,6 @@ class _History extends State<History> {
   }
 
   static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*\-]'));
-  // static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|~!@#$%^&*()_+=:`,./><?{}*\-]'));
   List song_info = [];
   List original = [];
   List info = [];
@@ -104,6 +103,7 @@ class _History extends State<History> {
        */
       
       if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+        print(p);
         result.add(p);
       } else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
         result.add(p);
