@@ -94,12 +94,12 @@ class _History extends State<History> {
       var artist = p["ARTIST"].toString().toLowerCase();
       var album = p['ALBUM'].toString().toLowerCase();
       // if (title.contains(query)) {  // 원래버전 초성검색 x 
-        if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) { // 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
-          result.add(p);
-        }else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
-          result.add(p);
-        }else if (album.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
-          result.add(p);
+      if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) { // 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
+        result.add(p);
+      } else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+        result.add(p);
+      } else if (album.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+        result.add(p);
       }
     }
 
