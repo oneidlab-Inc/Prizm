@@ -56,7 +56,7 @@ class _History extends State<History> {
     });
   }
 
-  static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*|-;"]'));
+  static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*\-]'));
   List song_info = [];
   List original = [];
   List info = [];
