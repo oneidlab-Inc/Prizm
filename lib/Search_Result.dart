@@ -186,7 +186,7 @@ class _Result extends State<Result> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     double c_height = MediaQuery.of(context).size.height; // 화면상의 전체 높이
     double c_width = MediaQuery.of(context).size.width; // 화면상의 전치 너비
-    final CNTS = song_cnts.length > 3;  // 차트에 조회수를 가지고 있는 달이 3달 이상일경우
+    final CNTS = song_cnts.length > 3 && listY.last > 10;  // 차트에 조회수를 가지고 있는 달이 3달 이상 && Y의 최대값이 10 이상
     final isExist = programs.isEmpty;   // 프로그램 방송 정보가 없을경우
     final isArtistNull = maps['ARTIST'] == null;  // Artist 의 정보가 없을경우
     final isAlbumNull = maps['ALBUM'] == null; // Album 의 정보가 없을경우
