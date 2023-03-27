@@ -256,6 +256,8 @@ class _Home extends State<Home> {
 
   Future<bool> _onBackKey() async {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    double c_height = MediaQuery.of(context).size.height;
+    double c_width = MediaQuery.of(context).size.width;
     return await showDialog(
       context: context,
       barrierDismissible: false, //다이얼로그 바깥을 터치 시에 닫히도록 하는지 여부 (true: 닫힘, false: 닫히지않음)
@@ -265,7 +267,7 @@ class _Home extends State<Home> {
             child: Container(
               width: 400,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
-              height: 150,
+              height: 155,
               color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -294,7 +296,7 @@ class _Home extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 200,
+                          width: c_width*0.4,
                           height: 78,
                           child: Container(
                               decoration: BoxDecoration(
@@ -307,23 +309,29 @@ class _Home extends State<Home> {
                                       )
                                   )
                               ),
-                              margin: const EdgeInsets.only(left: 20),
                               child: TextButton(
-                                  onPressed: () {
-                                    exit(0);
-                                  },
-                                  child: const Text(
-                                    '종료',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.red),
+                                  // style: ButtonStyle(
+                                  //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  //         RoundedRectangleBorder(
+                                  //             borderRadius: BorderRadius.all(Radius.circular(10)),
+                                  //             side: BorderSide(color: Colors.red)
+                                  //         )
+                                  //     )
+                                  // ),
+                                      onPressed: () {
+                                        exit(0);
+                                      },
+                                      child: const Text(
+                                        '종료',
+                                        style: TextStyle(
+                                            fontSize: 20, color: Colors.red),
+                                      )
                                   )
-                              )
                           ),
                         ),
                         Container(
-                            margin: const EdgeInsets.only(right: 20),
                             color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
-                            width: 180,
+                            width: c_width*0.4,
                             height: 78,
                             child: TextButton(
                               onPressed: () {
