@@ -256,7 +256,6 @@ class _Home extends State<Home> {
 
   Future<bool> _onBackKey() async {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    double c_height = MediaQuery.of(context).size.height;
     double c_width = MediaQuery.of(context).size.width;
     return await showDialog(
       context: context,
@@ -265,8 +264,8 @@ class _Home extends State<Home> {
         return Dialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Container(
-              width: 400,
               margin: const EdgeInsets.only(top: 20, bottom: 20),
+              width: c_width*0.8,
               height: 155,
               color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
               child: Column(
@@ -310,14 +309,6 @@ class _Home extends State<Home> {
                                   )
                               ),
                               child: TextButton(
-                                  // style: ButtonStyle(
-                                  //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  //         RoundedRectangleBorder(
-                                  //             borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  //             side: BorderSide(color: Colors.red)
-                                  //         )
-                                  //     )
-                                  // ),
                                       onPressed: () {
                                         exit(0);
                                       },
