@@ -105,6 +105,7 @@ class _History extends State<History> {
        * 검색 중 공백 제거 완료
        *
        * 공백이 있을때와 없을때를 둘다 잡기 위해 toString 만 한 것과 replaceAll 둘다 변수로 선언
+       * artist, album 이 null 일때 various artist, album 으로 변경
        */
       
       
@@ -169,11 +170,12 @@ class _History extends State<History> {
     }
     if (query.isNotEmpty) {
       List<String> ListData = <String>[];
-      SearchList.forEach((item) {
+      //SearchList.forEach((item) {
+      for (var item in SearchList) {
         if (item.contains(query)) {
           ListData.add(item);
         }
-      });
+      }
       setState(() {
         items.clear();
         items.addAll(ListData);
