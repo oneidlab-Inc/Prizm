@@ -90,15 +90,14 @@ class _History extends State<History> {
     query = query.toLowerCase();
     List result = [];
     for (var p in song_info) {
-
-      // var title = p["TITLE"].toString().toLowerCase();
+      var title = p['TITLE'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();  // 공백제거
       var title1 = p['TITLE'].toString().toLowerCase();
-      var title = p['TITLE'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();
       var artist = p["ARTIST"].toString().replaceAll(RegExp('\\s'),'').toLowerCase();
       var artist1 = p['ARTIST'].toString().toLowerCase();
       var album = p['ALBUM'].toString().replaceAll(RegExp('\\s'), '').toLowerCase();
       var album1 = p['ALBUM'].toString().toLowerCase();
 
+      var options = RegExpOptions(initialSearch: true);   // 초성검색
 
       /**
        * 초성검색 옵션 추가 완료. 테스트 더 필요하기때문에 원래코드 주석
@@ -109,7 +108,7 @@ class _History extends State<History> {
        */
       
       
-      if (p['ARTIST'] == null) {
+      if (p['ARTIST'] == null) {  // UI상 Various Artists 로 나오지만 데이터는 null 이므로 null 을 Various Artists 로 변경
         artist = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').replaceAll(RegExp('\\s'), '').toLowerCase();
         artist1 = p['ARTIST'].toString().replaceAll(RegExp('null'), 'Various Artists').toLowerCase();
       }
@@ -117,19 +116,19 @@ class _History extends State<History> {
         album = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').replaceAll(RegExp('\\s'), '').toLowerCase();
         album1 = p['ALBUM'].toString().replaceAll(RegExp('null'), 'Various Album').toLowerCase();
       }
-      
-      
-      if(title1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+
+
+      if(title.contains(getRegExp(query, options))) {
         result.add(p);
-      } else if(title.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+      } else if(title1.contains(getRegExp(query, options))) {
         result.add(p);
-      } else if(artist.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+      } else if(artist.contains(getRegExp(query, options))) {
         result.add(p);
-      } else if(artist1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+      } else if(artist1.contains(getRegExp(query, options))) {
         result.add(p);
-      } else if (album.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+      } else if (album.contains(getRegExp(query, options))) {
         result.add(p);
-      } else if (album1.contains(getRegExp(query, RegExpOptions(initialSearch: true)))) {
+      } else if (album1.contains(getRegExp(query, options))) {
         result.add(p);
       }
     }
@@ -197,7 +196,7 @@ class _History extends State<History> {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
-    return WillPopScope(  // WillPop >> Android 뒤로가기 버튼 제어
+    return WillPopScope(
         onWillPop: () async {
           return _onBackKey();
         },
