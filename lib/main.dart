@@ -17,6 +17,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_color_generator/material_color_generator.dart';
 import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Chart.dart';
 import 'History.dart';
@@ -56,7 +57,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
 
-  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+  static final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
   static var ranks;
   static var privacy;
   static var terms;
+  static var theme;
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +111,8 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> {
+  late SharedPreferences _prefs;
+
   int _selectedIndex = 1; // 처음에 나올 화면 지정
 
   var deviceInfoPlugin = DeviceInfoPlugin();
@@ -151,6 +155,11 @@ class _TabPageState extends State<TabPage> {
   }
   
   Future<void> initPlatformState() async {
+    _prefs = await SharedPreferences.getInstance();
+    MyApp.theme = (_prefs.getString('theme')??'light');
+    MyApp.theme == 'light'?MyApp.themeNotifier.value = ThemeMode.light:
+      MyApp.theme == 'dark'?MyApp.themeNotifier.value = ThemeMode.dark:
+          MyApp.themeNotifier.value = ThemeMode.light;
     String? deviceId;  //기기 uid
     try {
       deviceId = await PlatformDeviceId.getDeviceId;

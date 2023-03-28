@@ -14,7 +14,6 @@ import 'PlayInfo.dart';
 import 'Settings.dart';
 import 'main.dart';
 import 'package:korea_regexp/korea_regexp.dart';
-
 /*
  * 모든 리스트들은 Widget 으로 밖에서 생성하여 따로 관리
  * 변경에 용이하고 관리가 간편함
@@ -56,7 +55,8 @@ class _History extends State<History> {
     });
   }
 
-  static RegExp basicReg = (RegExp(r'[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*\-]'));
+  static RegExp basicReg = (
+      RegExp(r"[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ|a-z|A-Z|0-9|\s|~!@#$%^&*()_+=:`,./><?{}*'\-]"));
   List song_info = [];
   List original = [];
   List info = [];

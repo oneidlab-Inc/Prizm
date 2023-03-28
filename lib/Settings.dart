@@ -9,6 +9,7 @@ import 'package:material_color_generator/material_color_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yaml/yaml.dart';
 import 'Home.dart';
 import 'main.dart';
@@ -27,7 +28,7 @@ class Settings extends StatefulWidget {
 }
 
 class _Settings extends State<Settings> {
-
+  late SharedPreferences _prefs;
   Future<void> logSetscreen() async {
     await MyApp.analytics.setCurrentScreen(screenName: '설정');
   }
@@ -187,20 +188,22 @@ class _Settings extends State<Settings> {
                     ]
                   )
                 ),
-                Container(
-                    margin: const EdgeInsets.fromLTRB(30, 20, 10, 0),
-                    child: Text('화면스타일',
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: isDarkMode ? Colors.white : Colors.black
-                      )
-                    )
-                ),
                 SizedBox(
                   height: 70,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[   // Radio Value system 이 Default 사용자가 바꾸면 앱 종료시까지만 바뀐 값 유지
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Container(
+                            margin: const EdgeInsets.fromLTRB(30, 20, 0, 0),
+                            width: c_width*0.30,
+                            child: Text('화면스타일',
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: isDarkMode ? Colors.white : Colors.black
+                                )
+                            )
+                        ),// Radio Value system 이 Default 사용자가 바꾸면 앱 종료시까지만 바뀐 값 유지
                         Expanded(
                           child: SizedBox(
                               child: Theme(
@@ -220,7 +223,9 @@ class _Settings extends State<Settings> {
                                       ),
                                       groupValue: _style, // 상단 설정한 Enum group
                                       value: Style.light,
-                                      onChanged: (Style? value) {
+                                      onChanged: (Style? value) async{
+                                        _prefs = await SharedPreferences.getInstance();
+                                        _prefs.setString('theme', 'light');
                                         if(!mounted) {
                                           return;
                                         }
@@ -250,7 +255,9 @@ class _Settings extends State<Settings> {
                                     ),
                                     groupValue: _style,
                                     value: Style.dark,
-                                    onChanged: (Style? value) {
+                                    onChanged: (Style? value) async{
+                                      _prefs = await SharedPreferences.getInstance();
+                                      _prefs.setString('theme', 'dark');
                                       if(!mounted){
                                         return;
                                       }
@@ -260,39 +267,6 @@ class _Settings extends State<Settings> {
                                       });
                                     },
                                     activeColor: const Color.fromRGBO(64, 220, 196, 1),
-                                  )
-                              )
-                          ),
-                        ),
-                        Expanded(
-                          child: SizedBox(
-                              child: Theme(
-                                  data: Theme.of(context).copyWith(
-                                      unselectedWidgetColor: const Color.fromRGBO(221, 221, 221, 1),
-                                  ),
-                                  child: RadioListTile<Style>(
-                                      contentPadding: const EdgeInsets.only(left: 20),
-                                      title: Align(
-                                        alignment: const Alignment(-1, -0.1),
-                                        child: Text('시스템',
-                                            style: TextStyle(
-                                                fontSize: 13,
-                                                color: isDarkMode ? Colors.white : Colors.black
-                                            )
-                                        ),
-                                      ),
-                                      groupValue: _style,
-                                      value: Style.system,
-                                      onChanged: (Style? value) {
-                                        if(!mounted) {
-                                          return;
-                                        }
-                                        setState(() {
-                                          _style = value!;
-                                          MyApp.themeNotifier.value == ThemeMode.system;
-                                        });
-                                      },
-                                      activeColor: const Color.fromRGBO(64, 220, 196, 1)  // Radio selected Color
                                   )
                               )
                           ),
