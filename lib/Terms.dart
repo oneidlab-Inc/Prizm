@@ -61,12 +61,11 @@ class _Terms extends State<Terms> {
           toolbarHeight: 70,
         ),
         body: Container(
-            color: Colors.transparent,
+            color: Colors.white,
             child: Column(
               children: [
                 Expanded(
                     child: WebView(
-                  backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                   initialUrl: 'http://${MyApp.terms}',
                   javascriptMode: JavascriptMode.unrestricted,
                   onPageStarted: (String url) {
@@ -85,8 +84,8 @@ class _Terms extends State<Terms> {
                       decoration: const BoxDecoration(
                         color: Color.fromRGBO(51, 211, 180, 1),
                         borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20),
                         ),
                       ),
                       alignment: Alignment.center,

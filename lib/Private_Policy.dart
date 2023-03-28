@@ -43,6 +43,7 @@ class _Private extends State<Private> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text("개인정보 처리방침",
               style: TextStyle(
@@ -69,7 +70,6 @@ class _Private extends State<Private> {
           children: [
             Expanded(
                 child: WebView(
-                     backgroundColor: isDarkMode ? Colors.white.withOpacity(0.7) : Colors.white,
                      initialUrl: 'https://${MyApp.privacy}',
                      javascriptMode: JavascriptMode.unrestricted,
                      onPageStarted: (String url) {
