@@ -158,7 +158,7 @@ class _Settings extends State<Settings> {
                     ),
                   ),
                 Container(
-                  height: 70,
+                  height: 30,
                   decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(color: Colors.grey.withOpacity(0.3))
@@ -390,6 +390,135 @@ class _Settings extends State<Settings> {
                           );
                         });
                   },
+                    child: Container(
+                      color: isDarkMode ? Colors.black : Colors.white,
+                      height: 70,
+                      margin: const EdgeInsets.fromLTRB(30, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('검색내역 삭제', style: TextStyle(fontSize: 17, color: isDarkMode ? Colors.white : Colors.black)),
+                          Align(child: Image.asset('assets/move.png', width: 10))
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                                backgroundColor: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                child: Container(
+                                    height: c_height * 0.18,
+                                    width: c_width * 0.8,
+                                    color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+                                    margin: const EdgeInsets.only(top: 20, bottom: 20),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                            height: c_height * 0.115,
+                                            child: const Center(
+                                                child: Text('검색내역을 삭제하시겠습니까?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))
+                                            )
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border: Border(
+                                                  top: BorderSide(
+                                                      color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1)
+                                                  )
+                                              )
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                  width: c_width * 0.4,
+                                                  height: c_height * 0.08,
+                                                  child: Container(
+                                                      margin: const EdgeInsets.only(left: 20),
+                                                      decoration: BoxDecoration(
+                                                          color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+                                                          border: Border(
+                                                              right: BorderSide(
+                                                                  color: isDarkMode ? const Color.fromRGBO(94, 94, 94, 1) : Colors.black.withOpacity(0.1)
+                                                              )
+                                                          )
+                                                      ),
+                                                      child: TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(context);
+                                                          },
+                                                          child: Text('취소',
+                                                              style: TextStyle(
+                                                                  fontSize: 20,
+                                                                  color: isDarkMode ? Colors.white.withOpacity(0.8) : const Color.fromRGBO(147, 147, 147, 1)
+                                                              )
+                                                          )
+                                                      )
+                                                  )
+                                              ),
+                                              Container(
+                                                  margin: const EdgeInsets.only(right: 20),
+                                                  color: isDarkMode ? const Color.fromRGBO(66, 66, 66, 1) : Colors.white,
+                                                  width: c_width * 0.345,
+                                                  height: c_height * 0.08,
+                                                  child: Center(
+                                                    child: TextButton(
+                                                      onPressed: () async {
+                                                        if(!mounted) {
+                                                          return;
+                                                        }
+                                                        _deviceId = await PlatformDeviceId.getDeviceId;
+                                                        uid = _deviceId!;
+                                                        try {
+                                                          /**
+                                                           * history 가져오는 json과 같지만 id값 없이 uid만 가지고 전체삭제처리
+                                                           * url 관련 문제가 있거나 문의사항 있을때는 임차장님께 문의
+                                                           */
+                                                          Response response = await http.get(Uri.parse('http://${MyApp.history}?uid=$uid&proc=del'));
+                                                          if (response.statusCode == 200) {
+                                                            showToast();
+                                                          } else {
+                                                            failToast();
+                                                            NetworkToast();
+                                                            throw "검색내역 삭제 실패";
+                                                          }
+                                                          setState(() {
+                                                            Navigator.pop(context);
+                                                          });
+                                                        } catch (e) {
+                                                          failToast();
+                                                          NetworkToast();
+                                                          setState(() {
+                                                            Navigator.pop(context);
+                                                          });
+                                                          rethrow;
+                                                        }
+                                                      },
+                                                      child: const Text('삭제',
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            color: Color.fromRGBO(64, 220, 196, 1)
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                )
+                            );
+                          });
+                    },
                     child: Container(
                       color: isDarkMode ? Colors.black : Colors.white,
                       height: 70,
